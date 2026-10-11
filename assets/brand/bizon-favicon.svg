@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 100" role="img" aria-label="BizOn">
+  <!-- BizOn — Hướng 1 "Công tắc": chữ O là công tắc đang bật (On = Bật).
+       Chấm lệch phải = vị trí bật. Theme-aware để đọc rõ trên tab sáng lẫn tối. -->
+  <style>
+    .ring { stroke: #0E1512; }
+    .dot  { fill: #0F5C4E; }
+    @media (prefers-color-scheme: dark) {
+      .ring { stroke: #F1F4F1; }
+      .dot  { fill: #E4B23C; }
+    }
+  </style>
+  <ellipse class="ring" cx="47" cy="50" rx="36" ry="30" fill="none" stroke-width="16"/>
+  <circle class="dot" cx="62" cy="50" r="12"/>
+</svg>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravity Lab</title>
+<link rel="icon" href="assets/brand/bizon-favicon.svg" type="image/svg+xml">
+<meta name="description" content="Gravity Lab – phòng thí nghiệm mô hình lực hấp dẫn cho FDI vào Việt Nam: đọc lại kết quả công bố, mô phỏng tác động và ước lượng OLS/PPML ngay trên trình duyệt.">
+<!-- Phông tự host như CVP Studio / CMR Lab (không CDN, chạy offline). -->
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-weight:400 800;font-display:swap;src:url(assets/fonts/PlusJakartaSans-var-vietnamese.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:400 800;font-display:swap;src:url(assets/fonts/PlusJakartaSans-var-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:'JetBrains Mono';font-weight:400 500;font-display:swap;src:url(assets/fonts/IBMPlexMono-400-vietnamese.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'JetBrains Mono';font-weight:400 500;font-display:swap;src:url(assets/fonts/IBMPlexMono-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:'JetBrains Mono';font-weight:600 700;font-display:swap;src:url(assets/fonts/IBMPlexMono-600-vietnamese.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'JetBrains Mono';font-weight:600 700;font-display:swap;src:url(assets/fonts/IBMPlexMono-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2212}
+</style>
+<style>
+:root{
+  --bg:#0B1220; --panel:#111F38; --panel2:#0E1B31;
+  --grid:rgba(99,179,237,.08); --ink:#E7EEF8; --muted:#93A4BD; --faint:#6B7C97;
+  --line:#22324A; --line2:#2C3F5C;
+  --accent:#06B6D4; --accent2:#22C55E; --warn:#F59E0B; --neg:#F97316;
+  --shadow:0 10px 30px rgba(0,0,0,.35); --radius:16px;
+}
+html[data-theme="light"]{
+  --bg:#EEF3FA; --panel:#FFFFFF; --panel2:#F5F8FD;
+  --grid:rgba(30,64,120,.07); --ink:#0F1A2E; --muted:#52617B; --faint:#8392AB;
+  --line:#DDE7F3; --line2:#CBD8EA;
+  --accent:#0891B2; --accent2:#16A34A; --warn:#B45309; --neg:#C2410C;
+  --shadow:0 12px 30px rgba(20,40,80,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:26px 26px}
+.mono{font-family:'JetBrains Mono',monospace}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px 56px}
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.logo .mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.logo .sub{display:block;font-size:11px;font-weight:600;color:var(--muted)}
+.spacer{flex:1}
+.tbtn{border:1px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:10px;padding:7px 11px;font:600 12.5px inherit;font-family:inherit;cursor:pointer;text-decoration:none}
+.lang-pill{display:flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--panel)}
+.lang-pill button{border:0;background:transparent;color:var(--muted);padding:7px 11px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.lang-pill button.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.hero{padding:30px 0 16px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+h1{font-size:clamp(26px,4.4vw,40px);line-height:1.15;margin:10px 0 10px;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:780px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 14px}
+.tab{border:1px solid var(--line2);background:var(--panel);color:var(--muted);border-radius:999px;padding:8px 14px;font:700 13px inherit;font-family:inherit;cursor:pointer}
+.tab.on{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.card h2{font-size:18px;margin-bottom:6px}
+.card h3{font-size:15px;margin:12px 0 6px}
+.muted{color:var(--muted)} .small{font-size:12.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.grid2>*{min-width:0}
+#forest,#ppmlChart{overflow-x:auto}
+#forest svg,#ppmlChart svg{min-width:620px}
+.prov{display:inline-flex;gap:6px;align-items:center;font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid var(--line2);color:var(--muted);margin:4px 0 8px}
+.prov.pub::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent2)}
+.prov.sim::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.prov.user::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line2);background:var(--panel2);color:var(--ink);border-radius:9px;padding:6px 10px;font:700 12.5px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--panel2))}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{color:var(--muted);font-weight:700;font-size:12px}
+td.num{font-family:'JetBrains Mono',monospace}
+.flag{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-left:6px;vertical-align:middle}
+.dim{opacity:.55}
+svg text{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+label.ctl{display:block;margin:10px 0 2px;font-weight:700;font-size:13px}
+input[type=range]{width:100%}
+select,input[type=file]{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:6px 8px;max-width:100%}
+.big{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.pos{color:var(--accent2)} .neg{color:var(--neg)}
+.note{border-left:3px solid var(--warn);padding:8px 12px;background:var(--panel2);border-radius:8px;font-size:13px;margin-top:10px}
+.qa li{margin:6px 0 6px 18px}
+.chk{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0}
+.chk label{font-size:13px;display:flex;gap:6px;align-items:center}
+.btn{border:0;border-radius:10px;padding:9px 14px;font:800 13px inherit;font-family:inherit;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+footer{color:var(--faint);font-size:12px;text-align:center;margin-top:24px}
+[hidden]{display:none!important}
+</style>
+<link rel="stylesheet" href="css/clay-dark-skin.css">
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <div class="logo"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="4.5"/><path d="M9 12h4.5"/></svg></span>
+    <span>Gravity&nbsp;Lab<span class="sub" data-i18n="brand_sub">Mô hình lực hấp dẫn · FDI</span></span></div>
+  <div class="spacer"></div>
+  <a class="tbtn" href="https://thuyhuongctu.github.io/BizOn/" data-i18n="back">← Hệ sinh thái BizOn</a>
+  <div class="lang-pill"><button id="langVI" class="on" type="button">VI</button><button id="langEN" type="button">EN</button></div>
+  <button class="tbtn" id="themeBtn" type="button"></button>
+</div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="eyebrow" data-i18n="eyebrow">Phòng thí nghiệm kinh tế lượng · Kinh doanh quốc tế</span>
+    <h1 data-i18n="title">Khoảng cách còn quan trọng với dòng vốn FDI vào Việt Nam không?</h1>
+    <p class="lead" data-i18n="lead">Đọc lại kết quả đã công bố của Phan và Đỗ (2019), mô phỏng tác động của từng yếu tố, thấy vì sao mô hình lực hấp dẫn hiện đại dùng PPML, rồi tự ước lượng trên dữ liệu của bạn. Mọi phép tính chạy trong trình duyệt; không có dữ liệu nào được gửi đi.</p>
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab on" data-tab="t1" type="button" data-i18n="tab1">1 · Kết quả bài 2019</button>
+    <button class="tab" data-tab="t2" type="button" data-i18n="tab2">2 · Mô phỏng tác động</button>
+    <button class="tab" data-tab="t3" type="button" data-i18n="tab3">3 · Vì sao cần PPML?</button>
+    <button class="tab" data-tab="t4" type="button" data-i18n="tab4">4 · Dữ liệu của bạn</button>
+  </nav>
+
+  <!-- ===== Tab 1 ===== -->
+  <section id="t1">
+    <div class="card">
+      <h2 data-i18n="t1_h">Tám mô hình lồng nhau, đọc theo khoảng tin cậy</h2>
+      <span class="prov pub" data-i18n="prov_pub2019">Số đã công bố · Phan & Đỗ (2019), Bảng 6 · REM, sai số chuẩn vững</span>
+      <p class="muted small" data-i18n="t1_p">Chọn một mô hình. Mỗi chấm là hệ số; thanh ngang là khoảng tin cậy 95% tính từ sai số chuẩn trong bài. Thanh cắt qua đường 0 nghĩa là chưa đủ bằng chứng ở mức 5%.</p>
+      <div class="seg" id="modelSeg"></div>
+      <div id="forest"></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3 data-i18n="t1_tbl">Bảng hệ số</h3>
+        <div class="tblwrap"><table id="coefTbl"></table></div>
+        <p class="muted small" id="modelMeta"></p>
+        <label class="ctl small"><input type="checkbox" id="checkToggle"> <span data-i18n="check_toggle">Kiểm tra nhất quán: so sao trong bài với mức ý nghĩa tính lại</span></label>
+        <p class="muted small" id="flagNote" hidden><span class="flag"></span> <span data-i18n="flag_note">Sao trong bài khác mức ý nghĩa tính lại từ hệ số và sai số chuẩn (xấp xỉ chuẩn, hai phía).</span></p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="t1_read">Đọc kết quả</h3>
+        <div id="readout" class="small"></div>
+        <h3 data-i18n="t1_q">Câu hỏi thảo luận</h3>
+        <ol class="qa small">
+          <li data-i18n="q1">R² trong bảng chỉ khoảng 0,006–0,024, trong khi FDI và FDI năm trước tương quan 0,62. R² nào (within, between hay overall) đang được báo cáo?</li>
+          <li data-i18n="q2">Đưa biến trễ của biến phụ thuộc vào mô hình hiệu ứng ngẫu nhiên gây ra vấn đề gì (Nickell, 1981)? Có cách ước lượng nào thay thế?</li>
+          <li data-i18n="q3">GDP Việt Nam, độ mở thương mại và chỉ số tham nhũng giống nhau cho mọi đối tác trong cùng một năm. Nếu thêm hiệu ứng cố định năm thì các biến này ra sao?</li>
+          <li data-i18n="q4">Khoảng cách văn hóa không đổi theo thời gian. Có ước lượng được hệ số của nó khi dùng hiệu ứng cố định quốc gia không?</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 2 ===== -->
+  <section id="t2" hidden>
+    <div class="card">
+      <h2 data-i18n="t2_h">Nếu một yếu tố thay đổi, FDI thay đổi bao nhiêu?</h2>
+      <span class="prov sim" data-i18n="prov_sim">Mô phỏng minh họa · dùng hệ số Mô hình 8 đã công bố · không phải dự báo</span>
+      <div class="grid2">
+        <div>
+          <label class="ctl" for="partnerA" data-i18n="pA">Đối tác đang xét</label>
+          <select id="partnerA"></select>
+          <label class="ctl" for="partnerB" data-i18n="pB">So khoảng cách địa lý với</label>
+          <select id="partnerB"></select>
+          <p class="muted small" id="distInfo"></p>
+          <label class="ctl"><input type="checkbox" id="ftaOn"> <span data-i18n="c_fta">Việt Nam ký FTA với đối tác này</span></label>
+          <label class="ctl" for="econR"><span data-i18n="c_econ">Khoảng cách kinh tế thay đổi</span>: <span id="econV" class="mono"></span></label>
+          <input type="range" id="econR" min="-30" max="30" step="5" value="0">
+          <label class="ctl" for="instR"><span data-i18n="c_inst">Khoảng cách thể chế thay đổi (điểm chỉ số)</span>: <span id="instV" class="mono"></span></label>
+          <input type="range" id="instR" min="-2" max="2" step="0.5" value="0">
+          <label class="ctl" for="openR"><span data-i18n="c_open">Độ mở thương mại tăng (đơn vị chỉ số)</span>: <span id="openV" class="mono"></span></label>
+          <input type="range" id="openR" min="0" max="0.3" step="0.05" value="0">
+        </div>
+        <div>
+          <p class="muted small" data-i18n="sr">Tác động ngắn hạn (năm đầu)</p>
+          <div class="big" id="srOut">0%</div>
+          <p class="muted small" data-i18n="lr">Tác động dài hạn, khi hiệu ứng tín hiệu tích lũy (chia cho 1 − 0,45)</p>
+          <div class="big" id="lrOut">0%</div>
+          <div id="contrib"></div>
+          <p class="note" data-i18n="t2_note">Tác động cộng gộp chỉ là điểm ước lượng: bài báo không công bố hiệp phương sai giữa các hệ số nên không tính được khoảng tin cậy cho tổng. Thanh mờ là hệ số chưa có ý nghĩa ở mức 5% khi tính lại. Hệ số dài hạn chỉ đúng nếu ước lượng hệ số trễ không bị chệch.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Tab 3 ===== -->
+  <section id="t3" hidden>
+    <div class="card">
+      <h2 data-i18n="t3_h">Các năm FDI bằng 0 bị loại khỏi hồi quy log</h2>
+      <span class="prov pub" data-i18n="prov_xx">Số đã công bố · Xuan & Xing (2008), Bảng 1 · FDI thực hiện, triệu USD, 10 nước × 1990–2004</span>
+      <p class="muted small" data-i18n="t3_p">Hồi quy FDI theo khoảng cách (log) và hiệu ứng cố định năm. OLS trên log(FDI) phải bỏ các quan sát bằng 0; cộng thêm 1 trước khi lấy log là cách vá tùy tiện; PPML giữ toàn bộ mẫu (Santos Silva & Tenreyro, 2006). Sai số chuẩn theo cụm quốc gia (chỉ 10 cụm nên cần thận trọng).</p>
+      <div class="tblwrap"><table id="ppmlTbl"></table></div>
+      <div id="ppmlChart"></div>
+      <p class="note" data-i18n="t3_note">Đây là minh họa phương pháp với một biến giải thích. Mô hình đầy đủ cần thêm quy mô kinh tế, FTA và các chiều khoảng cách khác.</p>
+      <details style="margin-top:10px"><summary class="small" data-i18n="t3_data">Xem dữ liệu gốc</summary><div class="tblwrap"><table id="xxTbl"></table></div></details>
+    </div>
+  </section>
+
+  <!-- ===== Tab 4 ===== -->
+  <section id="t4" hidden>
+    <div class="card">
+      <h2 data-i18n="t4_h">Ước lượng trên bộ dữ liệu bảng của bạn</h2>
+      <span class="prov user" data-i18n="prov_user">Dữ liệu của bạn · chỉ xử lý trên máy này</span>
+      <p class="muted small" data-i18n="t4_p">Nạp tệp CSV (dấu phẩy hoặc chấm phẩy), mỗi dòng là một cặp quốc gia–năm. Với bộ dữ liệu bài 2019, xuất từ Stata bằng lệnh export delimited. Nếu biến phụ thuộc ở dạng mức (triệu USD), Lab chạy cả OLS trên log và PPML để so sánh.</p>
+      <input type="file" id="csvFile" accept=".csv,text/csv">
+      <button class="tbtn" id="tplBtn" type="button" data-i18n="tpl">Tải tệp mẫu (chỉ tiêu đề cột)</button>
+      <div id="mapUI" hidden>
+        <div class="grid2">
+          <div>
+            <label class="ctl" for="selY" data-i18n="m_y">Biến phụ thuộc</label><select id="selY"></select>
+            <label class="ctl"><input type="checkbox" id="yLevel" checked> <span data-i18n="m_level">Biến phụ thuộc ở dạng mức (không phải log)</span></label>
+            <label class="ctl" for="selUnit" data-i18n="m_unit">Cột quốc gia (cụm)</label><select id="selUnit"></select>
+            <label class="ctl" for="selYear" data-i18n="m_year">Cột năm</label><select id="selYear"></select>
+            <label class="ctl"><input type="checkbox" id="feYear" checked> <span data-i18n="m_fe">Hiệu ứng cố định năm</span></label>
+            <label class="ctl"><input type="checkbox" id="clu" checked> <span data-i18n="m_clu">Sai số chuẩn theo cụm quốc gia</span></label>
+          </div>
+          <div><label class="ctl" data-i18n="m_x">Biến giải thích</label><div class="chk" id="xList"></div></div>
+        </div>
+        <button class="btn" id="runBtn" type="button" data-i18n="run">Ước lượng</button>
+      </div>
+      <p class="small" id="userMsg"></p>
+      <div class="tblwrap"><table id="userTbl"></table></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 PGS.TS. Phan Anh Tú &amp; NCS. Đỗ Thùy Hương · Trường Kinh tế, Đại học Cần Thơ</p>
+    <p data-i18n="foot_src">Nguồn số liệu: Phan, A. T., & Đỗ, T. H. (2019), Tạp chí Kinh tế Đối ngoại, 114, 14–26; Xuan, N. T., & Xing, Y. (2008), Economics of Transition, 16(2), 183–197. Phương pháp PPML: Santos Silva & Tenreyro (2006).</p>
+  </footer>
+</main>
+
+<script src="gravity-lab-engine.js"></script>
+<script src="gravity-lab-data.js"></script>
+<script>
+(function () {
+  'use strict';
+  const E = window.GravityEngine, D = window.GravityData, P = D.paper2019;
+  const $ = id => document.getElementById(id);
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // ---------- i18n ----------
+  const EN = {
+    brand_sub: 'Gravity model · FDI', back: '← BizOn ecosystem',
+    eyebrow: 'Econometrics lab · International business',
+    title: 'Does distance still matter for FDI into Vietnam?',
+    lead: 'Re-read the published results of Phan and Do (2019), simulate the effect of each factor, see why modern gravity models use PPML, then estimate on your own data. Everything runs in the browser; no data leaves this device.',
+    tab1: '1 · The 2019 results', tab2: '2 · Effect simulator', tab3: '3 · Why PPML?', tab4: '4 · Your data',
+    t1_h: 'Eight nested models, read through confidence intervals',
+    prov_pub2019: 'Published figures · Phan & Do (2019), Table 6 · REM, robust s.e.',
+    t1_p: 'Pick a model. Each dot is a coefficient; the bar is the 95% confidence interval from the published standard error. A bar crossing zero means insufficient evidence at the 5% level.',
+    t1_tbl: 'Coefficient table', check_toggle: 'Consistency check: compare the paper\'s stars with recomputed significance', flag_note: 'Reported stars differ from the significance recomputed from the coefficient and standard error (normal approximation, two-sided).',
+    t1_read: 'Reading the results', t1_q: 'Discussion questions',
+    q1: 'R² in the table is only about 0.006–0.024, yet FDI and lagged FDI correlate at 0.62. Which R² (within, between or overall) is reported?',
+    q2: 'What goes wrong when a lagged dependent variable enters a random-effects model (Nickell, 1981)? What estimators are alternatives?',
+    q3: 'Vietnam GDP, trade openness and the corruption index are identical for all partners in a given year. What happens to them once year fixed effects are added?',
+    q4: 'Cultural distance does not vary over time. Can its coefficient be estimated with country fixed effects?',
+    t2_h: 'If one factor changes, how much does FDI change?',
+    prov_sim: 'Illustrative simulation · uses published Model 8 coefficients · not a forecast',
+    pA: 'Partner country', pB: 'Compare geographic distance with', c_fta: 'Vietnam signs an FTA with this partner',
+    c_econ: 'Economic distance changes', c_inst: 'Institutional distance changes (index points)', c_open: 'Trade openness rises (index units)',
+    sr: 'Short-run effect (first year)', lr: 'Long-run effect, as the signalling effect accumulates (divide by 1 − 0.45)',
+    t2_note: 'The combined effect is a point estimate only: the paper does not publish the coefficient covariance, so no interval can be computed for the sum. Faded bars are coefficients not significant at 5% when recomputed. The long-run multiplier is valid only if the lag coefficient is unbiased.',
+    t3_h: 'Zero-FDI years drop out of a log regression',
+    prov_xx: 'Published figures · Xuan & Xing (2008), Table 1 · disbursed FDI, USD million, 10 countries × 1990–2004',
+    t3_p: 'FDI regressed on log distance with year fixed effects. OLS on log(FDI) must discard zero observations; adding 1 before taking logs is an ad hoc patch; PPML keeps the full sample (Santos Silva & Tenreyro, 2006). Standard errors clustered by country (only 10 clusters, so read with care).',
+    t3_note: 'This is a one-regressor illustration of the method. A full model needs economic size, FTAs and the other distance dimensions.',
+    t3_data: 'Show the source data',
+    t4_h: 'Estimate on your own panel', prov_user: 'Your data · processed on this device only',
+    t4_p: 'Load a CSV (comma or semicolon), one row per country–year. For the 2019 dataset, export from Stata with export delimited. If the dependent variable is in levels (USD million), the Lab runs both OLS on logs and PPML for comparison.',
+    tpl: 'Download template (column headers only)', m_y: 'Dependent variable', m_level: 'Dependent variable in levels (not logs)',
+    m_unit: 'Country column (cluster)', m_year: 'Year column', m_fe: 'Year fixed effects', m_clu: 'Standard errors clustered by country',
+    m_x: 'Explanatory variables', run: 'Estimate',
+    foot_src: 'Data sources: Phan, A. T., & Do, T. H. (2019), Journal of Foreign Economics (Tạp chí Kinh tế Đối ngoại), 114, 14–26; Xuan, N. T., & Xing, Y. (2008), Economics of Transition, 16(2), 183–197. PPML method: Santos Silva & Tenreyro (2006).',
+    // dynamic
+    var: 'Variable', coef: 'Coef.', se: 'S.E.', starsPaper: 'Stars (paper)', pRe: 'p (recomputed)', starsRe: 'Stars (recomputed)',
+    model: 'Model', obs: 'Observations', theme_dark: 'Dark', theme_light: 'Light',
+    dropped: 'Dropped (perfect collinearity):', est: 'Estimator', sample: 'Sample', zeros: 'zero observations',
+    noData: 'Load a CSV file to begin.', needX: 'Choose at least one explanatory variable.', loaded: 'rows loaded.',
+    err: 'Could not estimate:', geoDist: 'Geographic distance', geoOnly: 'From geographic distance alone, FDI from',
+    vs: 'compared with', would: 'would be', km: 'km'
+  };
+  const VI = {
+    var: 'Biến', coef: 'Hệ số', se: 'SE', starsPaper: 'Sao (bài)', pRe: 'p (tính lại)', starsRe: 'Sao (tính lại)',
+    model: 'Mô hình', obs: 'Số quan sát', theme_dark: 'Tối', theme_light: 'Sáng',
+    dropped: 'Đã loại (cộng tuyến hoàn hảo):', est: 'Phương pháp', sample: 'Mẫu', zeros: 'quan sát bằng 0',
+    noData: 'Nạp tệp CSV để bắt đầu.', needX: 'Chọn ít nhất một biến giải thích.', loaded: 'dòng đã nạp.',
+    err: 'Không ước lượng được:', geoDist: 'Khoảng cách địa lý', geoOnly: 'Chỉ xét khoảng cách địa lý, FDI từ',
+    vs: 'so với', would: 'sẽ', km: 'km'
+  };
+  const viStatic = {};
+  document.querySelectorAll('[data-i18n]').forEach(el => { viStatic[el.dataset.i18n] = el.textContent; });
+  let LANG = store.get('gravitylab_lang') === 'en' ? 'en' : 'vi';
+  const t = k => (LANG === 'en' ? EN[k] : (VI[k] !== undefined ? VI[k] : viStatic[k])) || k;
+  const vname = id => { const v = P.vars.find(x => x.id === id); return v ? v[LANG] : id; };
+  const fmt = (x, d) => (Number.isFinite(x) ? x.toFixed(d === undefined ? 2 : d) : '–').replace('.', LANG === 'vi' ? ',' : '.');
+  const pct = x => (x >= 0 ? '+' : '') + fmt(x, 0) + '%';
+
+  // ---------- Theme ----------
+  function applyTheme(th) {
+    document.documentElement.setAttribute('data-theme', th);
+    $('themeBtn').textContent = (th === 'dark' ? '☀️ ' : '🌙 ') + (th === 'dark' ? t('theme_light') : t('theme_dark'));
+  }
+  $('themeBtn').onclick = () => { const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; store.set('gravitylab_theme', n); applyTheme(n); renderAll(); };
+
+  function setLang(l) {
+    LANG = l; store.set('gravitylab_lang', l);
+    document.documentElement.lang = l;
+    $('langVI').classList.toggle('on', l === 'vi'); $('langEN').classList.toggle('on', l === 'en');
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    applyTheme(document.documentElement.getAttribute('data-theme'));
+    fillPartners(); renderAll();
+  }
+  $('langVI').onclick = () => setLang('vi'); $('langEN').onclick = () => setLang('en');
+
+  // ---------- Tabs ----------
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === b));
+    ['t1', 't2', 't3', 't4'].forEach(id => { $(id).hidden = id !== b.dataset.tab; });
+  });
+
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  // ---------- Forest plot (SVG) ----------
+  function forest(rows, opts) {
+    opts = opts || {};
+    const W = 760, left = 230, right = 30, rowH = 30, top = 24;
+    const H = top + rows.length * rowH + 30;
+    const lo = Math.min(0, ...rows.map(r => r.b - 1.96 * r.se)), hi = Math.max(0, ...rows.map(r => r.b + 1.96 * r.se));
+    const pad = (hi - lo) * 0.06, a = lo - pad, z = hi + pad;
+    const X = v => left + (v - a) / (z - a) * (W - left - right);
+    const ink = css('--ink'), muted = css('--muted'), line = css('--line2'), acc = css('--accent'), neg = css('--neg');
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${opts.label || ''}">`;
+    s += `<line x1="${X(0)}" x2="${X(0)}" y1="${top - 10}" y2="${H - 24}" stroke="${muted}" stroke-dasharray="4 4"/>`;
+    const step = niceStep(z - a);
+    for (let i0 = Math.ceil(a / step); i0 * step <= z; i0++) {
+      const v = Math.abs(i0 * step) < step / 1e6 ? 0 : i0 * step;
+      s += `<text x="${X(v)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="${muted}">${fmt(v, step < 1 ? 1 : 0)}</text>`;
+    }
+    rows.forEach((r, i) => {
+      const y = top + i * rowH + rowH / 2, sig = r.p < 0.05, col = sig ? (r.b >= 0 ? acc : neg) : muted;
+      s += `<line x1="${left}" x2="${W - right}" y1="${y}" y2="${y}" stroke="${line}" stroke-opacity=".35"/>`;
+      s += `<text x="${left - 10}" y="${y + 4}" text-anchor="end" font-size="12.5" fill="${ink}">${r.label}</text>`;
+      s += `<line x1="${X(r.b - 1.96 * r.se)}" x2="${X(r.b + 1.96 * r.se)}" y1="${y}" y2="${y}" stroke="${col}" stroke-width="3" stroke-linecap="round" opacity="${sig ? 1 : .6}"/>`;
+      s += `<circle cx="${X(r.b)}" cy="${y}" r="5.5" fill="${col}"/>`;
+    });
+    return s + '</svg>';
+  }
+  function niceStep(span) { const raw = span / 6, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+
+  // ---------- Tab 1 ----------
+  let MODEL = 7;
+  $('checkToggle').addEventListener('change', () => renderModels());
+  function renderModels() {
+    $('modelSeg').innerHTML = P.models.map((_, i) => `<button type="button" class="${i === MODEL ? 'on' : ''}" data-m="${i}">${t('model')} ${i + 1}</button>`).join('');
+    $('modelSeg').querySelectorAll('button').forEach(b => b.onclick = () => { MODEL = +b.dataset.m; renderModels(); });
+    const m = P.models[MODEL];
+    const rows = P.vars.filter(v => m.c[v.id]).map(v => {
+      const [b, se, st] = m.c[v.id]; const p = E.pValue(b, se);
+      return { id: v.id, label: v[LANG], b, se, st, p, re: E.stars(p) };
+    });
+    $('forest').innerHTML = forest(rows.filter(r => r.id !== 'cons'), { label: t('t1_h') });
+    const CHECK = $('checkToggle').checked;
+    $('flagNote').hidden = !CHECK;
+    $('coefTbl').innerHTML = `<tr><th>${t('var')}</th><th>${t('coef')}</th><th>${t('se')}</th><th>${t('starsPaper')}</th>${CHECK ? `<th>${t('pRe')}</th><th>${t('starsRe')}</th>` : ''}</tr>` +
+      rows.map(r => `<tr><td>${r.label}${CHECK && r.st !== r.re ? '<span class="flag" title="' + t('flag_note') + '"></span>' : ''}</td><td class="num">${fmt(r.b)}</td><td class="num">${fmt(r.se)}</td><td class="num">${r.st || '–'}</td>${CHECK ? `<td class="num">${fmt(r.p, 3)}</td><td class="num">${r.re || '–'}</td>` : ''}</tr>`).join('');
+    $('modelMeta').textContent = `${t('obs')}: ${m.n} · R²: ${fmt(m.r2, 4)} · P: ${fmt(m.p, 4)}`;
+    $('readout').innerHTML = readout(m);
+  }
+  function readout(m) {
+    const out = [], c = m.c;
+    const vi = LANG === 'vi';
+    if (c.lagfdi) out.push(vi ? `FDI năm trước tăng 1% thì FDI năm nay tăng khoảng <b>${fmt(c.lagfdi[0])}%</b>, giữ các yếu tố khác không đổi (hiệu ứng tín hiệu).` : `A 1% rise in last year's FDI goes with about <b>${fmt(c.lagfdi[0])}%</b> more FDI this year, other things equal (signalling effect).`);
+    if (c.geo) out.push(vi ? `Khoảng cách địa lý xa hơn 10% đi kèm FDI thay đổi khoảng <b>${pct(E.pctChange(c.geo[0], Math.log(1.1)))}</b>.` : `A 10% longer geographic distance goes with about <b>${pct(E.pctChange(c.geo[0], Math.log(1.1)))}</b> FDI.`);
+    if (c.econ) out.push(vi ? `Khoảng cách kinh tế lớn hơn 10% đi kèm FDI thay đổi khoảng <b>${pct(E.pctChange(c.econ[0], Math.log(1.1)))}</b>.` : `A 10% wider economic distance goes with about <b>${pct(E.pctChange(c.econ[0], Math.log(1.1)))}</b> FDI.`);
+    if (c.fta) out.push(vi ? `Biến FTA là biến giả trong mô hình log: có FTA đi kèm FDI cao hơn khoảng <b>${pct(E.pctChange(c.fta[0], 1))}</b> (tính bằng exp(β) − 1, không phải β × 100).` : `FTA is a dummy in a log model: having an FTA goes with about <b>${pct(E.pctChange(c.fta[0], 1))}</b> more FDI (computed as exp(β) − 1, not β × 100).`);
+    return '<ul class="qa">' + out.map(x => `<li>${x}</li>`).join('') + '</ul>';
+  }
+
+  // ---------- Tab 2 ----------
+  function fillPartners() {
+    const opts = P.countries.map(c => `<option value="${c.id}">${c[LANG]} · ${Math.round(E.haversineKm(D.HANOI, c.cap)).toLocaleString(LANG === 'vi' ? 'vi-VN' : 'en-US')} ${t('km')}</option>`).join('');
+    const a = $('partnerA').value || 'JPN', b = $('partnerB').value || 'DEU';
+    $('partnerA').innerHTML = opts; $('partnerB').innerHTML = opts;
+    $('partnerA').value = a; $('partnerB').value = b;
+  }
+  function renderSim() {
+    const c = P.models[7].c, rho = c.lagfdi[0];
+    const A = P.countries.find(x => x.id === $('partnerA').value), B = P.countries.find(x => x.id === $('partnerB').value);
+    const dA = E.haversineKm(D.HANOI, A.cap), dB = E.haversineKm(D.HANOI, B.cap);
+    const geoPct = E.pctChange(c.geo[0], Math.log(dB / dA));
+    $('distInfo').innerHTML = `${t('geoOnly')} ${B[LANG]} ${t('vs')} ${A[LANG]} ${t('would')} <b>${pct(geoPct)}</b> (β = ${fmt(c.geo[0])}).`;
+    const econ = +$('econR').value, inst = +$('instR').value, open = +$('openR').value, fta = $('ftaOn').checked ? 1 : 0;
+    $('econV').textContent = (econ >= 0 ? '+' : '') + econ + '%'; $('instV').textContent = (inst >= 0 ? '+' : '') + fmt(inst, 1); $('openV').textContent = '+' + fmt(open, 2);
+    const parts = [
+      { id: 'fta', dx: fta }, { id: 'econ', dx: Math.log(1 + econ / 100) }, { id: 'inst', dx: inst }, { id: 'open', dx: open }
+    ].map(p => { const [b, se] = c[p.id]; return Object.assign(p, { b, se, sig: E.pValue(b, se) < 0.05, pct: E.pctChange(b, p.dx), lo: E.pctChange(b - 1.96 * se, p.dx), hi: E.pctChange(b + 1.96 * se, p.dx) }); });
+    const sumLog = parts.reduce((s, p) => s + p.b * p.dx, 0);
+    const sr = (Math.exp(sumLog) - 1) * 100, lr = (Math.exp(E.longRun(sumLog, rho)) - 1) * 100;
+    $('srOut').textContent = pct(sr); $('srOut').className = 'big ' + (sr >= 0 ? 'pos' : 'neg');
+    $('lrOut').textContent = pct(lr); $('lrOut').className = 'big ' + (lr >= 0 ? 'pos' : 'neg');
+    const active = parts.filter(p => p.dx !== 0);
+    $('contrib').innerHTML = active.length ? contribChart(active) : '';
+  }
+  function contribChart(parts) {
+    const W = 520, left = 200, rowH = 34, H = parts.length * rowH + 34;
+    const lo = Math.min(0, ...parts.map(p => p.lo)), hi = Math.max(0, ...parts.map(p => p.hi));
+    const X = v => left + (v - lo) / ((hi - lo) || 1) * (W - left - 60);
+    const ink = css('--ink'), muted = css('--muted'), acc = css('--accent2'), neg = css('--neg');
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${t('sr')}"><line x1="${X(0)}" x2="${X(0)}" y1="6" y2="${H - 22}" stroke="${muted}" stroke-dasharray="3 3"/>`;
+    parts.forEach((p, i) => {
+      const y = 10 + i * rowH, col = p.pct >= 0 ? acc : neg;
+      s += `<text x="${left - 8}" y="${y + 15}" text-anchor="end" font-size="12" fill="${ink}">${vname(p.id)}</text>`;
+      s += `<rect x="${Math.min(X(0), X(p.pct))}" y="${y + 4}" width="${Math.abs(X(p.pct) - X(0))}" height="16" rx="4" fill="${col}" opacity="${p.sig ? .9 : .35}"/>`;
+      s += `<line x1="${X(p.lo)}" x2="${X(p.hi)}" y1="${y + 12}" y2="${y + 12}" stroke="${ink}" stroke-opacity=".5"/>`;
+      s += `<text x="${X(Math.max(p.pct, 0)) + 6}" y="${y + 16}" font-size="11.5" fill="${ink}">${pct(p.pct)}</text>`;
+    });
+    return s + `<text x="${left}" y="${H - 6}" font-size="11" fill="${muted}">${LANG === 'vi' ? 'Đường mảnh: khoảng tin cậy 95% của từng thành phần' : 'Thin line: 95% interval of each component'}</text></svg>`;
+  }
+  ['partnerA', 'partnerB', 'econR', 'instR', 'openR', 'ftaOn'].forEach(id => $(id).addEventListener('input', renderSim));
+
+  // ---------- Tab 3 ----------
+  let XX = null;
+  function estimateXX() {
+    const S = D.xuanXing2008, rows = [];
+    S.series.forEach(s => S.years.forEach((yr, j) => rows.push({ id: s.id, year: yr, fdi: s.v[j], lndist: Math.log(E.haversineKm(D.HANOI, s.cap)) })));
+    const zeros = rows.filter(r => r.fdi === 0).length;
+    const fit = (rs, y, est) => { const d = E.design(rs, ['lndist'], { yearFE: 'year' }); return E[est](y, d.X, d.names, { cluster: rs.map(r => r.id) }); };
+    const pos = rows.filter(r => r.fdi > 0);
+    const r1 = fit(pos, pos.map(r => Math.log(r.fdi)), 'ols');
+    const r2 = fit(rows, rows.map(r => Math.log(r.fdi + 1)), 'ols');
+    const r3 = fit(rows, rows.map(r => r.fdi), 'ppml');
+    const pick = r => r.coef.find(c => c.name === 'lndist');
+    XX = { zeros, n: rows.length, res: [
+      { key: 'ols', label: { vi: 'OLS, log(FDI), bỏ quan sát 0', en: 'OLS, log(FDI), zeros dropped' }, n: r1.n, c: pick(r1) },
+      { key: 'ols1', label: { vi: 'OLS, log(FDI + 1)', en: 'OLS, log(FDI + 1)' }, n: r2.n, c: pick(r2) },
+      { key: 'ppml', label: { vi: 'PPML, FDI ở dạng mức', en: 'PPML, FDI in levels' }, n: r3.n, c: pick(r3) }
+    ] };
+  }
+  function renderXX() {
+    if (!XX) estimateXX();
+    $('ppmlTbl').innerHTML = `<tr><th>${t('est')}</th><th>${t('sample')}</th><th>β ln(${t('geoDist').toLowerCase()})</th><th>${t('se')}</th><th>p</th></tr>` +
+      XX.res.map(r => `<tr><td>${r.label[LANG]}</td><td class="num">${r.n}</td><td class="num">${fmt(r.c.b)}${r.c.stars}</td><td class="num">${fmt(r.c.se)}</td><td class="num">${fmt(r.c.p, 3)}</td></tr>`).join('') +
+      `<tr><td colspan="5" class="muted small">${XX.n} ${LANG === 'vi' ? 'quan sát, trong đó' : 'observations, of which'} ${XX.zeros} ${t('zeros')}.</td></tr>`;
+    $('ppmlChart').innerHTML = forest(XX.res.map(r => ({ label: r.label[LANG], b: r.c.b, se: r.c.se, p: r.c.p })), { label: t('t3_h') });
+    const S = D.xuanXing2008;
+    $('xxTbl').innerHTML = `<tr><th></th>${S.years.map(y => `<th>${y}</th>`).join('')}</tr>` + S.series.map(s => `<tr><td>${s[LANG]}</td>${s.v.map(v => `<td class="num${v === 0 ? ' dim' : ''}">${fmt(v, 1)}</td>`).join('')}</tr>`).join('');
+  }
+
+  // ---------- Tab 4 ----------
+  let USER = null;
+  $('tplBtn').onclick = () => {
+    const head = 'country,year,fdi,lnfdi_lag,ln_dist,inst_dist,cult_dist,ln_econ_dist,ln_gdp_vn,ln_gdp_partner,openness,experience,corruption,fta\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([head], { type: 'text/csv' }));
+    a.download = 'gravity-lab-template.csv'; a.click(); URL.revokeObjectURL(a.href);
+  };
+  $('csvFile').onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    f.text().then(txt => {
+      try {
+        USER = E.parseCSV(txt);
+        const cols = USER.columns, numCols = cols.filter(c => USER.rows.some(r => typeof r[c] === 'number' && Number.isFinite(r[c])));
+        const opt = list => list.map(c => `<option>${c}</option>`).join('');
+        $('selY').innerHTML = opt(numCols); $('selUnit').innerHTML = opt(cols); $('selYear').innerHTML = opt(cols);
+        const guess = (re, sel) => { const c = cols.find(x => re.test(x)); if (c) $(sel).value = c; };
+        guess(/^fdi$|fdi/i, 'selY'); guess(/country|nuoc|quocgia|id/i, 'selUnit'); guess(/year|nam/i, 'selYear');
+        $('xList').innerHTML = numCols.map(c => `<label><input type="checkbox" value="${c}"> ${c}</label>`).join('');
+        $('mapUI').hidden = false;
+        $('userMsg').textContent = `${USER.rows.length} ${t('loaded')}`;
+      } catch (err) { $('userMsg').textContent = t('err') + ' ' + err.message; }
+    });
+  };
+  $('runBtn').onclick = () => {
+    if (!USER) { $('userMsg').textContent = t('noData'); return; }
+    const y = $('selY').value, unit = $('selUnit').value, yr = $('selYear').value;
+    const xs = [...$('xList').querySelectorAll('input:checked')].map(i => i.value).filter(x => x !== y);
+    if (!xs.length) { $('userMsg').textContent = t('needX'); return; }
+    const ok = USER.rows.filter(r => [y].concat(xs).every(c => Number.isFinite(r[c])));
+    const opts = { yearFE: $('feYear').checked ? yr : null };
+    const cl = $('clu').checked ? ok.map(r => r[unit]) : null;
+    const res = [];
+    try {
+      if ($('yLevel').checked) {
+        const pos = ok.filter(r => r[y] > 0), dp = E.design(pos, xs, opts), da = E.design(ok, xs, opts);
+        res.push({ label: LANG === 'vi' ? `OLS log(${y})` : `OLS log(${y})`, r: E.ols(pos.map(r => Math.log(r[y])), dp.X, dp.names, { cluster: cl && pos.map(r => r[unit]) }) });
+        res.push({ label: `PPML ${y}`, r: E.ppml(ok.map(r => r[y]), da.X, da.names, { cluster: cl }) });
+      } else {
+        const d = E.design(ok, xs, opts);
+        res.push({ label: `OLS ${y}`, r: E.ols(ok.map(r => r[y]), d.X, d.names, { cluster: cl }) });
+      }
+    } catch (err) { $('userMsg').textContent = t('err') + ' ' + err.message; $('userTbl').innerHTML = ''; return; }
+    const names = ['_cons'].concat(xs);
+    $('userTbl').innerHTML = `<tr><th>${t('var')}</th>${res.map(x => `<th>${x.label}</th>`).join('')}</tr>` +
+      names.map(n => `<tr><td>${n === '_cons' ? vname('cons') : n}</td>${res.map(x => { const c = x.r.coef.find(k => k.name === n); return `<td class="num">${c ? fmt(c.b, 3) + c.stars + '<br><span class="muted">(' + fmt(c.se, 3) + ')</span>' : '–'}</td>`; }).join('')}</tr>`).join('') +
+      `<tr><td>${t('obs')}</td>${res.map(x => `<td class="num">${x.r.n}</td>`).join('')}</tr>` +
+      `<tr><td>R² / pseudo-R²</td>${res.map(x => `<td class="num">${fmt(x.r.r2, 3)}</td>`).join('')}</tr>`;
+    const dropped = res.flatMap(x => x.r.dropped).filter((v, i, a) => a.indexOf(v) === i);
+    $('userMsg').textContent = dropped.length ? `${t('dropped')} ${dropped.join(', ')}` : '';
+  };
+
+  function renderAll() { renderModels(); renderSim(); renderXX(); }
+
+  applyTheme(store.get('gravitylab_theme') === 'light' ? 'light' : 'dark');
+  fillPartners();
+  setLang(LANG);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* BizOn — lớp áo "đất sét đêm" cho các trang công cụ nền tối (lab/, app/).
+   Chỉ đổi biến màu, phông, bo góc và đổ bóng; KHÔNG đụng ID/script. Giữ nguyên màu ngữ nghĩa của biểu đồ
+   (doanh thu/chi phí/lãi/lỗ). Nạp SAU mọi stylesheet khác: <link rel="stylesheet" href="../css/clay-dark-skin.css"> */
+@import url("bizon-clay-fonts.css");
+
+:root{
+  /* lab/*.html */
+  --bg:#022A2E; --bg2:#033337; --panel:#0B4A4F; --panel2:#083E43;
+  --ink:#FBF4E8; --muted:#BFE6EE; --faint:#8FBFC4;
+  --line:rgba(255,213,138,.16); --line2:rgba(255,213,138,.26);
+  --grid:rgba(127,211,220,.08);
+  --accent:#FDA127; --accent2:#7FD3DC; --warn:#FFD58A;
+  --shadow:0 18px 30px -16px rgba(0,0,0,.55),inset 0 -6px 0 rgba(0,0,0,.18); --shadow-sm:0 10px 18px -10px rgba(0,0,0,.5);
+  --radius:26px; --radius-sm:16px;
+  /* lab/cmr-lab.html */
+  --bg-0:#022A2E; --bg-1:#033337; --bg-2:#0B4A4F; --bg-3:#0E555B; --bg-elev:#0E555B;
+  --border:rgba(255,213,138,.14); --border-strong:rgba(255,213,138,.26);
+  --text-0:#FFFFFF; --text-1:#FBF4E8; --text-2:#BFE6EE; --text-3:#8FBFC4; --text-4:#6E9EA2;
+  --primary:#E8762D; --primary-glow:#FDA127;
+  --font-display:"Plus Jakarta Sans","PJS Fallback","Be Vietnam Pro",sans-serif;
+  /* app/*.html (app-shell.css, aibis-app.css) */
+  --text:#FBF4E8; --cyan:#7FD3DC; --blue:#3FB6C9; --orange:#FDA127;
+  /* app/*.html (bizon-unified.css) */
+  --bz-bg:#022A2E; --bz-bg-2:#033337; --bz-panel:rgba(11,74,79,.92); --bz-panel-2:rgba(8,62,67,.86);
+  --bz-line:rgba(255,213,138,.16); --bz-line-strong:rgba(253,161,39,.45);
+  --bz-text:#FBF4E8; --bz-muted:#BFE6EE; --bz-cyan:#7FD3DC; --bz-blue:#3FB6C9; --bz-violet:#E8762D; --bz-purple:#FDA127; --bz-orange:#FDA127;
+  --bz-shadow:0 22px 40px -22px rgba(0,0,0,.6),inset 0 -6px 0 rgba(0,0,0,.18); --bz-radius:28px; --bz-radius-sm:18px;
+}
+html,body{font-family:"Be Vietnam Pro","BVP Fallback",system-ui,sans-serif!important}
+h1,h2,h3{font-family:"Plus Jakarta Sans","PJS Fallback","Be Vietnam Pro",sans-serif}
+html,body{background:#022A2E!important}
+
+/* Nền gradient xanh dương cố định trong mã gốc → đổi về xanh đồng bằng */
+.aibis-app{background:radial-gradient(circle at 76% -8%,rgba(253,161,39,.14),transparent 34%),linear-gradient(180deg,#022A2E,#033337 55%,#022A2E)!important}
+.aibis-topbar,.topbar{background:rgba(2,42,46,.9)!important;border-color:rgba(255,213,138,.16)!important}
+.brand-mark,.aibis-topbar .brand-mark{background:#FDA127!important;color:#033337!important;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18)!important}
+.aibis-panel,.round-card,.mode-card,.lumina-card,.counterfactual,.card,.bz-card,.bi-panel{border-color:rgba(255,213,138,.16)!important;box-shadow:0 22px 40px -22px rgba(0,0,0,.6),inset 0 -6px 0 rgba(0,0,0,.18)!important}
+.aibis-panel,.round-card{background:#0B4A4F!important}
+.mode-card,.lumina-card,.counterfactual{background:#083E43!important}
+.mode-card:hover,.mode-card.selected{border-color:#FDA127!important;box-shadow:0 0 0 2px #FDA127,0 14px 30px -16px rgba(0,0,0,.6)!important}
+.trade-map{background:radial-gradient(circle at 72% 24%,rgba(253,161,39,.14),transparent 16%),linear-gradient(145deg,#033337,#0B4A4F)!important}
+.journey .active{background:#E8762D!important;color:#fff!important}
+.aibis-app .mobile-nav{background:rgba(2,42,46,.95)!important;border-color:rgba(255,213,138,.16)!important}
+
+/* Nút: khối đất sét */
+button,.btn,.bz-btn,.bi-btn,.tbtn{border-radius:16px}
+.bz-btn,.bi-btn,.btn{box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),inset 0 2px 0 rgba(255,255,255,.12)}
+input,select,textarea{border-radius:14px}
