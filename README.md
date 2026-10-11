@@ -1,12 +1,24 @@
-# Gravity Lab
+# Gravity Lab — Trọng lực
 
-Phòng thí nghiệm mô hình lực hấp dẫn (gravity model) cho dòng vốn FDI vào Việt Nam — chạy hoàn toàn trên trình duyệt, không cần cài đặt: đọc lại kết quả công bố, mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS/PPML ngay trên trang.
+Phòng thí nghiệm mô hình lực hấp dẫn, chạy trên trình duyệt, gồm ba chặng: (1) định luật vạn vật hấp dẫn của Newton qua mô phỏng quỹ đạo; (2) mô hình hấp dẫn thương mại Tinbergen với các nền kinh tế đối tác của Việt Nam; (3) phòng thí nghiệm FDI vào Việt Nam — đọc lại hệ số công bố (Phan & Đỗ, 2019; Xuan & Xing, 2008), mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS và PPML trên dữ liệu CSV tải lên.
 
-*A browser-based gravity-model laboratory for FDI into Vietnam: replicate published results, simulate distance/market-size effects, and run OLS/PPML estimation directly on the page.*
+*A browser-based gravity-model laboratory in three stages: (1) Newtonian gravitation through an orbit simulator; (2) the Tinbergen gravity model of trade with Vietnam's partner economies; (3) an FDI-into-Vietnam lab that replicates published coefficients (Phan & Đỗ, 2019; Xuan & Xing, 2008), simulates distance and market-size effects, and runs OLS and PPML estimation on an uploaded CSV.*
 
 ## Chạy thử / Run it
 
-Mở trực tiếp `index.html` trong trình duyệt (không cần máy chủ), hoặc dùng bản đang chạy trực tuyến: **https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html**
+Ứng dụng viết bằng React + TanStack Start (Vite, Tailwind). Cần Node.js 22 trở lên.
+
+*The app is built with React + TanStack Start (Vite, Tailwind). Node.js 22 or later is required.*
+
+```sh
+npm install
+npm run dev      # http://localhost:8080
+npm run build    # bản dựng triển khai (Nitro, preset Vercel) / deployable build
+```
+
+Bản dựng dùng preset Vercel (có kết xuất phía máy chủ), nên cần triển khai lên Vercel hoặc một nền tảng tương thích, không phải GitHub Pages. Phiên bản HTML tĩnh trước đây vẫn được duy trì tại **https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html** và được lưu trong lịch sử git của repo này (commit `1857067`).
+
+*The build targets the Vercel preset (server-side rendering), so it must be deployed to Vercel or a compatible platform rather than GitHub Pages. The earlier static HTML version remains online at the URL above and is preserved in this repository's git history (commit `1857067`).*
 
 ## Nguồn gốc / Provenance
 
