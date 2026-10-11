@@ -1,0 +1,42 @@
+{
+  "title": "Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam",
+  "upload_type": "software",
+  "language": "vie",
+  "creators": [
+    {
+      "name": "Phan, Anh Tu",
+      "affiliation": "Can Tho University",
+      "orcid": "0000-0003-0667-3137"
+    },
+    {
+      "name": "Do, Thuy Huong",
+      "affiliation": "Can Tho University",
+      "orcid": "0000-0002-7711-2487"
+    }
+  ],
+  "description": "Gravity Lab là phòng thí nghiệm mô hình lực hấp dẫn (gravity model) cho dòng vốn FDI vào Việt Nam, chạy hoàn toàn trên trình duyệt: đọc lại kết quả công bố, mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS/PPML ngay trên trang. Tách từ hệ sinh thái BizOn để lưu trữ học thuật và cấp DOI qua Zenodo. / Gravity Lab is a browser-based gravity-model laboratory for FDI into Vietnam: replicate published results, simulate the effect of distance and market size, and run OLS/PPML estimation directly on the page. Split out of the BizOn ecosystem for academic archiving and a Zenodo DOI.",
+  "access_right": "open",
+  "keywords": [
+    "gravity model",
+    "foreign direct investment",
+    "FDI",
+    "Vietnam",
+    "econometrics",
+    "OLS",
+    "PPML",
+    "teaching tool"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/thuyhuongctu/BizOn",
+      "relation": "isDerivedFrom",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "notes": "© 2026 Phan Anh Tu & Do Thuy Huong. All rights reserved. Proprietary software – archived for transparency and citation."
+}

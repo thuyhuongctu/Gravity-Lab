@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "Nếu sử dụng phần mềm này trong giảng dạy hoặc nghiên cứu, vui lòng trích dẫn theo thông tin dưới đây. / If you use this software, please cite it as below."
+title: "Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam"
+type: software
+version: "1.0"
+date-released: 2026-10-11
+authors:
+  - family-names: "Phan"
+    given-names: "Anh Tu"
+    orcid: "https://orcid.org/0000-0003-0667-3137"
+    email: patu@ctu.edu.vn
+    affiliation: "Can Tho University"
+  - family-names: "Do"
+    given-names: "Thuy Huong"
+    orcid: "https://orcid.org/0000-0002-7711-2487"
+    email: thuyhuongctu@gmail.com
+    affiliation: "Can Tho University"
+repository-code: "https://github.com/thuyhuongctu/gravity-lab"
+url: "https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html"
+license-url: "https://github.com/thuyhuongctu/gravity-lab/blob/main/LICENSE"
+keywords:
+  - gravity model
+  - foreign direct investment
+  - FDI
+  - Vietnam
+  - econometrics
+  - OLS
+  - PPML
+  - teaching tool
+abstract: "Gravity Lab là phòng thí nghiệm mô hình lực hấp dẫn (gravity model) cho dòng vốn FDI vào Việt Nam, chạy hoàn toàn trên trình duyệt: đọc lại kết quả công bố, mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS/PPML ngay trên trang. Tách từ hệ sinh thái BizOn (https://github.com/thuyhuongctu/BizOn) để lưu trữ học thuật và cấp DOI qua Zenodo. / Gravity Lab is a browser-based gravity-model laboratory for FDI into Vietnam: replicate published results, simulate the effect of distance and market size, and run OLS/PPML estimation directly on the page. Split out of the BizOn ecosystem (https://github.com/thuyhuongctu/BizOn) for academic archiving and a Zenodo DOI."

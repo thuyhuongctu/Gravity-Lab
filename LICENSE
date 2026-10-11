@@ -1,0 +1,91 @@
+GIẤY PHÉP ĐỘC QUYỀN — PROPRIETARY LICENSE
+
+BizOn Bật Nghiệp — Business Simulation Game Ecosystem
+Bản quyền © 2026 Đỗ Thùy Hương và Phan Anh Tú.
+BẢO LƯU MỌI QUYỀN — ALL RIGHTS RESERVED.
+
+Mã định danh công bố (DOI): 10.5281/zenodo.21592241
+
+1. PHẠM VI BẢO HỘ
+   Toàn bộ nội dung trong kho mã nguồn này, bao gồm nhưng không giới hạn:
+   - Mã nguồn phần mềm (HTML, CSS, JavaScript), engine mô phỏng kinh doanh
+     6 vòng, BizOn GO GlObal, IE Lab và các trò chơi BizOn Arcade;
+   - Tạo hình các nhân vật: Lumina (Je m'appelle Hương), Tú Phan, Đội Demo
+     5 thành viên, cùng mọi tài sản đồ họa 3D claymorphism trong assets/;
+   - Kho âm nhạc gốc («Hương on Return», «Vừa Đủ Để Bay Cao»,
+     «Hương sans frontières» các phiên bản, «Bật Nghiệp» và các bản thu khác)
+     cùng toàn bộ ca từ;
+   - Tên gọi "BizOn", "BizOn Bật Nghiệp", "BizOn GO GlObal", nhận diện
+     thương hiệu, thiết kế cài áo Bản đồ Việt Nam;
+   - Tài liệu giảng viên, bộ phiếu khảo sát, kịch bản biến cố thị trường
+     và nội dung hướng dẫn trong docs/;
+   là tài sản trí tuệ thuộc sở hữu chung của hai tác giả nêu trên, được bảo hộ
+   theo Luật Sở hữu trí tuệ Việt Nam và các điều ước quốc tế liên quan
+   (Công ước Berne, Hiệp định TRIPS).
+
+2. QUYỀN ĐƯỢC PHÉP (không cần xin phép trước)
+   - Chơi và sử dụng ứng dụng tại địa chỉ chính thức
+     https://thuyhuongctu.github.io/BizOn/ ;
+   - Giảng viên và cơ sở giáo dục sử dụng ứng dụng tại địa chỉ chính thức
+     cho hoạt động GIẢNG DẠY PHI THƯƠNG MẠI (không thu phí riêng cho việc
+     dùng phần mềm), kể cả in bộ phiếu khảo sát kèm theo;
+   - Đọc mã nguồn cho mục đích học tập, tham khảo cá nhân;
+   - Trích dẫn học thuật kèm ghi công tác giả và DOI nêu trên;
+   - Chụp ảnh màn hình, quay video giới thiệu/đánh giá có ghi rõ nguồn.
+
+3. HÀNH VI BỊ CẤM (khi chưa có văn bản cho phép của chủ sở hữu)
+   - Sao chép, phân phối, công bố lại toàn bộ hoặc một phần mã nguồn,
+     kể cả triển khai ứng dụng tại tên miền/kho khác;
+   - Chỉnh sửa, tạo tác phẩm phái sinh, dịch ngược hoặc khai thác engine
+     mô phỏng dưới bất kỳ hình thức nào;
+   - Tách riêng để sử dụng: hình ảnh nhân vật, âm nhạc, ca từ, tài sản
+     đồ họa hoặc thương hiệu BizOn;
+   - Sử dụng trong sản phẩm, dịch vụ hoặc hoạt động đào tạo CÓ THU PHÍ
+     cho việc dùng phần mềm (cần hợp đồng cấp phép — xem mục 5);
+   - Dùng nội dung kho này làm dữ liệu huấn luyện hệ thống AI thương mại.
+
+4. NGOẠI LỆ — THÀNH PHẦN BÊN THỨ BA
+   Các thành phần bên thứ ba được sử dụng theo giấy phép riêng của chúng:
+   - Tailwind CSS (MIT License) — https://tailwindcss.com
+   - Google Fonts: Plus Jakarta Sans, Manrope (SIL Open Font License 1.1)
+
+5. CẤP PHÉP THƯƠNG MẠI
+   Nhu cầu cấp phép cho khoa/trường, tùy biến nội dung, đồng thương hiệu
+   hoặc mọi hình thức thương mại hóa khác: thuyhuongctu@gmail.com
+   (cấp phép KHÔNG ĐỘC QUYỀN theo thỏa thuận bằng văn bản).
+
+6. MIỄN TRỪ TRÁCH NHIỆM
+   Phần mềm được cung cấp "nguyên trạng", không kèm bất kỳ bảo đảm nào.
+   Số liệu trong trò chơi là MÔ PHỎNG phục vụ giáo dục, không phải
+   khuyến nghị đầu tư hay kinh doanh.
+
+---
+
+ENGLISH SUMMARY
+
+BizOn Bật Nghiệp — Business Simulation Game Ecosystem
+Copyright © 2026 Do Thuy Huong and Phan Anh Tu. All rights reserved.
+Publication identifier (DOI): 10.5281/zenodo.21592241
+
+PERMITTED without prior permission: playing the app at its official URL
+(https://thuyhuongctu.github.io/BizOn/); use by instructors and educational
+institutions for NON-COMMERCIAL classroom teaching (no fee charged for the
+software itself), including printing the bundled survey forms; reading the
+source for personal learning; academic citation with attribution and the DOI
+above; screenshots and review videos with credit.
+
+PROHIBITED without prior written permission: copying, redistributing, or
+re-deploying the source in whole or in part at any other domain/repository;
+modifying, creating derivative works, or exploiting the simulation engine;
+extracting the character designs, music, lyrics, artwork, or the BizOn brand
+for separate use; any use in paid products, services, or fee-charging
+training; using this repository as training data for commercial AI systems.
+
+Third-party components (Tailwind CSS — MIT; Google Fonts — OFL 1.1) remain
+under their respective licenses.
+
+Commercial, institutional, or co-branding licensing (non-exclusive, by
+written agreement): thuyhuongctu@gmail.com
+
+Provided "as is", without warranty of any kind. All in-game figures are
+educational SIMULATIONS, not investment or business advice.
