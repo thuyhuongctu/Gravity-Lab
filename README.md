@@ -45,7 +45,7 @@ DOI: **[10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833)**. DOI
 
 *DOI: 10.5281/zenodo.23307833. Concept DOI, covering all versions: 10.5281/zenodo.23307832. Full metadata in [`CITATION.cff`](CITATION.cff).*
 
-> Phan, A. T., & Đỗ, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam* (Version v1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
 
 Tệp trên Zenodo đang ở chế độ giới hạn: có thể xin truy cập để đọc, tham khảo và trích dẫn. / *Files on Zenodo are restricted and available on request for reading, consultation and citation.*
 
