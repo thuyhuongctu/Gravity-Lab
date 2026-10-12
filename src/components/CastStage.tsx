@@ -32,7 +32,7 @@ export const HOLDERS: Holder[] = [
     line: "Không chọn nước. Hỏi khoảng cách nào còn đứng khi vốn vào Việt Nam.",
     src: `${import.meta.env.BASE_URL}cast/face/huong.webp`,
     body: `${import.meta.env.BASE_URL}cast/huong.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/huong.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/huong.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/huong.webp`,
     alt: "Lumina",
     en: {
@@ -50,7 +50,7 @@ export const HOLDERS: Holder[] = [
     line: "Bài Phan và Do (2019). Địa lý vào mô hình 3 chưa có ý nghĩa. Từ mô hình 4, β giữ −0,38.",
     src: `${import.meta.env.BASE_URL}cast/face/tu.webp`,
     body: `${import.meta.env.BASE_URL}cast/tu-vest.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/tu.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/tu.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/tu.webp`,
     alt: "Tú Phan",
     en: {
@@ -68,7 +68,7 @@ export const HOLDERS: Holder[] = [
     line: "Vũ trụ đi trước. Mũ khoảng cách đang khóa ở 2 (Newton, 1687/1999).",
     src: `${import.meta.env.BASE_URL}cast/face/minh-long.webp`,
     body: `${import.meta.env.BASE_URL}cast/minh-long.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/minh-long.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/minh-long.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/minh-long.webp`,
     alt: "Minh Long, jacket xanh, khăn rằn đỏ",
     en: {
@@ -86,7 +86,7 @@ export const HOLDERS: Holder[] = [
     line: "γ không còn khóa ở 2. Tinbergen (1962) để γ được ước lượng.",
     src: `${import.meta.env.BASE_URL}cast/face/lan-chi.webp`,
     body: `${import.meta.env.BASE_URL}cast/lan-chi.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/lan-chi.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/lan-chi.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/lan-chi.webp`,
     alt: "Lan Chi, jacket vàng, khăn rằn, loa",
     en: {
@@ -104,7 +104,7 @@ export const HOLDERS: Holder[] = [
     line: "Km tới nhà máy. Xa hơn 10% đi kèm FDI thấp hơn khoảng 3,6%.",
     src: `${import.meta.env.BASE_URL}cast/face/bao-ngoc.webp`,
     body: `${import.meta.env.BASE_URL}cast/bao-ngoc.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/bao-ngoc.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/bao-ngoc.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/bao-ngoc.webp`,
     alt: "Bảo Ngọc, jacket ô-liu, khoanh tay",
     en: {
@@ -122,7 +122,7 @@ export const HOLDERS: Holder[] = [
     line: "Vốn năm trước. Có FTA: ngắn hạn khoảng +174,6%, dài hạn khoảng +527,4%.",
     src: `${import.meta.env.BASE_URL}cast/face/thu-ha.webp`,
     body: `${import.meta.env.BASE_URL}cast/thu-ha.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/thu-ha.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/thu-ha.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/thu-ha.webp`,
     alt: "Thu Hà, jacket đất nung, sổ cái",
     en: {
@@ -140,7 +140,7 @@ export const HOLDERS: Holder[] = [
     line: "OLS bỏ năm vốn bằng không. PPML giữ cả mẫu (Santos Silva & Tenreyro, 2006).",
     src: `${import.meta.env.BASE_URL}cast/face/gia-han.webp`,
     body: `${import.meta.env.BASE_URL}cast/gia-han.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/gia-han.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/gia-han.webp?v=2`,
     suit: `${import.meta.env.BASE_URL}cast/suit/gia-han.webp`,
     alt: "Gia Hân, jacket tím, kẹp hồ sơ",
     en: {
@@ -225,7 +225,7 @@ export function CastStage({
 }) {
   const lumina = byId("lumina");
   const tu = byId("tu");
-  const [suited, setSuited] = useState(false);
+  const [suited, setSuited] = useState(true);
   const look = (p: Holder) => (suited ? p.suit : p.body);
   return (
     <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
@@ -336,7 +336,7 @@ function Advisor({
 /** The whole class, suited up for the orbit room. */
 const CREW: Array<{ id: string; name: string; src: string }> = [
   ...HOLDERS.filter((h) => h.id !== "lumina").map((h) => ({ id: h.id, name: h.name, src: h.astro })),
-  { id: "huong", name: "Thùy Hương", src: `${import.meta.env.BASE_URL}cast/astro/huong.webp` },
+  { id: "huong", name: "Thùy Hương", src: `${import.meta.env.BASE_URL}cast/astro/huong.webp?v=2` },
 ];
 
 export function Crew() {

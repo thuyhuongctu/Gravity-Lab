@@ -64,6 +64,16 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "majumdar-2023",
+    parts: [
+      {
+        text: "Majumdar, D., & Basu, S. (2023). Exchange rate uncertainty and India's bilateral trade: A gravity model approach. ",
+      },
+      { text: "Arthaniti: Journal of Economic Theory and Practice", em: true },
+      { text: ". Advance online publication. https://doi.org/10.1177/09767479231178953" },
+    ],
+  },
+  {
     id: "mohr-2025",
     parts: [
       {

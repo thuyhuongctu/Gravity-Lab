@@ -51,7 +51,7 @@ The FDI specification for Vietnam, with institutional, cultural and economic dis
 
 $$\ln \mathit{FDI}_{it} = \beta_0 + \beta_1 \ln Y_{it} + \beta_2 \ln Y_{VN,t} - \gamma \ln D_{i,VN} + \delta' X_{it} + u_i + \varepsilon_{it}$$
 
-The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Do (2019), the coefficient on geographic distance for FDI into Vietnam is approximately −0.38 from Model 4 onwards.
+Majumdar and Basu (2023) augment the equation with an exchange-rate uncertainty index and the real exchange rate for India's trade with its top five partners and the SAARC countries; the Story page uses the study to show why time-invariant distance cannot be identified under country-pair fixed effects. The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Do (2019), the coefficient on geographic distance for FDI into Vietnam is approximately −0.38 from Model 4 onwards.
 
 ## Features
 
@@ -114,6 +114,8 @@ Anderson, J. E., & van Wincoop, E. (2003). Gravity with gravitas: A solution to 
 Disdier, A.-C., & Head, K. (2008). The puzzling persistence of the distance effect on bilateral trade. *The Review of Economics and Statistics, 90*(1), 37–48. https://doi.org/10.1162/rest.90.1.37
 
 Kepler, J. (1997). *The harmony of the world* (E. J. Aiton, A. M. Duncan, & J. V. Field, Trans.). American Philosophical Society. (Original work published 1619)
+
+Majumdar, D., & Basu, S. (2023). Exchange rate uncertainty and India's bilateral trade: A gravity model approach. *Arthaniti: Journal of Economic Theory and Practice*. Advance online publication. https://doi.org/10.1177/09767479231178953
 
 Mohr, P. J., Newell, D. B., Taylor, B. N., & Tiesinga, E. (2025). CODATA recommended values of the fundamental physical constants: 2022. *Reviews of Modern Physics, 97*, Article 025002. https://doi.org/10.1103/RevModPhys.97.025002
 
