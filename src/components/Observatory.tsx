@@ -72,7 +72,7 @@ export function Observatory() {
   const [snap, setSnap] = useState<OrbitSnap>({ count: 0, banner: null, selected: null });
 
   const [tradeScene, setTradeScene] = useState<TradeSceneId>("lecture");
-  const [tradeView, setTradeView] = useState<"plane" | "globe">("plane");
+  const [tradeView, setTradeView] = useState<"map" | "plane" | "globe">("map");
   const [ecos, setEcos] = useState<Economy[]>(() => makeEconomies("lecture"));
   const [focusId, setFocusId] = useState("vn");
   const [pairId, setPairId] = useState<string | null>(null);
@@ -321,8 +321,10 @@ export function Observatory() {
               onSpawn={() => setHint(false)}
             />
           ) : null}
-          {mode === "trade" && tradeView === "globe" ? (
+          {mode === "trade" && tradeView !== "plane" ? (
             <GlobeCanvas
+              key={tradeView}
+              flat={tradeView === "map"}
               economies={ecos}
               focusId={focusId}
               pairId={pairId}
@@ -418,7 +420,12 @@ export function Observatory() {
           ) : mode === "trade" ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
               <p className="max-w-[16rem] rounded-card bg-void-2/90 px-3 py-2 text-xs text-paper sm:max-w-sm sm:text-sm">
-                {tradeView === "globe"
+                {tradeView === "map"
+                  ? tr(
+                      "Kéo để di chuyển bản đồ, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy.",
+                      "Drag to pan the map; pinch or scroll to zoom. Tap an economy to make it the origin of the flows.",
+                    )
+                  : tradeView === "globe"
                   ? tr(
                       "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy.",
                       "Drag to turn the globe; pinch or scroll to zoom. Tap an economy to make it the origin of the flows.",
@@ -585,6 +592,15 @@ export function Observatory() {
                 </p>
               </div>
               <div className="flex gap-2 overflow-x-auto">
+                <Chip
+                  active={tradeView === "map"}
+                  onClick={() => {
+                    setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })));
+                    setTradeView("map");
+                  }}
+                >
+                  {tr("Bản đồ", "Map")}
+                </Chip>
                 <Chip active={tradeView === "plane"} onClick={() => setTradeView("plane")}>
                   {tr("Mặt phẳng", "Plane")}
                 </Chip>
@@ -598,6 +614,14 @@ export function Observatory() {
                   {tr("Địa cầu", "Globe")}
                 </Chip>
               </div>
+              {tradeView === "map" ? (
+                <p className="text-sm text-muted">
+                  {tr(
+                    "Trên bản đồ, mỗi nền kinh tế nằm ở tọa độ thật. D là khoảng cách đường tròn lớn, vẽ thành đường cong theo tuyến ngắn nhất trên mặt cầu. Độ dày là phần dòng chảy theo γ hiện tại.",
+                    "On the map, each economy sits at its real coordinates. D is the great-circle distance, drawn as the shortest route over the sphere. Line width is the share of the flow at the current γ.",
+                  )}
+                </p>
+              ) : null}
               {tradeView === "globe" ? (
                 <p className="text-sm text-muted">
                   {tr(
