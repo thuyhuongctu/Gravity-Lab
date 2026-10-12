@@ -9,8 +9,8 @@ import {
   setVolume,
 } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
-import { LYRICS_VI, SONG, clock, getSong, seekSong, subscribeSong, toggleSong } from "@/lib/song";
-import { fmt, fmtInt, tr } from "@/lib/prefs";
+import { SONGS, clock, getSong, pickSong, seekSong, subscribeSong, toggleSong, type SongId } from "@/lib/song";
+import { fmt, fmtInt, getLang, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 
 function Toggle({
@@ -49,6 +49,12 @@ export function SoundPanel() {
   const wrap = useRef<HTMLDivElement>(null);
   const song = useSyncExternalStore(subscribeSong, getSong, getSong);
   const playing = sound.ambient || sound.orbit || sound.chord || song.playing;
+
+  useEffect(() => {
+    if (!open) return;
+    const now = getSong();
+    if (!now.playing && now.time === 0) pickSong(getLang());
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -99,9 +105,27 @@ export function SoundPanel() {
           </div>
 
           <div className="mt-1 rounded-card border border-line p-3">
-            <p className="text-xs font-medium text-teal">
-              {tr("Bài hát Gravity Lab", "The Gravity Lab song")}
-            </p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-xs font-medium text-teal">
+                {tr("Bài hát Gravity Lab", "The Gravity Lab song")}
+              </p>
+              <div role="group" aria-label={tr("Phiên bản", "Version")} className="flex rounded-full bg-void-2/10 p-0.5">
+                {(["vi", "en"] as SongId[]).map((id) => (
+                  <button
+                    key={id}
+                    type="button"
+                    aria-pressed={song.id === id}
+                    onClick={() => pickSong(id)}
+                    className={
+                      "min-h-9 min-w-11 rounded-full px-2 text-xs font-medium " +
+                      (song.id === id ? "cosmic-btn" : "text-muted")
+                    }
+                  >
+                    {id === "vi" ? "Tiếng Việt" : "English"}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="mt-1 flex items-center gap-3">
               <button
                 type="button"
@@ -112,9 +136,9 @@ export function SoundPanel() {
                 {song.playing ? <Pause className="size-5" /> : <Play className="size-5" />}
               </button>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-serif text-base leading-tight">{SONG.title}</p>
+                <p className="truncate font-serif text-base leading-tight">{SONGS[song.id].title}</p>
                 <p className="text-xs text-muted">
-                  {tr("Bản tiếng Việt", "Vietnamese version")} · {clock(song.time)}
+                  {song.id === "vi" ? tr("Bản tiếng Việt", "Vietnamese version") : tr("Bản tiếng Anh", "English version")} · {clock(song.time)}
                   {song.duration ? ` / ${clock(song.duration)}` : ""}
                 </p>
               </div>
@@ -132,10 +156,10 @@ export function SoundPanel() {
             />
             <details className="mt-1">
               <summary className="min-h-11 cursor-pointer py-2 text-sm font-medium">
-                {tr("Lời bài hát", "Lyrics (Vietnamese)")}
+                {tr("Lời bài hát", "Lyrics")}
               </summary>
               <div className="max-h-64 overflow-y-auto pr-1 text-sm leading-relaxed">
-                {LYRICS_VI.map((st, i) => (
+                {SONGS[song.id].lyrics.map((st, i) => (
                   <div key={i} className="mb-3">
                     <p className="text-xs font-medium text-muted">{tr(st.vi, st.en)}</p>
                     {st.lines.map((line, j) =>
