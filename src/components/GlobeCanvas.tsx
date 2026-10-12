@@ -1,4 +1,5 @@
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
+import { WorldMap } from "@/components/WorldMap";
 import { partnerRows, radiusForGdp, type Economy } from "@/sim/trade";
 import { tr } from "@/lib/prefs";
 
@@ -9,10 +10,12 @@ type Props = {
   gamma: number;
   boosts: Record<string, number>;
   onTap: (id: string) => void;
+  /** Draw a flat world map instead of the globe. */
+  flat?: boolean;
 };
 
 /** The trade gravity model on the globe: real coordinates, great-circle flows from the focus economy. */
-export function GlobeCanvas({ economies, focusId, pairId, gamma, boosts, onTap }: Props) {
+export function GlobeCanvas({ economies, focusId, pairId, gamma, boosts, onTap, flat = false }: Props) {
   const home = economies.find((e) => e.id === focusId) ?? null;
   const pair = pairId ? (economies.find((e) => e.id === pairId) ?? null) : null;
   const rows = partnerRows(economies, focusId, gamma, pairId, boosts);
@@ -37,6 +40,20 @@ export function GlobeCanvas({ economies, focusId, pairId, gamma, boosts, onTap }
         highlight: row.econ.id === pairId,
       }))
     : [];
+
+  if (flat) {
+    return (
+      <WorldMap
+        nodes={nodes}
+        arcs={arcs}
+        onTap={onTap}
+        label={tr(
+          "Bản đồ thế giới của mô hình trọng lực thương mại. Kéo để di chuyển, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để chọn gốc dòng chảy.",
+          "World map of the trade gravity model. Drag to pan, pinch or scroll to zoom. Tap an economy to make it the origin of the flows.",
+        )}
+      />
+    );
+  }
 
   return (
     <Globe
