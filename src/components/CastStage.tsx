@@ -193,23 +193,23 @@ export function HolderBar({
   suited?: boolean;
 }) {
   return (
-    <div className="surface flex items-center gap-2 rounded-card bg-paper p-2 text-ink">
+    <div className="surface noir-card flex items-center gap-3 rounded-[24px] p-2.5 text-ink">
       <div className="flex min-w-0 flex-1 gap-3 overflow-x-auto">
         {people.map((person) => (
           <div key={person.id} className="flex min-w-0 flex-1 items-center gap-2">
             <img
               src={suited ? person.astro : person.src}
               alt={suited ? tr(`${person.name}, trang phục phi hành gia`, `${person.name} in a spacesuit`) : say(person).alt}
-              className="aspect-[4/5] h-16 w-auto shrink-0 rounded-lg object-cover object-center"
+              className="aspect-[4/5] h-16 w-auto shrink-0 rounded-xl object-cover object-center"
             />
             <div className="min-w-0">
-              <p className="font-serif text-lg leading-tight">{say(person).symbol}</p>
+              <p className="font-serif text-lg leading-tight text-amber">{say(person).symbol}</p>
               <p className="line-clamp-2 text-sm leading-snug text-muted">{person.name}. {say(person).line}</p>
             </div>
           </div>
         ))}
       </div>
-      <button type="button" className="min-h-11 shrink-0 px-2 text-sm font-medium text-teal" onClick={onBack}>
+      <button type="button" className="min-h-11 shrink-0 px-2.5 text-sm font-medium text-teal" onClick={onBack}>
         {tr("Về lớp", "Back to class")}
       </button>
     </div>
@@ -232,8 +232,8 @@ export function CastStage({
       <VnWatermark />
       <div className="relative">
       <div className="mx-auto max-w-lg px-4 pt-4">
-        <p className="text-xs font-medium text-teal">{tr("Cả lớp khám phá vũ trụ", "The class explores the universe")}</p>
-        <h2 className="mt-1 font-serif text-3xl leading-tight">{tr("Từ lực hấp dẫn đến dòng vốn", "From gravity to capital flows")}</h2>
+        <p className="kicker text-amber">{tr("Cả lớp khám phá vũ trụ", "The class explores the universe")}</p>
+        <h2 className="mt-1.5 font-serif text-3xl leading-[1.1]">{tr("Từ lực hấp dẫn đến dòng vốn", "From gravity to capital flows")}</h2>
         <p className="mt-1 font-math text-lg leading-snug">F = G m₁m₂ / r² → T = G YᵢYⱼ / Dᵞ → FDI</p>
         <p className="mt-1 text-sm text-muted">
           {tr(
@@ -243,7 +243,7 @@ export function CastStage({
         </p>
       </div>
       <div className="mx-auto max-w-lg px-4 pt-3">
-        <div role="group" aria-label={tr("Trang phục", "Outfit")} className="clay-tray inline-flex rounded-full bg-paper-2 p-1">
+        <div role="group" aria-label={tr("Trang phục", "Outfit")} className="noir-track flex rounded-full p-1">
           {[
             { on: false, vi: "Trang phục thường", en: "Everyday" },
             { on: true, vi: "Trang phục vũ trụ", en: "Spacesuits" },
@@ -254,7 +254,7 @@ export function CastStage({
               aria-pressed={suited === o.on}
               onClick={() => setSuited(o.on)}
               className={
-                "min-h-11 rounded-full px-4 text-sm font-medium " + (suited === o.on ? "cosmic-btn" : "text-muted")
+                "min-h-11 flex-1 rounded-full px-4 text-sm font-medium " + (suited === o.on ? "cosmic-btn" : "text-muted")
               }
             >
               {tr(o.vi, o.en)}
@@ -262,9 +262,46 @@ export function CastStage({
           ))}
         </div>
       </div>
-      <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 px-4 pt-4">
+      <div className="mx-auto max-w-lg px-4 pt-3.5">
+        <img
+          src={`${import.meta.env.BASE_URL}cast/class-board.webp`}
+          alt={tr(
+            "Cả lớp trong bộ đồ phi hành gia đứng trước bảng đen ghi F = G m₁m₂/r², T = G YᵢYⱼ/Dᵞ, PPML và FDI = 0",
+            "The class in spacesuits in front of a blackboard showing F = G m₁m₂/r², T = G YᵢYⱼ/Dᵞ, PPML and FDI = 0",
+          )}
+          width={688}
+          height={384}
+          className="h-44 w-full rounded-[22px] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),0_26px_34px_-22px_rgba(0,0,0,0.95)] sm:h-56"
+        />
+      </div>
+      <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 px-4 pt-3">
         <Advisor person={lumina} src={look(lumina)} onOpen={onOpen} />
         <Advisor person={tu} src={look(tu)} onOpen={onOpen} />
+      </div>
+      <div className="mx-auto max-w-lg px-4 pt-4">
+        <p className="mb-2 text-xs font-medium text-muted">{tr("Năm bước · chạm một gương mặt", "Five steps · tap a face")}</p>
+        <ul className="flex justify-between gap-1">
+          {STEPS.map((id) => {
+            const person = byId(id);
+            return (
+              <li key={id} className="w-[3.75rem]">
+                <button
+                  type="button"
+                  onClick={() => onOpen(person.room, person.panel, person.id)}
+                  className="flex w-full flex-col items-center gap-1.5"
+                >
+                  <img
+                    src={suited ? person.astro : person.src}
+                    alt={person.name}
+                    loading="lazy"
+                    className="size-14 rounded-full bg-[#f1e8de] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1),0_0_0_2px_rgba(94,234,212,0.35),0_12px_18px_-8px_rgba(0,0,0,0.95)]"
+                  />
+                  <span className="font-serif text-[11px] leading-tight whitespace-nowrap text-amber">{say(person).symbol}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
       <ol className="mx-auto max-w-lg pt-4">
         {STEPS.map((id, index) => {
@@ -320,15 +357,21 @@ function Advisor({
   onOpen: (room: Room, panel: LabPanel | null, id: string) => void;
 }) {
   return (
-    <button type="button" className="text-left" onClick={() => onOpen(person.room, person.panel, person.id)}>
+    <button
+      type="button"
+      className="noir-card flex flex-col overflow-hidden rounded-[24px] text-left"
+      onClick={() => onOpen(person.room, person.panel, person.id)}
+    >
       <img src={src} alt={src === person.suit ? tr(`${person.name}, trang phục phi hành gia`, `${person.name} in a spacesuit`) : say(person).alt} className={
-          "h-72 w-full rounded-card bg-[#f4ede1] object-bottom " +
-          (src === person.suit ? "object-cover" : "object-contain")
+          "h-60 w-full bg-[#f1e8de] sm:h-72 " +
+          (src === person.suit ? "object-cover object-[center_20%]" : "object-contain object-bottom")
         }
       />
-      <span className="mt-2 block font-serif text-xl leading-tight">{say(person).symbol}</span>
-      <span className="block text-sm font-medium">{person.name}</span>
-      <span className="mt-1 block text-sm leading-relaxed text-muted">{say(person).line}</span>
+      <span className="block px-3 pt-2.5 pb-3">
+        <span className="block font-serif text-lg leading-tight text-amber">{say(person).symbol}</span>
+        <span className="mt-0.5 block text-sm font-medium">{person.name}</span>
+        <span className="mt-1 block text-sm leading-relaxed text-muted">{say(person).line}</span>
+      </span>
     </button>
   );
 }
