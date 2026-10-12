@@ -2,6 +2,8 @@
  * Coefficients are copied from Phan & Đỗ (2019), Table 6, and Xuan & Xing (2008), Table 1.
  */
 
+import { tr } from "../lib/prefs.ts";
+
 export const HANOI: [number, number] = [21.0285, 105.8542];
 
 export const CITE_2019 = "Phan, A. T., & Đỗ, T. H. (2019). Tạp chí Kinh tế Đối ngoại, (114), 14–26.";
@@ -9,19 +11,19 @@ export const CITE_2008 = "Xuan, N. T., & Xing, Y. (2008). Economics of Transitio
 
 export type Coef = [b: number, se: number, stars: string];
 
-export const VARS: Array<{ id: string; label: string }> = [
-  { id: "cons", label: "Hằng số" },
-  { id: "lagfdi", label: "Độ trễ FDI (log)" },
-  { id: "geo", label: "Khoảng cách địa lý (log)" },
-  { id: "inst", label: "Khoảng cách thể chế" },
-  { id: "cult", label: "Khoảng cách văn hóa" },
-  { id: "econ", label: "Khoảng cách kinh tế (log)" },
-  { id: "gdpvn", label: "Quy mô thị trường Việt Nam (log)" },
-  { id: "gdppt", label: "Quy mô thị trường đối tác (log)" },
-  { id: "open", label: "Độ mở thương mại" },
-  { id: "exp", label: "Kinh nghiệm quốc tế" },
-  { id: "corr", label: "Tham nhũng" },
-  { id: "fta", label: "Khu vực thương mại tự do" },
+export const VARS: Array<{ id: string; label: string; en: string }> = [
+  { id: "cons", label: "Hằng số", en: "Constant" },
+  { id: "lagfdi", label: "Độ trễ FDI (log)", en: "Lagged FDI (log)" },
+  { id: "geo", label: "Khoảng cách địa lý (log)", en: "Geographic distance (log)" },
+  { id: "inst", label: "Khoảng cách thể chế", en: "Institutional distance" },
+  { id: "cult", label: "Khoảng cách văn hóa", en: "Cultural distance" },
+  { id: "econ", label: "Khoảng cách kinh tế (log)", en: "Economic distance (log)" },
+  { id: "gdpvn", label: "Quy mô thị trường Việt Nam (log)", en: "Vietnam market size (log)" },
+  { id: "gdppt", label: "Quy mô thị trường đối tác (log)", en: "Partner market size (log)" },
+  { id: "open", label: "Độ mở thương mại", en: "Trade openness" },
+  { id: "exp", label: "Kinh nghiệm quốc tế", en: "International experience" },
+  { id: "corr", label: "Tham nhũng", en: "Corruption" },
+  { id: "fta", label: "Khu vực thương mại tự do", en: "Free trade area" },
 ];
 
 const M = (
@@ -43,23 +45,23 @@ export const MODELS = [
   M(159, 0.0072, 0, { cons: [8.32, 4.72, "**"], lagfdi: [0.45, 0.07, "***"], geo: [-0.38, 0.19, "**"], inst: [0.12, 0.08, ""], cult: [0.03, 0.17, ""], econ: [0.33, 0.19, "**"], gdpvn: [-0.87, 1.13, ""], gdppt: [-0.25, 0.27, ""], open: [2.89, 1.37, "**"], exp: [0.11, 0.63, "**"], corr: [-1.54, 1.48, ""], fta: [1.01, 0.28, "***"] }),
 ];
 
-export const COUNTRIES: Array<{ id: string; name: string; cap: [number, number] }> = [
-  { id: "KOR", name: "Hàn Quốc", cap: [37.5665, 126.978] },
-  { id: "TWN", name: "Đài Loan", cap: [25.033, 121.5654] },
-  { id: "HKG", name: "Hồng Kông", cap: [22.3193, 114.1694] },
-  { id: "MYS", name: "Ma-lai-xi-a", cap: [3.139, 101.6869] },
-  { id: "CHN", name: "Trung Quốc", cap: [39.9042, 116.4074] },
-  { id: "SGP", name: "Xin-ga-po", cap: [1.3521, 103.8198] },
-  { id: "JPN", name: "Nhật Bản", cap: [35.6762, 139.6503] },
-  { id: "THA", name: "Thái Lan", cap: [13.7563, 100.5018] },
-  { id: "DEU", name: "Đức", cap: [52.52, 13.405] },
-  { id: "FRA", name: "Pháp", cap: [48.8566, 2.3522] },
-  { id: "NLD", name: "Hà Lan", cap: [52.3676, 4.9041] },
-  { id: "RUS", name: "Nga", cap: [55.7558, 37.6173] },
-  { id: "GBR", name: "Anh", cap: [51.5074, -0.1278] },
-  { id: "USA", name: "Hoa Kỳ", cap: [38.9072, -77.0369] },
-  { id: "CAN", name: "Ca-na-đa", cap: [45.4215, -75.6972] },
-  { id: "AUS", name: "Úc", cap: [-35.2809, 149.13] },
+export const COUNTRIES: Array<{ id: string; name: string; en: string; cap: [number, number] }> = [
+  { id: "KOR", name: "Hàn Quốc", en: "South Korea", cap: [37.5665, 126.978] },
+  { id: "TWN", name: "Đài Loan", en: "Taiwan", cap: [25.033, 121.5654] },
+  { id: "HKG", name: "Hồng Kông", en: "Hong Kong", cap: [22.3193, 114.1694] },
+  { id: "MYS", name: "Ma-lai-xi-a", en: "Malaysia", cap: [3.139, 101.6869] },
+  { id: "CHN", name: "Trung Quốc", en: "China", cap: [39.9042, 116.4074] },
+  { id: "SGP", name: "Xin-ga-po", en: "Singapore", cap: [1.3521, 103.8198] },
+  { id: "JPN", name: "Nhật Bản", en: "Japan", cap: [35.6762, 139.6503] },
+  { id: "THA", name: "Thái Lan", en: "Thailand", cap: [13.7563, 100.5018] },
+  { id: "DEU", name: "Đức", en: "Germany", cap: [52.52, 13.405] },
+  { id: "FRA", name: "Pháp", en: "France", cap: [48.8566, 2.3522] },
+  { id: "NLD", name: "Hà Lan", en: "Netherlands", cap: [52.3676, 4.9041] },
+  { id: "RUS", name: "Nga", en: "Russia", cap: [55.7558, 37.6173] },
+  { id: "GBR", name: "Anh", en: "United Kingdom", cap: [51.5074, -0.1278] },
+  { id: "USA", name: "Hoa Kỳ", en: "United States", cap: [38.9072, -77.0369] },
+  { id: "CAN", name: "Ca-na-đa", en: "Canada", cap: [45.4215, -75.6972] },
+  { id: "AUS", name: "Úc", en: "Australia", cap: [-35.2809, 149.13] },
 ];
 
 const XX_YEARS = [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004];
@@ -83,6 +85,12 @@ export function haversineKm(a: [number, number], b: [number, number]): number {
   const dLon = (b[1] - a[1]) * rad;
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+/** Country name in the current language. */
+export function countryName(id: string): string {
+  const c = COUNTRIES.find((x) => x.id === id);
+  return c ? tr(c.name, c.en) : id;
 }
 
 export function kmFromHanoi(id: string): number {
@@ -114,7 +122,8 @@ export function starsOf(p: number): string {
 }
 
 export function varLabel(id: string): string {
-  return VARS.find((v) => v.id === id)?.label ?? id;
+  const v = VARS.find((x) => x.id === id);
+  return v ? tr(v.label, v.en) : id;
 }
 
 export type ImpactPart = {
@@ -191,7 +200,7 @@ export function coefRows(modelIndex: number): CoefRow[] {
     const [b, se, published] = m.c[v.id]!;
     const p = pValue(b, se);
     const recomputed = starsOf(p);
-    return { id: v.id, label: v.label, b, se, published, p, recomputed, mismatch: published !== recomputed };
+    return { id: v.id, label: tr(v.label, v.en), b, se, published, p, recomputed, mismatch: published !== recomputed };
   });
 }
 
@@ -316,7 +325,7 @@ export function ols(y: number[], X0: number[][], names0: string[], cluster?: str
   const n = X.length;
   const k = X[0]!.length;
   const XtXi = invert(transposeMul(X));
-  if (!XtXi) throw new Error("Ma trận X′X suy biến");
+  if (!XtXi) throw new Error(tr("Ma trận X′X suy biến", "X′X matrix is singular"));
   const b = matVec(XtXi, transposeVec(X, y));
   const e = y.map((yi, i) => yi - X[i]!.reduce((s, x, j) => s + x * b[j]!, 0));
   const { M, G } = meatOf(X, e, cluster);
@@ -329,7 +338,7 @@ export function ols(y: number[], X0: number[][], names0: string[], cluster?: str
 }
 
 export function ppml(y: number[], X0: number[][], names0: string[], cluster?: string[]): Fit {
-  if (y.some((v) => v < 0)) throw new Error("PPML cần biến không âm");
+  if (y.some((v) => v < 0)) throw new Error(tr("PPML cần biến không âm", "PPML needs a non-negative outcome"));
   const { X, names, dropped } = dropCollinear(X0, names0);
   const n = X.length;
   const k = X[0]!.length;
@@ -341,7 +350,7 @@ export function ppml(y: number[], X0: number[][], names0: string[], cluster?: st
   for (let iter = 0; iter < 200; iter++) {
     const z = eta.map((e, i) => e + (y[i]! - mu[i]!) / mu[i]!);
     const XtWXi = invert(transposeMul(X, mu));
-    if (!XtWXi) throw new Error("Ma trận thông tin suy biến");
+    if (!XtWXi) throw new Error(tr("Ma trận thông tin suy biến", "Information matrix is singular"));
     b = matVec(XtWXi, transposeVec(X, z, mu));
     eta = X.map((r) => r.reduce((s, x, j) => s + x * b[j]!, 0));
     mu = eta.map((e) => Math.exp(Math.min(e, 700)));
@@ -353,7 +362,7 @@ export function ppml(y: number[], X0: number[][], names0: string[], cluster?: st
     dev = d;
   }
   const Bi = invert(transposeMul(X, mu));
-  if (!Bi) throw new Error("Ma trận thông tin suy biến");
+  if (!Bi) throw new Error(tr("Ma trận thông tin suy biến", "Information matrix is singular"));
   const e = y.map((v, i) => v - mu[i]!);
   const { M, G } = meatOf(X, e, cluster);
   const c = cluster ? G / (G - 1) : n / (n - k);
@@ -376,10 +385,20 @@ export type DistanceLesson = {
   rows: Array<{ label: string; n: number; b: number; se: number; p: number; stars: string }>;
 };
 
+// The fits are cached; their labels are translated on every call so they follow the language.
 let lessonCache: DistanceLesson | null = null;
 
 export function distanceLesson(): DistanceLesson {
-  if (lessonCache) return lessonCache;
+  if (!lessonCache) lessonCache = fitLesson();
+  const labels = [
+    tr("OLS, log(FDI), bỏ năm bằng 0", "OLS, log(FDI), zero years dropped"),
+    "OLS, log(FDI + 1)",
+    tr("PPML, FDI ở dạng mức", "PPML, FDI in levels"),
+  ];
+  return { ...lessonCache, rows: lessonCache.rows.map((r, i) => ({ ...r, label: labels[i]! })) };
+}
+
+function fitLesson(): DistanceLesson {
   const rows: Row[] = [];
   for (const s of XX) {
     const lndist = Math.log(haversineKm(HANOI, s.cap));
@@ -396,16 +415,15 @@ export function distanceLesson(): DistanceLesson {
   const c1 = fit(pos, pos.map((r) => Math.log(Number(r.fdi))), "ols");
   const c2 = fit(rows, rows.map((r) => Math.log(Number(r.fdi) + 1)), "ols");
   const c3 = fit(rows, rows.map((r) => Number(r.fdi)), "ppml");
-  lessonCache = {
+  return {
     n: rows.length,
     zeros,
     rows: [
-      { label: "OLS, log(FDI), bỏ năm bằng 0", n: pos.length, b: c1.b, se: c1.se, p: c1.p, stars: c1.stars },
-      { label: "OLS, log(FDI + 1)", n: rows.length, b: c2.b, se: c2.se, p: c2.p, stars: c2.stars },
-      { label: "PPML, FDI ở dạng mức", n: rows.length, b: c3.b, se: c3.se, p: c3.p, stars: c3.stars },
+      { label: "", n: pos.length, b: c1.b, se: c1.se, p: c1.p, stars: c1.stars },
+      { label: "", n: rows.length, b: c2.b, se: c2.se, p: c2.p, stars: c2.stars },
+      { label: "", n: rows.length, b: c3.b, se: c3.se, p: c3.p, stars: c3.stars },
     ],
   };
-  return lessonCache;
 }
 
 export type CsvTable = { columns: string[]; rows: Row[] };
@@ -441,9 +459,9 @@ export function parseCSV(text: string): CsvTable {
   }
   row.push(cell);
   if (row.some((c) => c.trim() !== "")) lines.push(row);
-  if (!lines.length) throw new Error("CSV trống");
+  if (!lines.length) throw new Error(tr("CSV trống", "The CSV is empty"));
   const head = lines.shift()!.map((h) => h.trim());
-  if (head.some((h) => !h) || new Set(head).size !== head.length) throw new Error("Tên cột không hợp lệ");
+  if (head.some((h) => !h) || new Set(head).size !== head.length) throw new Error(tr("Tên cột không hợp lệ", "Invalid column names"));
   const num = (s: string): number | string => {
     const t = s.trim();
     if (t === "" || t === "." || /^na$/i.test(t)) return Number.NaN;
@@ -472,14 +490,14 @@ export function xuanXingSeries(): {
 } {
   return {
     years: XX_YEARS,
-    series: XX.map((s) => ({ id: s.id, name: COUNTRIES.find((c) => c.id === s.id)?.name ?? s.id, cap: s.cap, v: s.v })),
+    series: XX.map((s) => ({ id: s.id, name: countryName(s.id), cap: s.cap, v: s.v })),
   };
 }
 
 export function xuanXingGrid(): { years: number[]; series: Array<{ name: string; v: number[] }> } {
   return {
     years: XX_YEARS,
-    series: XX.map((s) => ({ name: COUNTRIES.find((c) => c.id === s.id)?.name ?? s.id, v: s.v })),
+    series: XX.map((s) => ({ name: countryName(s.id), v: s.v })),
   };
 }
 
@@ -496,20 +514,20 @@ export function estimatePanel(input: {
   yLevel: boolean;
 }): PanelEstimate {
   const xs = input.xs.filter((x) => x && x !== input.y);
-  if (!xs.length) throw new Error("Chọn ít nhất một biến giải thích.");
+  if (!xs.length) throw new Error(tr("Chọn ít nhất một biến giải thích.", "Choose at least one explanatory variable."));
   const need = [input.y, ...xs];
   const ok = input.rows.filter((r) => need.every((c) => typeof r[c] === "number" && Number.isFinite(r[c])));
-  if (!ok.length) throw new Error("Không còn dòng nào đủ số cho các biến đã chọn.");
+  if (!ok.length) throw new Error(tr("Không còn dòng nào đủ số cho các biến đã chọn.", "No rows have numbers for all the chosen variables."));
   const yearCol = input.yearFE && input.year ? input.year : undefined;
   const clusterOf = (rs: Row[]) => (input.cluster && input.unit ? rs.map((r) => String(r[input.unit])) : undefined);
   const guard = (d: { X: number[][]; names: string[] }) => {
-    if (!d.X.length || d.X.length <= d.names.length) throw new Error("Quá ít dòng so với số biến.");
+    if (!d.X.length || d.X.length <= d.names.length) throw new Error(tr("Quá ít dòng so với số biến.", "Too few rows for the number of variables."));
   };
   const fits: PanelEstimate["fits"] = [];
   if (input.yLevel) {
-    if (ok.some((r) => Number(r[input.y]) < 0)) throw new Error("PPML cần biến không âm");
+    if (ok.some((r) => Number(r[input.y]) < 0)) throw new Error(tr("PPML cần biến không âm", "PPML needs a non-negative outcome"));
     const pos = ok.filter((r) => Number(r[input.y]) > 0);
-    if (!pos.length) throw new Error("Không còn quan sát dương để lấy log.");
+    if (!pos.length) throw new Error(tr("Không còn quan sát dương để lấy log.", "No positive observations left to take logs of."));
     const dp = design(pos, xs, yearCol);
     const da = design(ok, xs, yearCol);
     guard(dp);
@@ -531,7 +549,7 @@ export function estimatePanel(input: {
     });
   }
   const dropped = [...new Set(fits.flatMap((f) => f.fit.dropped))];
-  return { fits, note: dropped.length ? `Đã loại (cộng tuyến hoàn hảo): ${dropped.join(", ")}` : "" };
+  return { fits, note: dropped.length ? tr(`Đã loại (cộng tuyến hoàn hảo): ${dropped.join(", ")}`, `Dropped (perfect collinearity): ${dropped.join(", ")}`) : "" };
 }
 
 export const CSV_TEMPLATE =

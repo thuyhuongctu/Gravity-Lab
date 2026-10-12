@@ -1,5 +1,6 @@
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
 import { partnerRows, radiusForGdp, type Economy } from "@/sim/trade";
+import { tr } from "@/lib/prefs";
 
 type Props = {
   economies: Economy[];
@@ -21,7 +22,7 @@ export function GlobeCanvas({ economies, focusId, pairId, gamma, boosts, onTap }
     id: e.id,
     lon: e.lon,
     lat: e.lat,
-    label: e.short,
+    label: tr(e.short, e.shortEn),
     r: radiusForGdp(e.gdp) * 0.5,
     color: e.color,
     ring: e.id === focusId ? "teal" : e.id === pairId ? "amber" : undefined,
@@ -43,7 +44,10 @@ export function GlobeCanvas({ economies, focusId, pairId, gamma, boosts, onTap }
       arcs={arcs}
       focus={home ? (pair ? [home, pair] : [home]) : []}
       onTap={onTap}
-      label="Địa cầu mô hình trọng lực thương mại. Kéo để xoay, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để chọn gốc dòng chảy."
+      label={tr(
+        "Địa cầu mô hình trọng lực thương mại. Kéo để xoay, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để chọn gốc dòng chảy.",
+        "Trade gravity globe. Drag to turn, pinch or scroll to zoom. Tap an economy to make it the origin of the flows.",
+      )}
     />
   );
 }
