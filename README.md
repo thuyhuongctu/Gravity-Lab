@@ -96,17 +96,18 @@ This repository is a standalone edition of Gravity Lab, separated from the [BizO
 
 Please cite the version you used. The concept DOI covers all versions and always resolves to the latest release: **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**.
 
-> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.3) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23313162
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.4) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23314318
 
 | Version | DOI |
 | --- | --- |
+| v2.4 | [10.5281/zenodo.23314318](https://doi.org/10.5281/zenodo.23314318) |
 | v2.3 | [10.5281/zenodo.23313162](https://doi.org/10.5281/zenodo.23313162) |
 | v2.2 | [10.5281/zenodo.23308587](https://doi.org/10.5281/zenodo.23308587) |
 | v2.1 | [10.5281/zenodo.23308307](https://doi.org/10.5281/zenodo.23308307) |
 | v2.0 | [10.5281/zenodo.23308130](https://doi.org/10.5281/zenodo.23308130) |
 | v1.0 | [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833) |
 
-Complete metadata are provided in [`CITATION.cff`](CITATION.cff). From v2.3 the deposited files on Zenodo are openly downloadable for reading, consultation and citation; earlier versions were deposited with restricted access. Open access to the files does not change the licence: the software remains proprietary (see [`LICENSE`](LICENSE)).
+Complete metadata are provided in [`CITATION.cff`](CITATION.cff). From v2.3 onwards the deposited files on Zenodo are openly downloadable for reading, consultation and citation; earlier versions were deposited with restricted access. Open access to the files does not change the licence: the software remains proprietary (see [`LICENSE`](LICENSE)).
 
 ## References
 
