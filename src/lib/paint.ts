@@ -6,37 +6,37 @@
 import { getTheme } from "@/lib/prefs";
 
 const LIGHT: Record<string, string> = {
-  "#101614": "#f4f1ff", // sky / stage: pearl dawn
-  "#22302a": "#fbfaff", // sea, lit side
-  "#141c18": "#e6e0ff", // sea, limb
-  "#f3ece1": "#1a1640", // ink on the sky: midnight indigo
-  "#c4bbb0": "#4b4577", // mist
-  "#8fd4c0": "#0b7285", // aurora
+  "#101614": "#f3eee4", // sky / stage: warm bone
+  "#22302a": "#fbf8f1", // sea, lit side
+  "#141c18": "#e6dfd1", // sea, limb
+  "#f3ece1": "#1d1e22", // ink on the sky: graphite
+  "#c4bbb0": "#55504a", // mist
+  "#8fd4c0": "#0b7285", // teal rim light
   "#7ec8b8": "#0e7490",
-  "#9ec4b6": "#5b4bb5",
-  "#e7c27a": "#b4530a", // solar amber
+  "#9ec4b6": "#6d5a3a", // clay sand
+  "#e7c27a": "#b4530a", // amber key light
   "#d4a04a": "#9a4a0c",
   "#e0a090": "#c2185b", // flare
   "#c46a4a": "#a3134c",
-  "#f0dcc0": "#6d28d9", // nebula violet
+  "#f0dcc0": "#6d5a3a", // bone
 };
 
 /** The colour to draw for a dark-theme colour, under the current theme. */
-/** Dark theme: midnight indigo sky, aurora, solar amber, flare pink, nebula violet. */
+/** Dark theme (clay noir, graphite): near-black sky, teal rim, amber key, flare pink, bone. No purple. */
 const DARK: Record<string, string> = {
-  "#101614": "#0b0a1f",
-  "#22302a": "#1b1942",
-  "#141c18": "#110f2b",
-  "#f3ece1": "#eeeafb",
-  "#c4bbb0": "#a9a3d6",
+  "#101614": "#0a0b0d",
+  "#22302a": "#1c1e22",
+  "#141c18": "#111215",
+  "#f3ece1": "#f1ece2",
+  "#c4bbb0": "#a8a297",
   "#8fd4c0": "#5eead4",
   "#7ec8b8": "#22d3ee",
-  "#9ec4b6": "#a78bfa",
+  "#9ec4b6": "#e8d9b8",
   "#e7c27a": "#ffc56b",
   "#d4a04a": "#f59e0b",
   "#e0a090": "#ff7a9c",
   "#c46a4a": "#ff5e8a",
-  "#f0dcc0": "#c4b5fd",
+  "#f0dcc0": "#e8d9b8",
 };
 
 export function paint(hex: string): string {
