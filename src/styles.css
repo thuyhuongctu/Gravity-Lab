@@ -306,6 +306,13 @@
   color: transparent;
 }
 
+.hero-gradient {
+  background: linear-gradient(100deg, #5eead4 0%, #a78bfa 50%, #ff7a9c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 :root[data-theme="dark"] .cosmic-text {
   background-image: linear-gradient(100deg, #5eead4 0%, #a78bfa 50%, #ff7a9c 100%);
 }

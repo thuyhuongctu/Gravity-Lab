@@ -3,6 +3,7 @@ import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { ReferenceList } from "@/components/ReferenceList";
 import { FormulaBridge } from "@/components/FormulaBridge";
+import { HeroScene } from "@/components/HeroScene";
 import { VnWatermark } from "@/components/VnWatermark";
 import { RoomCover, type CoverRoom } from "@/components/RoomCover";
 import { tr } from "@/lib/prefs";
@@ -163,29 +164,52 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
     <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
       <VnWatermark />
       <div className="relative">
-      <div className="mx-auto max-w-2xl px-4 pt-5">
-        <p className="clay-tray inline-flex items-center gap-2 rounded-full bg-paper-2 py-1 ps-1 pe-3 text-xs font-semibold">
-          <span
-            aria-hidden="true"
-            className="inline-flex size-6 items-center justify-center rounded-full bg-[#da251d] text-xs leading-none text-[#ffde00]"
-          >
-            ★
-          </span>
-          {tr(
-            "Thiết kế tại Đồng bằng sông Cửu Long · Đại học Cần Thơ",
-            "Made in the Mekong Delta · Can Tho University",
-          )}
-        </p>
-        <h2 className="mt-3 font-serif text-4xl leading-[1.06] sm:text-5xl">
-          {tr("Từ quả táo của Newton đến ", "From Newton's apple to ")}
-          <span className="cosmic-text">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
-        </h2>
-        <p className="mt-3 max-w-xl leading-relaxed text-muted">
-          {tr(
-            "Ba thế kỷ, một dạng phương trình: quy mô ở tử số, khoảng cách ở mẫu số. Mỗi chương dưới đây mở ra một phần của phòng thí nghiệm.",
-            "Three centuries, one form of equation: size in the numerator, distance in the denominator. Each chapter below opens a part of the lab.",
-          )}
-        </p>
+      <section className="relative isolate overflow-hidden bg-[#0b0a1f] text-[#fbfaff]">
+        <div className="absolute inset-0 -z-10">
+          <HeroScene />
+        </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(11,10,31,0.85)_0%,rgba(11,10,31,0)_32%,rgba(11,10,31,0)_62%,rgba(11,10,31,0.92)_100%)]"
+        />
+        <div className="pointer-events-none mx-auto flex min-h-[min(44rem,92svh)] max-w-2xl flex-col justify-between px-4 pt-5 pb-6">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full bg-white/10 py-1 ps-1 pe-3 text-xs font-semibold backdrop-blur">
+              <span
+                aria-hidden="true"
+                className="inline-flex size-6 items-center justify-center rounded-full bg-[#da251d] text-xs leading-none text-[#ffde00]"
+              >
+                ★
+              </span>
+              {tr(
+                "Thiết kế tại Đồng bằng sông Cửu Long · Đại học Cần Thơ",
+                "Made in the Mekong Delta · Can Tho University",
+              )}
+            </p>
+            <h2 className="mt-3 font-serif text-4xl leading-[1.06] drop-shadow-[0_2px_12px_rgba(11,10,31,0.9)] sm:text-5xl">
+              {tr("Từ quả táo của Newton đến ", "From Newton's apple to ")}
+              <span className="hero-gradient">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
+            </h2>
+          </div>
+          <div>
+            <p className="font-math text-base text-[#5eead4] sm:text-lg">F = G m₁m₂ / r² → T = G YᵢYⱼ / Dᵞ → FDI</p>
+            <p className="mt-2 max-w-xl leading-relaxed text-[#d9d6f2]">
+              {tr(
+                "Ba thế kỷ, một dạng phương trình: quy mô ở tử số, khoảng cách ở mẫu số. Mỗi chương dưới đây mở ra một phần của phòng thí nghiệm.",
+                "Three centuries, one form of equation: size in the numerator, distance in the denominator. Each chapter below opens a part of the lab.",
+              )}
+            </p>
+            <p className="mt-2 text-xs text-[#b9b4e0]">
+              {tr(
+                "Kéo để xoay Trái Đất. Quả táo và Mặt Trăng cùng chịu một lực; các vệt sáng là dòng vốn FDI chảy về Việt Nam.",
+                "Drag to turn the Earth. The apple and the Moon answer to one force; the streaks of light are FDI flowing into Vietnam.",
+              )}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-2xl px-4">
         <figure className="mt-5">
           <img
             src={`${import.meta.env.BASE_URL}noir/vietnam.webp`}
