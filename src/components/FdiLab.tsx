@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   CITE_2008,
   CITE_2019,
@@ -16,10 +16,12 @@ import {
   pValue,
   varLabel,
   xuanXingGrid,
+  xuanXingSeries,
   xuanXingTable,
   type CsvTable,
   type PanelEstimate,
 } from "@/sim/gravity-lab";
+import { Pause, Play } from "lucide-react";
 import { ReferenceList } from "@/components/ReferenceList";
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
 
@@ -388,10 +390,119 @@ function PpmlStage({ lab }: { lab: LabState }) {
         Một biến giải thích, hiệu ứng cố định năm, sai số chuẩn theo cụm quốc gia. Mô hình đầy đủ còn cần quy mô kinh tế,
         FTA và các chiều khoảng cách khác. {CITE_2008}
       </p>
+      <XuanGlobe />
       <details className="max-w-xl">
         <summary className="min-h-11 text-sm text-paper">Xem dữ liệu gốc</summary>
         <XuanTable />
       </details>
+    </div>
+  );
+}
+
+/** Year-by-year replay of Xuan & Xing (2008) on the globe; zero years stay on the map in clay. */
+function XuanGlobe() {
+  const data = useMemo(() => xuanXingSeries(), []);
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const last = data.years.length - 1;
+
+  useEffect(() => {
+    if (!playing) return;
+    const timer = window.setInterval(() => {
+      setIdx((i) => {
+        if (i >= last) {
+          setPlaying(false);
+          return i;
+        }
+        return i + 1;
+      });
+    }, 900);
+    return () => window.clearInterval(timer);
+  }, [playing, last]);
+
+  const hanoi = { lon: HANOI[1], lat: HANOI[0] };
+  const peak = Math.max(...data.series.flatMap((s) => s.v));
+  const year = data.years[idx]!;
+  const positive = data.series.filter((s) => s.v[idx]! > 0);
+  const zeros = data.series.filter((s) => s.v[idx]! <= 0);
+  const top = positive.reduce<(typeof positive)[number] | null>((m, s) => (!m || s.v[idx]! > m.v[idx]! ? s : m), null);
+
+  const nodes: GlobeNode[] = [
+    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: "Hà Nội", r: 7, color: "#8fd4c0", tappable: false },
+    ...data.series.map(
+      (s): GlobeNode => ({
+        id: s.id,
+        lon: s.cap[1],
+        lat: s.cap[0],
+        label: s.id,
+        r: 5,
+        color: s.v[idx]! > 0 ? "#f3ece1" : "#c46a4a",
+        tappable: false,
+      }),
+    ),
+  ];
+  // Width scales with the series peak so years compare; sqrt keeps small flows visible.
+  const arcs: GlobeArc[] = positive.map((s) => ({
+    id: s.id,
+    from: { lon: s.cap[1], lat: s.cap[0] },
+    to: hanoi,
+    weight: Math.sqrt(s.v[idx]! / peak),
+    highlight: s.id === top?.id,
+  }));
+
+  return (
+    <div className="flex max-w-xl flex-col gap-2">
+      <p className="text-sm text-paper">
+        Phát lại theo năm: cung là FDI thực hiện từ mỗi nước, chấm đỏ đất là năm bằng 0 — những quan sát OLS trên log phải
+        bỏ.
+      </p>
+      <div className="h-80 overflow-hidden rounded-card sm:h-96">
+        <Globe
+          nodes={nodes}
+          arcs={arcs}
+          focus={[hanoi]}
+          label={`Địa cầu FDI thực hiện vào Việt Nam năm ${year}, theo Xuan và Xing (2008).`}
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          aria-label={playing ? "Tạm dừng" : "Phát"}
+          aria-pressed={playing}
+          onClick={() => {
+            if (!playing && idx >= last) setIdx(0);
+            setPlaying((p) => !p);
+          }}
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-paper bg-paper text-ink"
+        >
+          {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
+        </button>
+        <label className="flex flex-1 flex-col gap-1">
+          <span className="flex items-baseline justify-between text-sm text-paper">
+            <span>Năm</span>
+            <span className="tabular-nums font-medium">{year}</span>
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={last}
+            step={1}
+            value={idx}
+            aria-label="Năm"
+            aria-valuetext={String(year)}
+            onChange={(e) => {
+              setPlaying(false);
+              setIdx(Number(e.target.value));
+            }}
+          />
+        </label>
+      </div>
+      <p className="text-sm text-paper tabular-nums">
+        {year}: {positive.length} nước có FDI dương, {zeros.length} nước bằng 0
+        {zeros.length ? ` (${zeros.map((s) => s.name).join(", ")})` : ""}.
+        {top ? ` Lớn nhất: ${top.name}, ${num(top.v[idx]!, 1)} (cung vàng).` : ""}
+      </p>
+      <p className="text-xs text-mist">Độ dày cung theo căn bậc hai của giá trị, so với đỉnh của cả chuỗi. {CITE_2008}</p>
     </div>
   );
 }

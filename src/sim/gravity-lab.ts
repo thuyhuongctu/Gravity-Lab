@@ -465,6 +465,17 @@ export function xuanXingTable(): CsvTable {
   return { columns: ["country", "year", "fdi", "lndist"], rows };
 }
 
+/** Xuan & Xing (2008) series with each source country's capital, for the year-by-year globe replay. */
+export function xuanXingSeries(): {
+  years: number[];
+  series: Array<{ id: string; name: string; cap: [number, number]; v: number[] }>;
+} {
+  return {
+    years: XX_YEARS,
+    series: XX.map((s) => ({ id: s.id, name: COUNTRIES.find((c) => c.id === s.id)?.name ?? s.id, cap: s.cap, v: s.v })),
+  };
+}
+
 export function xuanXingGrid(): { years: number[]; series: Array<{ name: string; v: number[] }> } {
   return {
     years: XX_YEARS,
