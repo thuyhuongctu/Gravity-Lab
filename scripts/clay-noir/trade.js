@@ -5,14 +5,14 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
 import { clay, done, finish, lights, stage } from "./noir.js";
 
 const W = window.W, H = window.H;
-const st = stage({ width: W, height: H, bg: 0x0a1112, exposure: 1.1 });
+const st = stage({ width: W, height: H, bg: 0x0b0a1f, exposure: 1.1 });
 const { scene, renderer } = st;
 const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
 camera.position.set(0, 5.2, 16);
 camera.lookAt(0, 0.4, 0);
 lights(scene, { target: new THREE.Vector3(0, 0, 0), spotPos: [-6, 13, 8], spot: 900, angle: 0.62, rim: 2.2, fill: 0.3 });
 
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), clay(0x17282b, 0.96));
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), clay(0x1b1942, 0.96));
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = -1.6;
 floor.receiveShadow = true;

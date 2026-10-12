@@ -3,14 +3,14 @@ import * as THREE from "three";
 import { clay, done, finish, lights, stage } from "./noir.js";
 
 const W = window.W, H = window.H;
-const st = stage({ width: W, height: H, bg: 0x070d0f, exposure: 1.05 });
+const st = stage({ width: W, height: H, bg: 0x07061a, exposure: 1.05 });
 const { scene, renderer } = st;
 const camera = new THREE.PerspectiveCamera(34, W / H, 0.1, 100);
 camera.position.set(0, 5.5, 15);
 camera.lookAt(0, -0.3, 0);
 lights(scene, { spotPos: [-8, 12, 6], spot: 500, angle: 0.6, rim: 2.0, fill: 0.25 });
 
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), clay(0x0f1d20, 0.98));
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), clay(0x110f2b, 0.98));
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = -2.2;
 floor.receiveShadow = true;
@@ -35,7 +35,7 @@ const planets = [
   [7.2, 0.58, 0xd8c8a8, 5.3],
 ];
 for (const [r, size, color, a] of planets) {
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.035, 12, 220), clay(0x5c7d80, 0.85));
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.035, 12, 220), clay(0x6a5fb0, 0.85));
   ring.rotation.x = Math.PI / 2;
   ring.receiveShadow = true;
   tilt.add(ring);

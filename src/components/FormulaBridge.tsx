@@ -592,7 +592,7 @@ export function FormulaBridge({
             if (!playing && i === STEPS.length - 1) go(0);
             setPlaying((p) => !p);
           }}
-          className="clay-btn inline-flex min-h-11 items-center gap-2 rounded-full bg-teal px-4 text-sm font-semibold text-paper"
+          className="cosmic-btn inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold"
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
           {playing ? tr("Dừng", "Pause") : tr("Tự chạy", "Play")}

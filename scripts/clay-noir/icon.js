@@ -4,7 +4,7 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
 import { clay, done, finish, lights, stage } from "./noir.js";
 
 const W = window.W, H = window.H;
-const st = stage({ width: W, height: H, bg: 0x0a1416, exposure: 1.15 });
+const st = stage({ width: W, height: H, bg: 0x0b0a1f, exposure: 1.15 });
 const { scene, renderer } = st;
 scene.fog = null;
 const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
@@ -12,7 +12,7 @@ camera.position.set(0, 0.9, 14.2);
 camera.lookAt(0, 0, 0);
 lights(scene, { target: new THREE.Vector3(0, 0, 0), spotPos: [-5, 7, 10], spot: 520, angle: 0.55, rim: 3.2, fill: 0.35 });
 
-const tile = new THREE.Mesh(new RoundedBoxGeometry(12, 12, 1, 8, 0.6), clay(0x1f4649, 0.95));
+const tile = new THREE.Mesh(new RoundedBoxGeometry(12, 12, 1, 8, 0.6), clay(0x2b2668, 0.95));
 tile.position.z = -4.2;
 tile.receiveShadow = true;
 scene.add(tile);

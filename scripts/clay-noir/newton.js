@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { clay, done, finish, lights, stage } from "./noir.js";
 
 const W = window.W, H = window.H;
-const st = stage({ width: W, height: H, bg: 0x0a1112, exposure: 1.1 });
+const st = stage({ width: W, height: H, bg: 0x0b0a1f, exposure: 1.1 });
 const { scene, renderer } = st;
 const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
 camera.position.set(0.2, 1.2, 18.5);
@@ -15,7 +15,7 @@ const table = new THREE.Mesh(new THREE.BoxGeometry(30, 0.6, 14), clay(0x3a2a20, 
 table.position.set(0, -3.6, -2);
 table.receiveShadow = true;
 scene.add(table);
-const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), clay(0x142224, 0.98));
+const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), clay(0x1a1745, 0.98));
 wall.position.set(0, 4, -8);
 wall.receiveShadow = true;
 scene.add(wall);

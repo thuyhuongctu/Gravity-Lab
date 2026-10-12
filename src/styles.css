@@ -131,19 +131,25 @@
   --font-serif: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-math: "Cambria Math", Cambria, "Times New Roman", Georgia, serif;
 
-  --color-void: #04191b;
-  --color-void-2: #0d2e31;
-  --color-ink: #033337;
-  --color-paper: #fffbf4;
-  --color-paper-2: #f3e6cf;
-  --color-muted: #3e5a5c;
-  --color-mist: #9cc9c9;
-  --color-line: #eadbc0;
-  --color-amber: #c2581b;
-  --color-amber-2: #ffd58a;
-  --color-teal: #006687;
-  --color-teal-2: #7fd3dc;
-  --color-clay: #e8762d;
+  /*
+   * Cosmic palette: midnight indigo sky, nebula violet, aurora cyan, a solar
+   * amber, and one breakthrough accent, flare pink. Paper surfaces are pearl.
+   */
+  --color-void: #0b0a1f;
+  --color-void-2: #1a1745;
+  --color-ink: #1a1640;
+  --color-paper: #fbfaff;
+  --color-paper-2: #eee9ff;
+  --color-muted: #4b4577;
+  --color-mist: #a9a3d6;
+  --color-line: #ddd6f6;
+  --color-amber: #b4530a;
+  --color-amber-2: #ffc56b;
+  --color-teal: #0b7285;
+  --color-teal-2: #5eead4;
+  --color-clay: #ff5e8a;
+  --color-violet: #6d28d9;
+  --color-violet-2: #a78bfa;
 
   --radius-card: 1.375rem;
 }
@@ -191,45 +197,48 @@
  * Utilities read these variables, so overriding them per scope re-colours everything.
  */
 :root[data-theme="dark"] .surface {
-  --color-paper: #0d2e31;
-  --color-paper-2: #143b3e;
-  --color-ink: #f3ece1;
-  --color-muted: #a9cccc;
-  --color-line: #24494c;
-  --color-teal: #7fd3dc;
-  --color-amber: #ffd58a;
-  --color-clay: #f4a06a;
+  --color-paper: #141233;
+  --color-paper-2: #1f1c4a;
+  --color-ink: #eeeafb;
+  --color-muted: #b3acd9;
+  --color-line: #2e2a66;
+  --color-teal: #5eead4;
+  --color-amber: #ffc56b;
+  --color-clay: #ff7a9c;
+  --color-violet: #a78bfa;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  background: #fbf4e8;
+  background: #f4f1ff;
   color-scheme: light;
 }
 
 :root[data-theme="light"] .stage {
-  --color-void: #fbf4e8;
-  --color-void-2: #f3e6cf;
-  --color-paper: #033337;
-  --color-paper-2: #24403f;
-  --color-ink: #fffbf4;
-  --color-mist: #3e5a5c;
-  --color-teal-2: #006687;
-  --color-amber-2: #c2581b;
-  --color-clay: #c2581b;
+  --color-void: #f4f1ff;
+  --color-void-2: #e6e0ff;
+  --color-paper: #1a1640;
+  --color-paper-2: #2b2660;
+  --color-ink: #fbfaff;
+  --color-mist: #4b4577;
+  --color-teal-2: #0b7285;
+  --color-amber-2: #b4530a;
+  --color-clay: #c2185b;
+  --color-violet-2: #6d28d9;
 }
 
 /* Paper surfaces inside the light stage keep the original paper palette. */
 :root[data-theme="light"] .stage .surface {
-  --color-void: #04191b;
-  --color-void-2: #0d2e31;
-  --color-paper: #fffbf4;
-  --color-paper-2: #f3e6cf;
-  --color-ink: #033337;
-  --color-mist: #9cc9c9;
-  --color-teal-2: #7fd3dc;
-  --color-amber-2: #ffd58a;
-  --color-clay: #e8762d;
+  --color-void: #0b0a1f;
+  --color-void-2: #1a1745;
+  --color-paper: #fbfaff;
+  --color-paper-2: #eee9ff;
+  --color-ink: #1a1640;
+  --color-mist: #a9a3d6;
+  --color-teal-2: #5eead4;
+  --color-amber-2: #ffc56b;
+  --color-clay: #ff5e8a;
+  --color-violet-2: #a78bfa;
 }
 
 @utility dock-scroll {
@@ -251,13 +260,13 @@
 /* Clay surfaces (BizOn): a raised card, a pressed tray, a pressed-in button. */
 .clay-card {
   box-shadow:
-    inset 0 -9px 0 rgb(110 70 30 / 0.08),
+    inset 0 -9px 0 rgb(40 30 110 / 0.08),
     inset 0 5px 0 rgb(255 255 255 / 0.9),
-    0 26px 36px -24px rgb(110 70 30 / 0.5);
+    0 26px 36px -24px rgb(40 30 110 / 0.45);
 }
 
 .clay-tray {
-  box-shadow: inset 0 3px 6px rgb(110 70 30 / 0.18);
+  box-shadow: inset 0 3px 6px rgb(40 30 110 / 0.16);
 }
 
 .clay-btn {
@@ -275,6 +284,43 @@
 
 :root[data-theme="dark"] .clay-tray {
   box-shadow: inset 0 3px 6px rgb(0 0 0 / 0.35);
+}
+
+/*
+ * Breakthrough accents: an aurora-to-flare gradient for the active control and
+ * the hero headline, and a faint nebula over the dark pages.
+ */
+.cosmic-btn {
+  background: linear-gradient(120deg, #22d3ee 0%, #8b5cf6 55%, #ff5e8a 100%);
+  color: #fff;
+  box-shadow:
+    inset 0 -4px 0 rgb(0 0 0 / 0.18),
+    inset 0 3px 0 rgb(255 255 255 / 0.28),
+    0 8px 22px -10px rgb(139 92 246 / 0.8);
+}
+
+.cosmic-text {
+  background: linear-gradient(100deg, #0b7285 0%, #6d28d9 55%, #c2185b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:root[data-theme="dark"] .cosmic-text {
+  background-image: linear-gradient(100deg, #5eead4 0%, #a78bfa 50%, #ff7a9c 100%);
+}
+
+:root[data-theme="dark"] .surface.nebula,
+:root[data-theme="dark"] .nebula-head {
+  background-image:
+    radial-gradient(60rem 28rem at 85% -10%, rgb(139 92 246 / 0.22), transparent 70%),
+    radial-gradient(40rem 22rem at 5% 0%, rgb(34 211 238 / 0.12), transparent 70%);
+}
+
+:root[data-theme="light"] .surface.nebula {
+  background-image:
+    radial-gradient(60rem 28rem at 85% -10%, rgb(139 92 246 / 0.12), transparent 70%),
+    radial-gradient(40rem 22rem at 5% 0%, rgb(34 211 238 / 0.1), transparent 70%);
 }
 
 /* BizOn's scalloped edge: a row of half circles in the colour below. */

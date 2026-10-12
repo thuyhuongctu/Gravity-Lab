@@ -6,14 +6,14 @@ import { clay, done, finish, lights, stage } from "./noir.js";
 import { HOANG_SA, TRUONG_SA, projector, vietnam } from "./vn.js";
 
 const W = window.W, H = window.H;
-const st = stage({ width: W, height: H, bg: 0x081012, exposure: 1.1 });
+const st = stage({ width: W, height: H, bg: 0x0b0a1f, exposure: 1.1 });
 const { scene, renderer } = st;
 const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 200);
 camera.position.set(3.2, 19, 17.5);
 camera.lookAt(3.0, 0, 1.2);
 lights(scene, { target: new THREE.Vector3(1.5, 0, 0), spotPos: [-12, 14, 6], spot: 2000, angle: 0.6, rim: 1.8, fill: 0.32 });
 
-const sea = new THREE.Mesh(new THREE.PlaneGeometry(70, 50), clay(0x1d4a4f, 0.92));
+const sea = new THREE.Mesh(new THREE.PlaneGeometry(70, 50), clay(0x2a2563, 0.92));
 sea.rotation.x = -Math.PI / 2;
 sea.receiveShadow = true;
 scene.add(sea);

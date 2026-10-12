@@ -2,7 +2,7 @@
 // little ambient, then vignette and film grain over the frame.
 import * as THREE from "three";
 
-export function stage({ width, height, bg = 0x0b1314, exposure = 1.0 }) {
+export function stage({ width, height, bg = 0x0b0a1f, exposure = 1.0 }) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(1);
   renderer.setSize(width, height);
@@ -46,7 +46,7 @@ export const clay = (color, rough = 0.86, extra = {}) =>
 
 /** Noir lighting: a warm spot from upper left, a cool rim from behind right, a low fill. */
 export function lights(scene, { target = new THREE.Vector3(0, 0, 0), spotPos = [-6, 9, 8], spot = 260, rim = 2.2, fill = 0.25, angle = 0.42, shadowSize = 6 } = {}) {
-  scene.add(new THREE.HemisphereLight(0x2a3d44, 0x050808, fill));
+  scene.add(new THREE.HemisphereLight(0x3a3380, 0x05040f, fill));
   const key = new THREE.SpotLight(0xffd9a8, spot, 0, angle, 0.55, 2);
   key.position.set(...spotPos);
   key.target.position.copy(target);
@@ -59,7 +59,7 @@ export function lights(scene, { target = new THREE.Vector3(0, 0, 0), spotPos = [
   key.shadow.camera.near = 1;
   key.shadow.camera.far = 60;
   scene.add(key, key.target);
-  const rimLight = new THREE.DirectionalLight(0x7fc4d6, rim);
+  const rimLight = new THREE.DirectionalLight(0x9d7bff, rim);
   rimLight.position.set(6, 4, -7);
   scene.add(rimLight);
   void shadowSize;

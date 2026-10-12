@@ -5,7 +5,7 @@ import { HOANG_SA, TRUONG_SA, projector, vietnam } from "./vn.js";
 import { clay, done, finish, lights, stage } from "./noir.js";
 
 const W = window.W, H = window.H;
-const st = stage({ width: W, height: H, bg: 0x081012, exposure: 1.05 });
+const st = stage({ width: W, height: H, bg: 0x0b0a1f, exposure: 1.05 });
 const { scene, renderer } = st;
 
 const { X, Z } = projector(108.6, 15.2);
@@ -26,7 +26,7 @@ const seaGeo = new THREE.PlaneGeometry(60, 50, 240, 200);
   }
   seaGeo.computeVertexNormals();
 }
-const sea = new THREE.Mesh(seaGeo, clay(0x1d4a4f, 0.92));
+const sea = new THREE.Mesh(seaGeo, clay(0x2a2563, 0.92));
 sea.rotation.x = -Math.PI / 2;
 sea.receiveShadow = true;
 scene.add(sea);

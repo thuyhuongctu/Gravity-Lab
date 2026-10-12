@@ -132,7 +132,7 @@ const CHAPTERS: Chapter[] = [
 
 export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | null) => void }) {
   return (
-    <div className="surface absolute inset-0 overflow-y-auto bg-paper text-ink">
+    <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
       <VnWatermark />
       <div className="relative">
       <div className="mx-auto max-w-2xl px-4 pt-5">
@@ -150,7 +150,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
         </p>
         <h2 className="mt-3 font-serif text-4xl leading-[1.06] sm:text-5xl">
           {tr("Từ quả táo của Newton đến ", "From Newton's apple to ")}
-          <span className="text-teal">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
+          <span className="cosmic-text">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
         </h2>
         <p className="mt-3 max-w-xl leading-relaxed text-muted">
           {tr(
@@ -167,7 +167,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
             )}
             width={1600}
             height={1000}
-            className="clay-card aspect-[8/5] w-full rounded-card bg-[#081012] object-cover"
+            className="clay-card aspect-[8/5] w-full rounded-card bg-[#0b0a1f] object-cover"
           />
           <figcaption className="mt-2 text-xs text-muted">
             {tr(
@@ -182,7 +182,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
         <img
           src={art("newton.webp")}
           alt={tr("Quả táo rơi, quyển Principia và Mặt Trăng: đất sét phong cách noir", "The falling apple, the Principia and the Moon: clay noir")}
-          className="clay-card aspect-square w-full rounded-card bg-[#0a1112] object-cover"
+          className="clay-card aspect-square w-full rounded-card bg-[#0b0a1f] object-cover"
         />
         <figcaption>
           <p className="font-serif text-xl leading-tight">Isaac Newton</p>

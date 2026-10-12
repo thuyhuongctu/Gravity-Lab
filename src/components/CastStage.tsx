@@ -216,7 +216,7 @@ export function CastStage({
   const lumina = byId("lumina");
   const tu = byId("tu");
   return (
-    <div className="surface absolute inset-0 overflow-y-auto bg-paper text-ink">
+    <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
       <VnWatermark />
       <div className="relative">
       <div className="mx-auto max-w-lg px-4 pt-4">

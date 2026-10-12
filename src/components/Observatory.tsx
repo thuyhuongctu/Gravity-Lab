@@ -155,10 +155,10 @@ export function Observatory() {
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-4 py-3">
+        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <img
-              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=3`}
+              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=4`}
               alt=""
               width={44}
               height={44}
@@ -204,7 +204,7 @@ export function Observatory() {
                   onClick={() => setLang(l)}
                   className={
                     "min-h-9 min-w-10 rounded-full px-2 text-xs font-semibold uppercase " +
-                    (lang === l ? "clay-btn bg-teal-2 text-void" : "text-mist")
+                    (lang === l ? "cosmic-btn" : "text-mist")
                   }
                 >
                   {l === "vi" ? "VI" : "EN"}
@@ -236,7 +236,7 @@ export function Observatory() {
               aria-selected={mode === "story"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "story" ? "clay-btn bg-teal-2 text-void" : "text-mist")
+                (mode === "story" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -251,7 +251,7 @@ export function Observatory() {
               aria-selected={mode === "cast"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "cast" ? "clay-btn bg-teal-2 text-void" : "text-mist")
+                (mode === "cast" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -266,7 +266,7 @@ export function Observatory() {
               aria-selected={mode === "orbit"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "orbit" ? "clay-btn bg-teal-2 text-void" : "text-mist")
+                (mode === "orbit" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -281,7 +281,7 @@ export function Observatory() {
               aria-selected={mode === "trade"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "trade" ? "clay-btn bg-teal-2 text-void" : "text-mist")
+                (mode === "trade" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -296,7 +296,7 @@ export function Observatory() {
               aria-selected={mode === "lab"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "lab" ? "clay-btn bg-teal-2 text-void" : "text-mist")
+                (mode === "lab" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
