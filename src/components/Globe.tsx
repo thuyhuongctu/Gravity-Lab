@@ -9,6 +9,8 @@ import {
   type Vec3,
   type View,
 } from "@/sim/globe";
+import { paint, paintA } from "@/lib/paint";
+import { tr } from "@/lib/prefs";
 
 export type GlobeNode = {
   id: string;
@@ -179,27 +181,27 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       const R = radius();
       const c = centre();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = "#101614";
+      ctx.fillStyle = paint("#101614");
       ctx.fillRect(0, 0, viewW, viewH);
 
       const sea = ctx.createRadialGradient(c.x - R * 0.3, c.y - R * 0.35, R * 0.1, c.x, c.y, R);
-      sea.addColorStop(0, "#22302a");
-      sea.addColorStop(1, "#141c18");
+      sea.addColorStop(0, paint("#22302a"));
+      sea.addColorStop(1, paint("#141c18"));
       ctx.fillStyle = sea;
       ctx.beginPath();
       ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.lineWidth = 0.6;
-      ctx.strokeStyle = "rgba(196,187,176,0.08)";
+      ctx.strokeStyle = paintA("#c4bbb0", 0.08);
       for (const line of GRATICULE) strokePath(line, false);
 
       ctx.lineWidth = 0.9;
-      ctx.strokeStyle = "rgba(196,187,176,0.42)";
+      ctx.strokeStyle = paintA("#c4bbb0", 0.42);
       for (const ring of land) strokePath(ring, true);
 
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(143,212,192,0.35)";
+      ctx.strokeStyle = paintA("#8fd4c0", 0.35);
       ctx.beginPath();
       ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
       ctx.stroke();
@@ -208,7 +210,7 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
         const pts = arcPoints(toVec(arc.from.lon, arc.from.lat), toVec(arc.to.lon, arc.to.lat));
         const w = Math.max(0, Math.min(1, arc.weight));
         ctx.lineWidth = 1 + w * 6;
-        ctx.strokeStyle = arc.highlight ? "rgba(231,194,122,0.92)" : `rgba(143,212,192,${0.2 + w * 0.65})`;
+        ctx.strokeStyle = arc.highlight ? paintA("#e7c27a", 0.92) : paintA("#8fd4c0", 0.2 + w * 0.65);
         strokePath(pts, false);
 
         if (!reduce) {
@@ -216,7 +218,7 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
           const t = (now * speed + arc.id.length * 0.13) % 1;
           const p = project(pts[Math.round(t * (pts.length - 1))]!, view);
           if (p.front) {
-            ctx.fillStyle = arc.highlight ? RING.amber : RING.teal;
+            ctx.fillStyle = paint(arc.highlight ? RING.amber : RING.teal);
             ctx.beginPath();
             ctx.arc(c.x + p.x * R, c.y + p.y * R, 1.5 + w * 2.5, 0, Math.PI * 2);
             ctx.fill();
@@ -234,18 +236,18 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
         const y = c.y + p.y * R;
         const r = dotRadius(n);
         const glow = ctx.createRadialGradient(x, y, r * 0.2, x, y, r * 2.2);
-        glow.addColorStop(0, "rgba(143,212,192,0.3)");
-        glow.addColorStop(1, "rgba(143,212,192,0)");
+        glow.addColorStop(0, paintA("#8fd4c0", 0.3));
+        glow.addColorStop(1, paintA("#8fd4c0", 0));
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = n.color;
+        ctx.fillStyle = paint(n.color);
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fill();
         if (n.ring) {
-          ctx.strokeStyle = RING[n.ring];
+          ctx.strokeStyle = paint(RING[n.ring]);
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.arc(x, y, r + 4, 0, Math.PI * 2);
@@ -263,7 +265,7 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       // Ringed and fixed nodes label first; any later label that would overlap one already drawn is skipped.
       labels.sort((p, q) => p.rank - q.rank);
       const placed: Array<{ l: number; r: number; t: number; b: number }> = [];
-      ctx.fillStyle = "#f3ece1";
+      ctx.fillStyle = paint("#f3ece1");
       for (const lab of labels) {
         const box = { l: lab.x - lab.w / 2 - 2, r: lab.x + lab.w / 2 + 2, t: lab.y - 11, b: lab.y + 3 };
         if (placed.some((o) => box.l < o.r && box.r > o.l && box.t < o.b && box.b > o.t)) continue;
@@ -273,8 +275,8 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
 
       ctx.textAlign = "right";
       ctx.font = "400 10px 'Be Vietnam Pro', sans-serif";
-      ctx.fillStyle = "rgba(196,187,176,0.6)";
-      ctx.fillText("Bản đồ: Natural Earth", viewW - 10, viewH - 10);
+      ctx.fillStyle = paintA("#c4bbb0", 0.6);
+      ctx.fillText(tr("Bản đồ: Natural Earth", "Map: Natural Earth"), viewW - 10, viewH - 10);
     };
 
     const loop = (now: number) => {

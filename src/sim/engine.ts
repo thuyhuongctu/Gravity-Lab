@@ -1,14 +1,16 @@
 /** Pixel-space Newtonian n-body. Leapfrog + Plummer softening. */
 
+import { tr } from "../lib/prefs.ts";
+
 export const G = 980;
 export const EPS = 10;
 
 export const MASS_PRESETS = [
-  { id: "dust", label: "Bụi", mass: 3 },
-  { id: "moon", label: "Trăng", mass: 16 },
-  { id: "planet", label: "Hành tinh", mass: 56 },
-  { id: "giant", label: "Khổng lồ", mass: 340 },
-  { id: "star", label: "Sao", mass: 5600 },
+  { id: "dust", label: "Bụi", en: "Dust", mass: 3 },
+  { id: "moon", label: "Trăng", en: "Moon", mass: 16 },
+  { id: "planet", label: "Hành tinh", en: "Planet", mass: 56 },
+  { id: "giant", label: "Khổng lồ", en: "Giant", mass: 340 },
+  { id: "star", label: "Sao", en: "Star", mass: 5600 },
 ] as const;
 
 export type MassId = (typeof MASS_PRESETS)[number]["id"];
@@ -121,7 +123,7 @@ export class Simulation {
     color?: string;
   }): Body | null {
     if (this.bodies.length >= MAX_BODIES) {
-      this.say("Bầu trời đã đầy");
+      this.say(tr("Bầu trời đã đầy", "The sky is full"));
       return null;
     }
     const mass = Math.max(0.4, spec.mass);
@@ -320,7 +322,7 @@ export class Simulation {
           b.vy += (impulse / b.mass) * ny;
           this.separate(a, b, nx, ny, min - dist);
           this.burst((a.x + b.x) / 2, (a.y + b.y) / 2, "#e0a090", 8);
-          this.say("Va chạm đàn hồi");
+          this.say(tr("Va chạm đàn hồi", "Elastic collision"));
         }
       }
     }
@@ -371,7 +373,7 @@ export class Simulation {
       color: keeper.color,
       radius: keeper.radius,
     });
-    this.say(`Hợp nhất · khối lượng ${Math.round(mass)}`);
+    this.say(tr(`Hợp nhất · khối lượng ${Math.round(mass)}`, `Merged · mass ${Math.round(mass)}`));
   }
 
   private burst(x: number, y: number, color: string, n: number) {
@@ -453,7 +455,7 @@ export class Simulation {
     const reach = peer ? 150 + peer.radius * 3.2 : 260;
     if (turn > 0.28 && gain > 0.08 && s.minDist < reach * 0.92) {
       b.slingCooldown = 3.5;
-      this.say(`Ná hấp dẫn · nhanh hơn ${Math.round(gain * 100)}%`);
+      this.say(tr(`Ná hấp dẫn · nhanh hơn ${Math.round(gain * 100)}%`, `Gravity assist · ${Math.round(gain * 100)}% faster`));
       this.burst(b.x, b.y, "#8fd4c0", 12);
     }
   }

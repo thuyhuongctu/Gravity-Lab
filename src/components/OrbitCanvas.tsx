@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { circularSpeed, EPS, radiusFor, type Simulation } from "@/sim/engine";
+import { paint, paintA } from "@/lib/paint";
+import { tr } from "@/lib/prefs";
 
 const LAUNCH = 1.55;
 
@@ -57,11 +59,7 @@ type Gesture =
     };
 
 function hexAlpha(hex: string, a: number): string {
-  const n = parseInt(hex.replace("#", ""), 16);
-  const r = (n >> 16) & 255;
-  const g = (n >> 8) & 255;
-  const b = n & 255;
-  return `rgba(${r},${g},${b},${a})`;
+  return paintA(hex, a);
 }
 
 type Aim =
@@ -90,13 +88,13 @@ function aimOf(sim: Simulation, x: number, y: number, vx: number, vy: number, ig
       best = { mass: b.mass, dist };
     }
   }
-  if (speed < 8) return { kind: "still", text: "Đứng yên — sẽ bị kéo vào" };
-  if (!best) return { kind: "free", text: "Trôi tự do" };
+  if (speed < 8) return { kind: "still", text: tr("Đứng yên — sẽ bị kéo vào", "At rest — will be pulled in") };
+  if (!best) return { kind: "free", text: tr("Trôi tự do", "Drifting free") };
   const vc = circularSpeed(best.mass, best.dist);
   const ve = vc * Math.SQRT2;
-  if (speed < vc * 0.72) return { kind: "fall", text: "Chậm — dễ rơi vào", vc, ve };
-  if (speed < ve * 0.98) return { kind: "orbit", text: "Trong cửa sổ quỹ đạo", vc, ve };
-  return { kind: "escape", text: "Nhanh — có thể thoát ly", vc, ve };
+  if (speed < vc * 0.72) return { kind: "fall", text: tr("Chậm — dễ rơi vào", "Slow — likely to fall in"), vc, ve };
+  if (speed < ve * 0.98) return { kind: "orbit", text: tr("Trong cửa sổ quỹ đạo", "Inside the orbit window"), vc, ve };
+  return { kind: "escape", text: tr("Nhanh — có thể thoát ly", "Fast — may escape"), vc, ve };
 }
 
 function mix(hex: string, toward: number, t: number): string {
@@ -251,11 +249,11 @@ export function OrbitCanvas({
 
     const draw = () => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = "#101614";
+      ctx.fillStyle = paint("#101614");
       ctx.fillRect(0, 0, viewW, viewH);
 
       for (const s of stars) {
-        ctx.fillStyle = `rgba(243,236,225,${s.a})`;
+        ctx.fillStyle = paintA("#f3ece1", s.a);
         ctx.beginPath();
         ctx.arc(s.x * viewW, s.y * viewH, s.r, 0, Math.PI * 2);
         ctx.fill();
@@ -263,7 +261,7 @@ export function OrbitCanvas({
 
       const com = sim.centerOfMass();
       if (com) {
-        ctx.strokeStyle = "rgba(243,236,225,0.06)";
+        ctx.strokeStyle = paintA("#f3ece1", 0.06);
         ctx.lineWidth = 1;
         for (const r of [120, 240, 420, 680]) {
           const p = toScreen(com.x, com.y);
@@ -309,15 +307,15 @@ export function OrbitCanvas({
         ctx.arc(p.x, p.y, r * (b.mass > 1500 ? 3.4 : 2.6), 0, Math.PI * 2);
         ctx.fill();
         const marble = ctx.createRadialGradient(p.x - r * 0.34, p.y - r * 0.38, r * 0.08, p.x, p.y, r);
-        marble.addColorStop(0, mix(b.color, 255, 0.55));
-        marble.addColorStop(0.55, b.color);
-        marble.addColorStop(1, mix(b.color, 16, 0.45));
+        marble.addColorStop(0, mix(paint(b.color), 255, 0.55));
+        marble.addColorStop(0.55, paint(b.color));
+        marble.addColorStop(1, mix(paint(b.color), 16, 0.45));
         ctx.fillStyle = marble;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
         if (b.id === sim.selectedId) {
-          ctx.strokeStyle = "#f3ece1";
+          ctx.strokeStyle = paint("#f3ece1");
           ctx.lineWidth = 1.5;
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
@@ -363,7 +361,7 @@ export function OrbitCanvas({
           const vy = (bw.y - ow.y) * LAUNCH;
           const ignore = drag.kind === "fling" ? drag.bodyId : undefined;
           const aim = aimOf(sim, ow.x, ow.y, vx, vy, ignore);
-          const ink = AIM_COLOR[aim.kind];
+          const ink = paint(AIM_COLOR[aim.kind]);
           const mass = drag.kind === "spawn" ? propsRef.current.mass : (origin?.mass ?? propsRef.current.mass);
           const count = sim.predict(
             { x: ow.x, y: ow.y, vx, vy, mass, replaceId: ignore },
@@ -406,11 +404,11 @@ export function OrbitCanvas({
               ctx.lineTo(p.x + px * 7, p.y + py * 7);
               ctx.stroke();
               ctx.font = "500 11px 'Be Vietnam Pro', sans-serif";
-              ctx.fillStyle = "#f3ece1";
+              ctx.fillStyle = paint("#f3ece1");
               ctx.fillText(label, p.x + 8, p.y - 6);
             };
-            tick(aim.vc, "vòng");
-            tick(aim.ve, "thoát");
+            tick(aim.vc, tr("vòng", "circular"));
+            tick(aim.ve, tr("thoát", "escape"));
           }
           ctx.strokeStyle = ink;
           ctx.fillStyle = ink;
@@ -425,7 +423,7 @@ export function OrbitCanvas({
             ctx.globalAlpha = 1;
           }
           ctx.font = "500 13px 'Be Vietnam Pro', sans-serif";
-          ctx.fillStyle = "#f3ece1";
+          ctx.fillStyle = paint("#f3ece1");
           ctx.fillText(aim.text, bpt.x + 10, bpt.y - 8);
         }
       }
@@ -611,7 +609,10 @@ export function OrbitCanvas({
       ref={canvasRef}
       className="h-full w-full touch-none"
       role="application"
-      aria-label="Mô phỏng quỹ đạo. Chạm chỗ trống và kéo để phóng thiên thể. Kéo một thiên thể để đặt vận tốc."
+      aria-label={tr(
+        "Mô phỏng quỹ đạo. Chạm chỗ trống và kéo để phóng thiên thể. Kéo một thiên thể để đặt vận tốc.",
+        "Orbit simulation. Touch empty space and drag to launch a body. Drag a body to set its velocity.",
+      )}
     />
   );
 }

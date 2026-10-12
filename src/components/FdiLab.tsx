@@ -4,6 +4,7 @@ import {
   CITE_2019,
   COUNTRIES,
   CSV_TEMPLATE,
+  countryName,
   HANOI,
   MODELS,
   coefRows,
@@ -24,12 +25,13 @@ import {
 import { Pause, Play } from "lucide-react";
 import { ReferenceList } from "@/components/ReferenceList";
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
+import { fmt, fmtInt, tr } from "@/lib/prefs";
+import { usePrefs } from "@/lib/use-prefs";
 
 export type LabPanel = "coef" | "sim" | "ppml" | "data";
 
 function num(n: number, digits = 2): string {
-  if (!Number.isFinite(n)) return "—";
-  return n.toFixed(digits).replace(".", ",");
+  return fmt(n, digits);
 }
 
 function pct(n: number): string {
@@ -62,6 +64,7 @@ function Chip({
 }
 
 export function useLabState() {
+  const { lang } = usePrefs();
   const [panel, setPanel] = useState<LabPanel>("sim");
   const [model, setModel] = useState(7);
   const [a, setA] = useState("JPN");
@@ -79,12 +82,14 @@ export function useLabState() {
   const [yLevel, setYLevel] = useState(true);
   const [yearFE, setYearFE] = useState(true);
   const [clusterOn, setClusterOn] = useState(true);
-  const [estMsg, setEstMsg] = useState("Nạp tệp CSV để bắt đầu.");
+  // Empty means "no message yet"; the default prompt is rendered in the current language.
+  const [estMsg, setEstMsg] = useState("");
   const [est, setEst] = useState<PanelEstimate | null>(null);
   const impact = useMemo(() => impactOf({ a, b, econPct: econ, inst, open, fta }), [a, b, econ, inst, open, fta]);
-  const rows = useMemo(() => coefRows(model), [model]);
-  const lesson = useMemo(() => distanceLesson(), []);
-  const name = (id: string) => COUNTRIES.find((c) => c.id === id)?.name ?? id;
+  // lang is a dependency because the rows carry translated labels.
+  const rows = useMemo(() => coefRows(model), [model, lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  const lesson = useMemo(() => distanceLesson(), [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  const name = countryName;
   const numCols = useMemo(() => {
     if (!table) return [];
     return table.columns.filter((c) => table.rows.some((r) => typeof r[c] === "number" && Number.isFinite(r[c] as number)));
@@ -104,13 +109,17 @@ export function useLabState() {
     setYLevel(true);
     setYearFE(true);
     setClusterOn(true);
-    setEstMsg(parsed.rows.length ? `${parsed.rows.length} dòng đã nạp.` : "Tệp chỉ có tiêu đề cột.");
+    setEstMsg(
+      parsed.rows.length
+        ? tr(`${parsed.rows.length} dòng đã nạp.`, `${parsed.rows.length} rows loaded.`)
+        : tr("Tệp chỉ có tiêu đề cột.", "The file has only column headers."),
+    );
   }
 
   function runEstimate() {
     if (!table) {
       setEst(null);
-      setEstMsg("Nạp tệp CSV để bắt đầu.");
+      setEstMsg("");
       return;
     }
     try {
@@ -125,10 +134,10 @@ export function useLabState() {
         yLevel,
       });
       setEst(result);
-      setEstMsg(result.note || `${result.fits[0]?.fit.n ?? 0} quan sát.`);
+      setEstMsg(result.note || tr(`${result.fits[0]?.fit.n ?? 0} quan sát.`, `${result.fits[0]?.fit.n ?? 0} observations.`));
     } catch (err) {
       setEst(null);
-      setEstMsg(`Không ước lượng được: ${err instanceof Error ? err.message : "lỗi không rõ"}`);
+      setEstMsg(tr("Không ước lượng được: ", "Could not estimate: ") + (err instanceof Error ? err.message : tr("lỗi không rõ", "unknown error")));
     }
   }
 
@@ -143,7 +152,7 @@ export function useLabState() {
     panel, setPanel, model, setModel, a, setA, b, setB, econ, setEcon, inst, setInst, open, setOpen, fta, setFta, check, setCheck,
     impact, rows, lesson, name,
     table, yCol, setYCol, unitCol, setUnitCol, yearCol, setYearCol, xCols, setXCols, yLevel, setYLevel, yearFE, setYearFE, clusterOn, setClusterOn,
-    estMsg, est, numCols, loadTable, runEstimate, note,
+    estMsg: estMsg || tr("Nạp tệp CSV để bắt đầu.", "Load a CSV file to start."), est, numCols, loadTable, runEstimate, note,
   };
 }
 
@@ -154,12 +163,15 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
     <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       {lead}
       <div>
-        <p className="text-xs font-medium text-teal-2">Gravity Lab · FDI vào Việt Nam</p>
+        <p className="text-xs font-medium text-teal-2">{tr("Gravity Lab · FDI vào Việt Nam", "Gravity Lab · FDI into Vietnam")}</p>
         <h2 className="mt-2 max-w-xl font-serif text-2xl leading-snug text-paper">
-          Khoảng cách còn quan trọng với dòng vốn không?
+          {tr("Khoảng cách còn quan trọng với dòng vốn không?", "Does distance still matter for capital flows?")}
         </h2>
         <p className="mt-2 max-w-xl text-sm text-mist">
-          Cùng dạng Newton: quy mô ở tử số, khoảng cách ở mẫu số. Lực ở đây là FDI, mũ không khóa ở 2.
+          {tr(
+            "Cùng dạng Newton: quy mô ở tử số, khoảng cách ở mẫu số. Lực ở đây là FDI, mũ không khóa ở 2.",
+            "Newton's form again: size in the numerator, distance in the denominator. The force here is FDI, and the exponent is not locked at 2.",
+          )}
         </p>
       </div>
 
@@ -178,7 +190,7 @@ function FdiGlobe({ lab }: { lab: LabState }) {
   const terms = COUNTRIES.map((c) => ({ c, term: Math.pow(kmFromHanoi(c.id), beta) }));
   const maxTerm = Math.max(...terms.map((t) => t.term));
   const nodes: GlobeNode[] = [
-    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: "Hà Nội", r: 7, color: "#8fd4c0", tappable: false },
+    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8fd4c0", tappable: false },
     ...COUNTRIES.map(
       (c): GlobeNode => ({
         id: c.id,
@@ -209,12 +221,17 @@ function FdiGlobe({ lab }: { lab: LabState }) {
           onTap={(id) => {
             if (id !== lab.a) lab.setB(id);
           }}
-          label={`Địa cầu các nước nguồn FDI vào Việt Nam. Chạm một nước để so với ${lab.name(lab.a)}.`}
+          label={tr(
+            `Địa cầu các nước nguồn FDI vào Việt Nam. Chạm một nước để so với ${lab.name(lab.a)}.`,
+            `Globe of the source countries of FDI into Vietnam. Tap a country to compare it with ${lab.name(lab.a)}.`,
+          )}
         />
       </div>
       <p className="text-xs text-mist">
-        Chạm một nước để so với {lab.name(lab.a)} (vòng xanh). Độ dày cung là phần do khoảng cách: D^β với β ={" "}
-        {num(beta)} (mô hình 8), so với nước gần Hà Nội nhất. D đo giữa hai thủ đô theo đường tròn lớn.
+        {tr(
+          `Chạm một nước để so với ${lab.name(lab.a)} (vòng xanh). Độ dày cung là phần do khoảng cách: D^β với β = ${num(beta)} (mô hình 8), so với nước gần Hà Nội nhất. D đo giữa hai thủ đô theo đường tròn lớn.`,
+          `Tap a country to compare it with ${lab.name(lab.a)} (teal ring). Arc width is the distance term D^β with β = ${num(beta)} (Model 8), relative to the country nearest Hanoi. D is the great-circle distance between the two capitals.`,
+        )}
       </p>
     </div>
   );
@@ -228,27 +245,28 @@ function SimStage({ lab }: { lab: LabState }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="max-w-xl text-sm text-paper">
-        Chỉ xét khoảng cách địa lý, FDI từ {name(b)} so với {name(a)} sẽ {pct(impact.geoPct)} (β = {num(impact.betaGeo)}).{" "}
-        {name(a)} cách Hà Nội {Math.round(impact.kmA).toLocaleString("vi-VN")} km, {name(b)} cách{" "}
-        {Math.round(impact.kmB).toLocaleString("vi-VN")} km.
+        {tr(
+          `Chỉ xét khoảng cách địa lý, FDI từ ${name(b)} so với ${name(a)} sẽ ${pct(impact.geoPct)} (β = ${num(impact.betaGeo)}). ${name(a)} cách Hà Nội ${fmtInt(impact.kmA)} km, ${name(b)} cách ${fmtInt(impact.kmB)} km.`,
+          `On geographic distance alone, FDI from ${name(b)} relative to ${name(a)} is ${pct(impact.geoPct)} (β = ${num(impact.betaGeo)}). ${name(a)} is ${fmtInt(impact.kmA)} km from Hanoi, ${name(b)} is ${fmtInt(impact.kmB)} km.`,
+        )}
       </p>
       <FdiGlobe lab={lab} />
       {idle ? (
         <div className="max-w-xl rounded-card bg-void-2 px-3 py-3">
-          <p className="text-xs text-mist">Xa hơn 10%, mô hình 8</p>
+          <p className="text-xs text-mist">{tr("Xa hơn 10%, mô hình 8", "10% farther, Model 8")}</p>
           <p className="mt-1 font-serif text-3xl text-clay">{pct(geoTen)}</p>
-          <p className="mt-1 text-sm text-mist">Độ co của khoảng cách. Chưa phải kết quả của một cặp nước.</p>
+          <p className="mt-1 text-sm text-mist">{tr("Độ co của khoảng cách. Chưa phải kết quả của một cặp nước.", "The distance elasticity. Not yet a result for a pair of countries.")}</p>
         </div>
       ) : (
         <div className="grid max-w-xl grid-cols-2 gap-3">
           <div className="rounded-card bg-void-2 px-3 py-3">
-            <p className="text-xs text-mist">Ngắn hạn, năm đầu</p>
+            <p className="text-xs text-mist">{tr("Ngắn hạn, năm đầu", "Short run, first year")}</p>
             <p className={"mt-1 font-serif text-3xl " + (impact.shortRun >= 0 ? "text-teal-2" : "text-clay")}>
               {pct(impact.shortRun)}
             </p>
           </div>
           <div className="rounded-card bg-void-2 px-3 py-3">
-            <p className="text-xs text-mist">Dài hạn, chia cho 1 − 0,45</p>
+            <p className="text-xs text-mist">{tr("Dài hạn, chia cho 1 − 0,45", "Long run, divided by 1 − 0.45")}</p>
             <p className={"mt-1 font-serif text-3xl " + (impact.longRun >= 0 ? "text-teal-2" : "text-clay")}>
               {pct(impact.longRun)}
             </p>
@@ -276,11 +294,13 @@ function SimStage({ lab }: { lab: LabState }) {
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-mist">Muốn xem FTA hoặc một khoảng cách khác, dùng bảng bên.</p>
+        <p className="text-sm text-mist">{tr("Muốn xem FTA hoặc một khoảng cách khác, dùng bảng bên.", "To see an FTA or another distance, use the side panel.")}</p>
       )}
       <p className="max-w-xl text-xs text-mist">
-        Minh họa bằng hệ số mô hình 8 đã công bố, không phải dự báo. Thanh mờ là hệ số chưa có ý nghĩa ở mức 5% khi tính
-        lại. Bài không công bố hiệp phương sai nên không có khoảng tin cậy cho tổng.
+        {tr(
+          "Minh họa bằng hệ số mô hình 8 đã công bố, không phải dự báo. Thanh mờ là hệ số chưa có ý nghĩa ở mức 5% khi tính lại. Bài không công bố hiệp phương sai nên không có khoảng tin cậy cho tổng.",
+          "An illustration with the published Model 8 coefficients, not a forecast. Faded bars are coefficients not significant at 5% when recomputed. The paper does not report the covariance matrix, so the total has no confidence interval.",
+        )}
       </p>
     </div>
   );
@@ -299,8 +319,9 @@ function CoefStage({ lab }: { lab: LabState }) {
   return (
     <div className="flex max-w-xl flex-col gap-3">
       <p className="text-xs text-mist">
-        Mô hình {lab.model + 1} · n = {meta.n} · R² = {num(meta.r2, 4)} · REM, sai số chuẩn vững
-        {cons ? ` · hằng số ${num(cons.b)} (${num(cons.se)})` : ""}
+        {tr("Mô hình", "Model")} {lab.model + 1} · n = {meta.n} · R² = {num(meta.r2, 4)} ·{" "}
+        {tr("REM, sai số chuẩn vững", "REM, robust standard errors")}
+        {cons ? ` · ${tr("hằng số", "constant")} ${num(cons.b)} (${num(cons.se)})` : ""}
       </p>
       <ul className="flex flex-col gap-2">
         {shown.map((r) => (
@@ -323,7 +344,12 @@ function CoefStage({ lab }: { lab: LabState }) {
           </li>
         ))}
       </ul>
-      <p className="text-xs text-mist">Chấm là hệ số. Thanh là khoảng tin cậy 95%. Cắt qua vạch 0 là chưa đủ bằng chứng ở mức 5%. Hằng số không vẽ trên trục này.</p>
+      <p className="text-xs text-mist">
+        {tr(
+          "Chấm là hệ số. Thanh là khoảng tin cậy 95%. Cắt qua vạch 0 là chưa đủ bằng chứng ở mức 5%. Hằng số không vẽ trên trục này.",
+          "Dots are coefficients; bars are 95% confidence intervals. A bar crossing 0 is not enough evidence at 5%. The constant is not drawn on this axis.",
+        )}
+      </p>
       {notes.length ? (
         <ul className="flex list-disc flex-col gap-1 pl-4 text-sm text-paper">
           {notes.map((line) => (
@@ -338,16 +364,43 @@ function CoefStage({ lab }: { lab: LabState }) {
 function reading(model: number): string[] {
   const c = MODELS[model]!.c;
   const out: string[] = [];
-  if (c.lagfdi) out.push(`FDI năm trước tăng 1% thì FDI năm nay tăng khoảng ${num(c.lagfdi[0])}%, các yếu tố khác giữ nguyên.`);
-  if (c.geo) out.push(`Khoảng cách địa lý xa hơn 10% đi kèm FDI thay đổi ${pct(pctChange(c.geo[0], Math.log(1.1)))}.`);
-  if (c.econ) out.push(`Khoảng cách kinh tế lớn hơn 10% đi kèm FDI thay đổi ${pct(pctChange(c.econ[0], Math.log(1.1)))}.`);
-  if (c.fta) out.push(`Có FTA đi kèm FDI cao hơn khoảng ${pct(pctChange(c.fta[0], 1))}. Đó là exp(β) − 1, không phải β × 100.`);
+  if (c.lagfdi)
+    out.push(
+      tr(
+        `FDI năm trước tăng 1% thì FDI năm nay tăng khoảng ${num(c.lagfdi[0])}%, các yếu tố khác giữ nguyên.`,
+        `A 1% rise in last year's FDI goes with about ${num(c.lagfdi[0])}% more FDI this year, other things equal.`,
+      ),
+    );
+  if (c.geo)
+    out.push(
+      tr(
+        `Khoảng cách địa lý xa hơn 10% đi kèm FDI thay đổi ${pct(pctChange(c.geo[0], Math.log(1.1)))}.`,
+        `10% more geographic distance goes with a ${pct(pctChange(c.geo[0], Math.log(1.1)))} change in FDI.`,
+      ),
+    );
+  if (c.econ)
+    out.push(
+      tr(
+        `Khoảng cách kinh tế lớn hơn 10% đi kèm FDI thay đổi ${pct(pctChange(c.econ[0], Math.log(1.1)))}.`,
+        `10% more economic distance goes with a ${pct(pctChange(c.econ[0], Math.log(1.1)))} change in FDI.`,
+      ),
+    );
+  if (c.fta)
+    out.push(
+      tr(
+        `Có FTA đi kèm FDI cao hơn khoảng ${pct(pctChange(c.fta[0], 1))}. Đó là exp(β) − 1, không phải β × 100.`,
+        `An FTA goes with about ${pct(pctChange(c.fta[0], 1))} more FDI. That is exp(β) − 1, not β × 100.`,
+      ),
+    );
   if (c.cult) {
     const [b, se] = c.cult;
     out.push(
       pValue(b, se) < 0.05
-        ? `Khoảng cách văn hóa có hệ số ${num(b)}.`
-        : `Khoảng cách văn hóa là ${num(b)}, chưa có ý nghĩa ở mức 5%.`,
+        ? tr(`Khoảng cách văn hóa có hệ số ${num(b)}.`, `Cultural distance has a coefficient of ${num(b)}.`)
+        : tr(
+            `Khoảng cách văn hóa là ${num(b)}, chưa có ý nghĩa ở mức 5%.`,
+            `Cultural distance is ${num(b)}, not significant at 5%.`,
+          ),
     );
   }
   return out;
@@ -362,9 +415,10 @@ function PpmlStage({ lab }: { lab: LabState }) {
   return (
     <div className="flex max-w-xl flex-col gap-3">
       <p className="text-sm text-paper">
-        {lesson.n} quan sát FDI thực hiện, trong đó {lesson.zeros} năm bằng 0. OLS trên log phải bỏ những năm đó. Cộng 1
-        rồi lấy log là cách vá. PPML giữ cả mẫu (Santos Silva & Tenreyro, 2006). Số dưới đây tính trên dữ liệu Xuan và
-        Xing (2008), không lấy từ bài 2006.
+        {tr(
+          `${lesson.n} quan sát FDI thực hiện, trong đó ${lesson.zeros} năm bằng 0. OLS trên log phải bỏ những năm đó. Cộng 1 rồi lấy log là cách vá. PPML giữ cả mẫu (Santos Silva & Tenreyro, 2006). Số dưới đây tính trên dữ liệu Xuan và Xing (2008), không lấy từ bài 2006.`,
+          `${lesson.n} observations of realised FDI, ${lesson.zeros} of them zero years. OLS on logs has to drop those years; adding 1 before taking logs is a patch. PPML keeps the whole sample (Santos Silva & Tenreyro, 2006). The numbers below are computed on the Xuan and Xing (2008) data, not taken from the 2006 paper.`,
+        )}
       </p>
       <ul className="flex flex-col gap-3">
         {lesson.rows.map((r) => (
@@ -387,12 +441,15 @@ function PpmlStage({ lab }: { lab: LabState }) {
         ))}
       </ul>
       <p className="text-xs text-mist">
-        Một biến giải thích, hiệu ứng cố định năm, sai số chuẩn theo cụm quốc gia. Mô hình đầy đủ còn cần quy mô kinh tế,
-        FTA và các chiều khoảng cách khác. {CITE_2008}
+        {tr(
+          "Một biến giải thích, hiệu ứng cố định năm, sai số chuẩn theo cụm quốc gia. Mô hình đầy đủ còn cần quy mô kinh tế, FTA và các chiều khoảng cách khác.",
+          "One explanatory variable, year fixed effects, standard errors clustered by country. A full model also needs economic size, FTAs and the other distance dimensions.",
+        )}{" "}
+        {CITE_2008}
       </p>
       <XuanGlobe />
       <details className="max-w-xl">
-        <summary className="min-h-11 text-sm text-paper">Xem dữ liệu gốc</summary>
+        <summary className="min-h-11 text-sm text-paper">{tr("Xem dữ liệu gốc", "Show the source data")}</summary>
         <XuanTable />
       </details>
     </div>
@@ -428,7 +485,7 @@ function XuanGlobe() {
   const top = positive.reduce<(typeof positive)[number] | null>((m, s) => (!m || s.v[idx]! > m.v[idx]! ? s : m), null);
 
   const nodes: GlobeNode[] = [
-    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: "Hà Nội", r: 7, color: "#8fd4c0", tappable: false },
+    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8fd4c0", tappable: false },
     ...data.series.map(
       (s): GlobeNode => ({
         id: s.id,
@@ -453,21 +510,26 @@ function XuanGlobe() {
   return (
     <div className="flex max-w-xl flex-col gap-2">
       <p className="text-sm text-paper">
-        Phát lại theo năm: cung là FDI thực hiện từ mỗi nước, chấm đỏ đất là năm bằng 0 — những quan sát OLS trên log phải
-        bỏ.
+        {tr(
+          "Phát lại theo năm: cung là FDI thực hiện từ mỗi nước, chấm đỏ đất là năm bằng 0 — những quan sát OLS trên log phải bỏ.",
+          "Year-by-year replay: each arc is realised FDI from one country; clay dots are zero years — the observations OLS on logs has to drop.",
+        )}
       </p>
       <div className="h-80 overflow-hidden rounded-card sm:h-96">
         <Globe
           nodes={nodes}
           arcs={arcs}
           focus={[hanoi]}
-          label={`Địa cầu FDI thực hiện vào Việt Nam năm ${year}, theo Xuan và Xing (2008).`}
+          label={tr(
+            `Địa cầu FDI thực hiện vào Việt Nam năm ${year}, theo Xuan và Xing (2008).`,
+            `Globe of realised FDI into Vietnam in ${year}, from Xuan and Xing (2008).`,
+          )}
         />
       </div>
       <div className="flex items-center gap-3">
         <button
           type="button"
-          aria-label={playing ? "Tạm dừng" : "Phát"}
+          aria-label={playing ? tr("Tạm dừng", "Pause") : tr("Phát", "Play")}
           aria-pressed={playing}
           onClick={() => {
             if (!playing && idx >= last) setIdx(0);
@@ -479,7 +541,7 @@ function XuanGlobe() {
         </button>
         <label className="flex flex-1 flex-col gap-1">
           <span className="flex items-baseline justify-between text-sm text-paper">
-            <span>Năm</span>
+            <span>{tr("Năm", "Year")}</span>
             <span className="tabular-nums font-medium">{year}</span>
           </span>
           <input
@@ -488,7 +550,7 @@ function XuanGlobe() {
             max={last}
             step={1}
             value={idx}
-            aria-label="Năm"
+            aria-label={tr("Năm", "Year")}
             aria-valuetext={String(year)}
             onChange={(e) => {
               setPlaying(false);
@@ -498,11 +560,20 @@ function XuanGlobe() {
         </label>
       </div>
       <p className="text-sm text-paper tabular-nums">
-        {year}: {positive.length} nước có FDI dương, {zeros.length} nước bằng 0
+        {tr(
+          `${year}: ${positive.length} nước có FDI dương, ${zeros.length} nước bằng 0`,
+          `${year}: ${positive.length} countries with positive FDI, ${zeros.length} at zero`,
+        )}
         {zeros.length ? ` (${zeros.map((s) => s.name).join(", ")})` : ""}.
-        {top ? ` Lớn nhất: ${top.name}, ${num(top.v[idx]!, 1)} (cung vàng).` : ""}
+        {top ? tr(` Lớn nhất: ${top.name}, ${num(top.v[idx]!, 1)} (cung vàng).`, ` Largest: ${top.name}, ${num(top.v[idx]!, 1)} (amber arc).`) : ""}
       </p>
-      <p className="text-xs text-mist">Độ dày cung theo căn bậc hai của giá trị, so với đỉnh của cả chuỗi. {CITE_2008}</p>
+      <p className="text-xs text-mist">
+        {tr(
+          "Độ dày cung theo căn bậc hai của giá trị, so với đỉnh của cả chuỗi.",
+          "Arc width follows the square root of the value, relative to the peak of the whole series.",
+        )}{" "}
+        {CITE_2008}
+      </p>
     </div>
   );
 }
@@ -514,7 +585,7 @@ function XuanTable() {
       <table className="text-xs text-paper">
         <thead>
           <tr className="text-mist">
-            <th className="py-1 pr-3 text-left font-medium">Nước</th>
+            <th className="py-1 pr-3 text-left font-medium">{tr("Nước", "Country")}</th>
             {grid.years.map((y) => (
               <th key={y} className="px-1 py-1 text-right font-medium">{y}</th>
             ))}
@@ -545,8 +616,10 @@ function DataStage({ lab }: { lab: LabState }) {
   return (
     <div className="flex max-w-xl flex-col gap-3">
       <p className="text-sm text-paper">
-        Mỗi dòng là một cặp quốc gia–năm. Nếu FDI ở dạng mức, Lab chạy cả OLS trên log — phải bỏ năm bằng 0 — và PPML trên
-        cả mẫu. Phép tính ở lại trên máy này.
+        {tr(
+          "Mỗi dòng là một cặp quốc gia–năm. Nếu FDI ở dạng mức, Lab chạy cả OLS trên log — phải bỏ năm bằng 0 — và PPML trên cả mẫu. Phép tính ở lại trên máy này.",
+          "Each row is a country–year pair. If FDI is in levels, the Lab runs both OLS on logs — dropping zero years — and PPML on the whole sample. The computation stays on this device.",
+        )}
       </p>
       {!est ? (
         <p className="text-sm text-mist">{lab.estMsg}</p>
@@ -555,7 +628,7 @@ function DataStage({ lab }: { lab: LabState }) {
           <table className="w-full min-w-72 text-sm text-paper">
             <thead>
               <tr className="text-xs text-mist">
-                <th className="py-2 pr-3 text-left font-medium">Biến</th>
+                <th className="py-2 pr-3 text-left font-medium">{tr("Biến", "Variable")}</th>
                 {est.fits.map((f) => (
                   <th key={f.label} className="py-2 pr-3 text-right font-medium">{f.label}</th>
                 ))}
@@ -564,7 +637,7 @@ function DataStage({ lab }: { lab: LabState }) {
             <tbody>
               {names.map((n) => (
                 <tr key={n} className="border-t border-paper/15">
-                  <td className="py-2 pr-3">{n === "_cons" ? "Hằng số" : n}</td>
+                  <td className="py-2 pr-3">{n === "_cons" ? tr("Hằng số", "Constant") : n}</td>
                   {est.fits.map((f) => {
                     const c = f.fit.coef.find((k) => k.name === n);
                     return (
@@ -583,7 +656,7 @@ function DataStage({ lab }: { lab: LabState }) {
                 </tr>
               ))}
               <tr className="border-t border-paper/15">
-                <td className="py-2 pr-3">Số quan sát</td>
+                <td className="py-2 pr-3">{tr("Số quan sát", "Observations")}</td>
                 {est.fits.map((f) => (
                   <td key={f.label} className="py-2 pr-3 text-right tabular-nums">{f.fit.n}</td>
                 ))}
@@ -598,7 +671,12 @@ function DataStage({ lab }: { lab: LabState }) {
           </table>
         </div>
       )}
-      {est ? <p className="text-xs text-mist">Sao tính từ p hai phía. Sai số chuẩn trong ngoặc. {lab.estMsg}</p> : null}
+      {est ? (
+        <p className="text-xs text-mist">
+          {tr("Sao tính từ p hai phía. Sai số chuẩn trong ngoặc.", "Stars from two-sided p-values. Standard errors in parentheses.")}{" "}
+          {lab.estMsg}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -608,16 +686,16 @@ export function FdiDock({ lab }: { lab: LabState }) {
     <div className="flex flex-col gap-4 p-4 pb-8">
       <div className="flex flex-wrap gap-2">
         <Chip active={lab.panel === "coef"} onClick={() => lab.setPanel("coef")}>
-          Hệ số 2019
+          {tr("Hệ số 2019", "2019 coefficients")}
         </Chip>
         <Chip active={lab.panel === "sim"} onClick={() => lab.setPanel("sim")}>
-          Tác động
+          {tr("Tác động", "Impact")}
         </Chip>
         <Chip active={lab.panel === "ppml"} onClick={() => lab.setPanel("ppml")}>
-          Vì sao PPML
+          {tr("Vì sao PPML", "Why PPML")}
         </Chip>
         <Chip active={lab.panel === "data"} onClick={() => lab.setPanel("data")}>
-          Dữ liệu của bạn
+          {tr("Dữ liệu của bạn", "Your data")}
         </Chip>
       </div>
       {lab.panel === "coef" ? <CoefDock lab={lab} /> : null}
@@ -625,16 +703,21 @@ export function FdiDock({ lab }: { lab: LabState }) {
       {lab.panel === "data" ? <DataDock lab={lab} /> : null}
       {lab.panel === "ppml" ? (
         <p className="text-sm text-muted">
-          Santos Silva và Tenreyro (2006): hồi quy log làm méo hệ số khoảng cách khi nhiều quan sát bằng không, và khi
-          phương sai không tỉ lệ với bình phương kỳ vọng. PPML ước lượng trực tiếp trên mức FDI.
+          {tr(
+            "Santos Silva và Tenreyro (2006): hồi quy log làm méo hệ số khoảng cách khi nhiều quan sát bằng không, và khi phương sai không tỉ lệ với bình phương kỳ vọng. PPML ước lượng trực tiếp trên mức FDI.",
+            "Santos Silva and Tenreyro (2006): log regressions distort the distance coefficient when many observations are zero and when the variance is not proportional to the squared mean. PPML estimates directly on FDI levels.",
+          )}
         </p>
       ) : null}
       <p className="text-xs text-muted">
         {lab.panel === "ppml"
           ? CITE_2008
           : lab.panel === "data"
-            ? "Santos Silva và Tenreyro (2006). File chỉ được đọc trên máy này."
-            : `${CITE_2019} Bảng 6 · 16 đối tác, 2006–2015.`}
+            ? tr(
+                "Santos Silva và Tenreyro (2006). File chỉ được đọc trên máy này.",
+                "Santos Silva and Tenreyro (2006). Files are read only on this device.",
+              )
+            : `${CITE_2019} ${tr("Bảng 6 · 16 đối tác, 2006–2015.", "Table 6 · 16 partners, 2006–2015.")}`}
       </p>
     </div>
   );
@@ -653,24 +736,37 @@ function CoefDock({ lab }: { lab: LabState }) {
       </div>
       <label className="flex min-h-11 items-center gap-2 text-sm">
         <input type="checkbox" checked={lab.check} onChange={(e) => lab.setCheck(e.target.checked)} />
-        So sao trong bài với mức ý nghĩa tính lại
+        {tr("So sao trong bài với mức ý nghĩa tính lại", "Compare the paper's stars with recomputed significance")}
       </label>
       {lab.check && flagged.length ? (
         <ul className="flex flex-col gap-1 text-sm text-muted">
           {flagged.map((r) => (
             <li key={r.id}>
-              {r.label}: bài ghi {r.published || "không sao"}, tính lại p = {num(r.p, 3)} ({r.recomputed || "không sao"}).
+              {r.label}: {tr("bài ghi", "paper reports")} {r.published || tr("không sao", "no stars")},{" "}
+              {tr("tính lại", "recomputed")} p = {num(r.p, 3)} ({r.recomputed || tr("không sao", "no stars")}).
             </li>
           ))}
         </ul>
       ) : null}
       <details className="rounded-card border border-line px-3 py-2">
-        <summary className="min-h-11 text-sm font-medium">Câu hỏi thảo luận</summary>
+        <summary className="min-h-11 text-sm font-medium">{tr("Câu hỏi thảo luận", "Discussion questions")}</summary>
         <ol className="list-decimal pb-2 pl-4 text-sm text-muted">
-          <li>R² chỉ khoảng 0,006–0,024, trong khi FDI và FDI năm trước tương quan 0,62. R² nào đang được báo cáo?</li>
-          <li>Đưa biến trễ của biến phụ thuộc vào mô hình hiệu ứng ngẫu nhiên gây ra vấn đề gì?</li>
-          <li>GDP Việt Nam giống nhau cho mọi đối tác trong một năm. Thêm hiệu ứng cố định năm thì biến này ra sao?</li>
-          <li>Khoảng cách văn hóa không đổi theo thời gian. Hiệu ứng cố định quốc gia còn ước lượng được nó không?</li>
+          <li>{tr(
+            "R² chỉ khoảng 0,006–0,024, trong khi FDI và FDI năm trước tương quan 0,62. R² nào đang được báo cáo?",
+            "R² is only about 0.006–0.024, while FDI and last year's FDI correlate at 0.62. Which R² is being reported?",
+          )}</li>
+          <li>{tr(
+            "Đưa biến trễ của biến phụ thuộc vào mô hình hiệu ứng ngẫu nhiên gây ra vấn đề gì?",
+            "What problem does putting the lagged dependent variable into a random-effects model cause?",
+          )}</li>
+          <li>{tr(
+            "GDP Việt Nam giống nhau cho mọi đối tác trong một năm. Thêm hiệu ứng cố định năm thì biến này ra sao?",
+            "Vietnam's GDP is the same for every partner in a given year. What happens to this variable once year fixed effects are added?",
+          )}</li>
+          <li>{tr(
+            "Khoảng cách văn hóa không đổi theo thời gian. Hiệu ứng cố định quốc gia còn ước lượng được nó không?",
+            "Cultural distance does not change over time. Can country fixed effects still estimate it?",
+          )}</li>
         </ol>
       </details>
     </div>
@@ -681,59 +777,59 @@ function SimDock({ lab }: { lab: LabState }) {
   return (
     <div className="flex flex-col gap-3">
       <label className="block text-sm">
-        <span className="mb-1 block font-medium">Đối tác đang xét</span>
+        <span className="mb-1 block font-medium">{tr("Đối tác đang xét", "Partner")}</span>
         <select
           className="min-h-11 w-full rounded-lg border border-line bg-paper-2 px-2"
           value={lab.a}
-          aria-label="Đối tác đang xét"
+          aria-label={tr("Đối tác đang xét", "Partner")}
           onChange={(e) => lab.setA(e.target.value)}
         >
           {COUNTRIES.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name} · {Math.round(kmFromHanoi(c.id)).toLocaleString("vi-VN")} km
+              {tr(c.name, c.en)} · {fmtInt(kmFromHanoi(c.id))} km
             </option>
           ))}
         </select>
       </label>
       <label className="block text-sm">
-        <span className="mb-1 block font-medium">So khoảng cách với</span>
+        <span className="mb-1 block font-medium">{tr("So khoảng cách với", "Compare distance with")}</span>
         <select
           className="min-h-11 w-full rounded-lg border border-line bg-paper-2 px-2"
           value={lab.b}
-          aria-label="Quốc gia để so khoảng cách"
+          aria-label={tr("Quốc gia để so khoảng cách", "Country to compare distance with")}
           onChange={(e) => lab.setB(e.target.value)}
         >
           {COUNTRIES.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name} · {Math.round(kmFromHanoi(c.id)).toLocaleString("vi-VN")} km
+              {tr(c.name, c.en)} · {fmtInt(kmFromHanoi(c.id))} km
             </option>
           ))}
         </select>
       </label>
       <label className="flex min-h-11 items-center gap-2 text-sm">
         <input type="checkbox" checked={lab.fta} onChange={(e) => lab.setFta(e.target.checked)} />
-        Việt Nam ký FTA với đối tác đang xét
+        {tr("Việt Nam ký FTA với đối tác đang xét", "Vietnam signs an FTA with this partner")}
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
-          <span>Khoảng cách kinh tế</span>
+          <span>{tr("Khoảng cách kinh tế", "Economic distance")}</span>
           <span className="tabular-nums font-medium">{lab.econ >= 0 ? "+" : ""}{lab.econ}%</span>
         </span>
-        <input type="range" min={-30} max={30} step={5} value={lab.econ} aria-label="Khoảng cách kinh tế thay đổi" onChange={(e) => lab.setEcon(Number(e.target.value))} />
+        <input type="range" min={-30} max={30} step={5} value={lab.econ} aria-label={tr("Khoảng cách kinh tế thay đổi", "Change in economic distance")} onChange={(e) => lab.setEcon(Number(e.target.value))} />
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
-          <span>Khoảng cách thể chế</span>
+          <span>{tr("Khoảng cách thể chế", "Institutional distance")}</span>
           <span className="tabular-nums font-medium">{lab.inst >= 0 ? "+" : ""}{num(lab.inst, 1)}</span>
         </span>
-        <input type="range" min={-2} max={2} step={0.5} value={lab.inst} aria-label="Khoảng cách thể chế thay đổi" onChange={(e) => lab.setInst(Number(e.target.value))} />
+        <input type="range" min={-2} max={2} step={0.5} value={lab.inst} aria-label={tr("Khoảng cách thể chế thay đổi", "Change in institutional distance")} onChange={(e) => lab.setInst(Number(e.target.value))} />
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
-          <span>Độ mở thương mại</span>
+          <span>{tr("Độ mở thương mại", "Trade openness")}</span>
           <span className="tabular-nums font-medium">+{num(lab.open, 2)}</span>
         </span>
-        <input type="range" min={0} max={0.3} step={0.05} value={lab.open} aria-label="Độ mở thương mại tăng" onChange={(e) => lab.setOpen(Number(e.target.value))} />
+        <input type="range" min={0} max={0.3} step={0.05} value={lab.open} aria-label={tr("Độ mở thương mại tăng", "Increase in trade openness")} onChange={(e) => lab.setOpen(Number(e.target.value))} />
       </label>
     </div>
   );
@@ -744,16 +840,19 @@ function DataDock({ lab }: { lab: LabState }) {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-muted">
-        CSV dấu phẩy hoặc chấm phẩy, một dòng một cặp quốc gia–năm. Với bộ 2019, xuất từ Stata bằng export delimited.
+        {tr(
+          "CSV dấu phẩy hoặc chấm phẩy, một dòng một cặp quốc gia–năm. Với bộ 2019, xuất từ Stata bằng export delimited.",
+          "Comma- or semicolon-separated CSV, one row per country–year pair. For the 2019 dataset, export from Stata with export delimited.",
+        )}
       </p>
       <div className="flex flex-wrap gap-2">
         <label className="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-ink bg-ink px-3 text-sm font-medium text-paper">
-          Nạp CSV
+          {tr("Nạp CSV", "Load CSV")}
           <input
             type="file"
             accept=".csv,text/csv"
             className="sr-only"
-            aria-label="Nạp tệp CSV"
+            aria-label={tr("Nạp tệp CSV", "Load a CSV file")}
             onChange={(e) => {
               const file = e.target.files?.[0];
               e.target.value = "";
@@ -762,7 +861,7 @@ function DataDock({ lab }: { lab: LabState }) {
                 try {
                   lab.loadTable(parseCSV(txt));
                 } catch (err) {
-                  lab.note(`Không ước lượng được: ${err instanceof Error ? err.message : "CSV"}`);
+                  lab.note(tr("Không ước lượng được: ", "Could not estimate: ") + (err instanceof Error ? err.message : "CSV"));
                 }
               });
             }}
@@ -780,20 +879,20 @@ function DataDock({ lab }: { lab: LabState }) {
             URL.revokeObjectURL(url);
           }}
         >
-          Tải tệp mẫu
+          {tr("Tải tệp mẫu", "Download template")}
         </button>
         <button type="button" className="min-h-11 rounded-full border border-line px-3 text-sm font-medium" onClick={() => lab.loadTable(xuanXingTable(), ["lndist"])}>
-          Nạp bảng Xuan & Xing
+          {tr("Nạp bảng Xuan & Xing", "Load the Xuan & Xing table")}
         </button>
       </div>
       {lab.table && lab.numCols.length ? (
         <>
           <label className="block text-sm">
-            <span className="mb-1 block font-medium">Biến phụ thuộc</span>
+            <span className="mb-1 block font-medium">{tr("Biến phụ thuộc", "Dependent variable")}</span>
             <select
               className={selectClass}
               value={lab.yCol}
-              aria-label="Biến phụ thuộc"
+              aria-label={tr("Biến phụ thuộc", "Dependent variable")}
               onChange={(e) => {
                 const y = e.target.value;
                 lab.setYCol(y);
@@ -807,20 +906,20 @@ function DataDock({ lab }: { lab: LabState }) {
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
             <input type="checkbox" checked={lab.yLevel} onChange={(e) => lab.setYLevel(e.target.checked)} />
-            Biến phụ thuộc ở dạng mức (không phải log)
+            {tr("Biến phụ thuộc ở dạng mức (không phải log)", "Dependent variable in levels (not logs)")}
           </label>
           <label className="block text-sm">
-            <span className="mb-1 block font-medium">Cột quốc gia</span>
-            <select className={selectClass} value={lab.unitCol} aria-label="Cột quốc gia" onChange={(e) => lab.setUnitCol(e.target.value)}>
+            <span className="mb-1 block font-medium">{tr("Cột quốc gia", "Country column")}</span>
+            <select className={selectClass} value={lab.unitCol} aria-label={tr("Cột quốc gia", "Country column")} onChange={(e) => lab.setUnitCol(e.target.value)}>
               {lab.table.columns.map((c) => (
                 <option key={c}>{c}</option>
               ))}
             </select>
           </label>
           <label className="block text-sm">
-            <span className="mb-1 block font-medium">Cột năm</span>
-            <select className={selectClass} value={lab.yearCol} aria-label="Cột năm" onChange={(e) => lab.setYearCol(e.target.value)}>
-              <option value="">Không có</option>
+            <span className="mb-1 block font-medium">{tr("Cột năm", "Year column")}</span>
+            <select className={selectClass} value={lab.yearCol} aria-label={tr("Cột năm", "Year column")} onChange={(e) => lab.setYearCol(e.target.value)}>
+              <option value="">{tr("Không có", "None")}</option>
               {lab.table.columns.map((c) => (
                 <option key={c}>{c}</option>
               ))}
@@ -828,14 +927,14 @@ function DataDock({ lab }: { lab: LabState }) {
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
             <input type="checkbox" checked={lab.yearFE} onChange={(e) => lab.setYearFE(e.target.checked)} />
-            Hiệu ứng cố định năm
+            {tr("Hiệu ứng cố định năm", "Year fixed effects")}
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
             <input type="checkbox" checked={lab.clusterOn} onChange={(e) => lab.setClusterOn(e.target.checked)} />
-            Sai số chuẩn theo cụm quốc gia
+            {tr("Sai số chuẩn theo cụm quốc gia", "Standard errors clustered by country")}
           </label>
           <fieldset>
-            <legend className="mb-1 text-sm font-medium">Biến giải thích</legend>
+            <legend className="mb-1 text-sm font-medium">{tr("Biến giải thích", "Explanatory variables")}</legend>
             <div className="flex flex-col">
               {lab.numCols
                 .filter((c) => c !== lab.yCol)
@@ -852,7 +951,7 @@ function DataDock({ lab }: { lab: LabState }) {
             </div>
           </fieldset>
           <button type="button" className="min-h-11 rounded-full bg-ink px-3 text-sm font-medium text-paper" onClick={() => lab.runEstimate()}>
-            Ước lượng
+            {tr("Ước lượng", "Estimate")}
           </button>
         </>
       ) : null}

@@ -12,6 +12,10 @@ Bản trực tuyến: **https://thuyhuongctu.github.io/Gravity-Lab/** (GitHub Pa
 
 *Live version at the URL above (GitHub Pages, deployed automatically from `main`).*
 
+Giao diện song ngữ Việt–Anh (nút VI/EN, hoặc mở với `?lang=en`) và có chế độ sáng/tối (mặc định theo cài đặt của thiết bị); lựa chọn được ghi nhớ trên máy. Đầu trang và mục tài liệu tham khảo hiển thị DOI để trích dẫn.
+
+*The interface is bilingual, Vietnamese and English (VI/EN switch, or open with `?lang=en`), with light and dark themes (following the device setting by default); the choice is remembered on the device. The header and the reference list show the DOI to cite.*
+
 Ứng dụng là một trang tĩnh viết bằng React, Vite và Tailwind. Cần Node.js 22 trở lên.
 
 *The app is a static single page built with React, Vite and Tailwind. Node.js 22 or later is required.*

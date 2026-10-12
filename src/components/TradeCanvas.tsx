@@ -4,6 +4,8 @@ import {
   radiusForGdp,
   type Economy,
 } from "@/sim/trade";
+import { paint, paintA } from "@/lib/paint";
+import { tr } from "@/lib/prefs";
 
 type Props = {
   economies: Economy[];
@@ -103,7 +105,7 @@ export function TradeCanvas({ economies, focusId, pairId, gamma, boosts, onMove,
     const draw = (now: number) => {
       const { economies: ecos, focusId: focus, pairId: pair, gamma: g, boosts: bst } = propsRef.current;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = "#101614";
+      ctx.fillStyle = paint("#101614");
       ctx.fillRect(0, 0, viewW, viewH);
 
       const rows = partnerRows(ecos, focus, g, pair, bst);
@@ -120,7 +122,7 @@ export function TradeCanvas({ economies, focusId, pairId, gamma, boosts, onMove,
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.quadraticCurveTo(mx, my, b.x, b.y);
-          ctx.strokeStyle = selected ? "rgba(231,194,122,0.9)" : `rgba(143,212,192,${0.18 + weight * 0.65})`;
+          ctx.strokeStyle = selected ? paintA("#e7c27a", 0.9) : paintA("#8fd4c0", 0.18 + weight * 0.65);
           ctx.lineWidth = 1 + weight * 7;
           ctx.setLineDash(reduce ? [] : [5, 9]);
           ctx.lineDashOffset = reduce ? 0 : -((now / 28) % 28);
@@ -135,25 +137,25 @@ export function TradeCanvas({ economies, focusId, pairId, gamma, boosts, onMove,
         const p = toScreen(e.x, e.y);
         const r = Math.max(8, radiusForGdp(e.gdp) * cam.k);
         const glow = ctx.createRadialGradient(p.x, p.y, r * 0.2, p.x, p.y, r * 2.2);
-        glow.addColorStop(0, "rgba(143,212,192,0.28)");
-        glow.addColorStop(1, "rgba(143,212,192,0)");
+        glow.addColorStop(0, paintA("#8fd4c0", 0.28));
+        glow.addColorStop(1, paintA("#8fd4c0", 0));
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r * 2.2, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = e.color;
+        ctx.fillStyle = paint(e.color);
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
         if (e.id === focus || e.id === pair) {
-          ctx.strokeStyle = e.id === focus ? "#8fd4c0" : "#e7c27a";
+          ctx.strokeStyle = e.id === focus ? paint("#8fd4c0") : paint("#e7c27a");
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.arc(p.x, p.y, r + 5, 0, Math.PI * 2);
           ctx.stroke();
         }
-        ctx.fillStyle = "#f3ece1";
-        ctx.fillText(e.short, p.x, p.y + r + 14);
+        ctx.fillStyle = paint("#f3ece1");
+        ctx.fillText(tr(e.short, e.shortEn), p.x, p.y + r + 14);
       }
     };
 
@@ -257,7 +259,10 @@ export function TradeCanvas({ economies, focusId, pairId, gamma, boosts, onMove,
       ref={canvasRef}
       className="h-full w-full touch-none"
       role="application"
-      aria-label="Sơ đồ mô hình trọng lực thương mại. Kéo một nền kinh tế để đổi khoảng cách. Chạm để chọn gốc dòng chảy."
+      aria-label={tr(
+        "Sơ đồ mô hình trọng lực thương mại. Kéo một nền kinh tế để đổi khoảng cách. Chạm để chọn gốc dòng chảy.",
+        "Trade gravity model diagram. Drag an economy to change distances. Tap one to make it the origin of the flows.",
+      )}
     />
   );
 }
