@@ -178,6 +178,19 @@ const CHAPTERS: Chapter[] = [
       en: "Bảo Ngọc in a spacesuit at a blackboard showing β = −0.38 and a curve of FDI falling with the kilometres to the factory",
     },
   },
+  {
+    year: "2023",
+    who: "Majumdar & Basu",
+    vi: {
+      title: "Tỷ giá bất định trong phương trình trọng lực",
+      text: "Thương mại song phương của Ấn Độ với năm đối tác lớn nhất và các nước SAARC, 2000–2018, chia theo năm nhóm ngành. Phương trình trọng lực được mở rộng thêm chỉ số bất định tỷ giá (độ lệch chuẩn của thay đổi log tỷ giá thực) và tỷ giá thực, ước lượng hiệu ứng cố định. Bất định tỷ giá làm giảm thương mại nguyên liệu nông nghiệp với SAARC nhưng đi kèm thương mại lớn hơn với năm đối tác lớn, nơi thị trường phòng ngừa rủi ro phát triển hơn (Majumdar & Basu, 2023). Một điểm đáng bàn cho lớp học: hiệu ứng cố định xóa mất khoảng cách vì khoảng cách không đổi theo thời gian, nên bài ước lượng khoảng cách trong một hồi quy OLS riêng chỉ có một biến; hệ số dương với năm đối tác lớn vì thế nên đọc thận trọng. Đây là lý do mô hình trọng lực cấu trúc dùng hiệu ứng cố định theo cặp nước hoặc PPML.",
+    },
+    en: {
+      title: "Exchange-rate uncertainty in the gravity equation",
+      text: "India's bilateral trade with its top five partners and the SAARC countries, 2000–2018, in five industry groups. The gravity equation is augmented with an exchange-rate uncertainty index (the standard deviation of changes in the log real exchange rate) and the real exchange rate, and estimated with fixed effects. Uncertainty reduces trade in agricultural raw materials with SAARC partners but goes with more trade with the top five partners, where hedging markets are deeper (Majumdar & Basu, 2023). A point for discussion in class: fixed effects wipe out distance because it does not change over time, so the paper estimates distance in a separate OLS regression with distance alone; the positive coefficient for the top five partners should therefore be read with care. This is why structural gravity uses pair fixed effects or PPML.",
+    },
+    formula: "ln Tᵢⱼₜ = α + β₁ ln(YᵢYⱼ)ₜ + β₂ ln(PopᵢPopⱼ)ₜ + β₃ ln Eᵢⱼₜ + β₄ ln RERᵢⱼₜ + β₅ ln Dᵢⱼ + u",
+  },
 ];
 
 export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | null) => void }) {
