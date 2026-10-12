@@ -7,6 +7,7 @@ import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiL
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
 import { SoundPanel } from "@/components/SoundPanel";
+import { RoomCover } from "@/components/RoomCover";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { fmt, setLang, setTheme, tr } from "@/lib/prefs";
@@ -154,10 +155,10 @@ export function Observatory() {
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-4 py-3">
+        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <img
-              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=2`}
+              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=4`}
               alt=""
               width={44}
               height={44}
@@ -190,7 +191,7 @@ export function Observatory() {
               DOI {APP_DOI}
             </a>
             <div
-              className="flex rounded-full bg-void-2 p-1"
+              className="clay-tray flex rounded-full bg-void-2 p-1"
               role="group"
               aria-label={tr("Ngôn ngữ", "Language")}
             >
@@ -203,7 +204,7 @@ export function Observatory() {
                   onClick={() => setLang(l)}
                   className={
                     "min-h-9 min-w-10 rounded-full px-2 text-xs font-semibold uppercase " +
-                    (lang === l ? "bg-paper text-ink" : "text-mist")
+                    (lang === l ? "cosmic-btn" : "text-mist")
                   }
                 >
                   {l === "vi" ? "VI" : "EN"}
@@ -225,7 +226,7 @@ export function Observatory() {
             </button>
           </div>
           <div
-            className="flex w-full overflow-x-auto rounded-full bg-void-2 p-1"
+            className="clay-tray flex w-full overflow-x-auto rounded-full bg-void-2 p-1"
             role="tablist"
             aria-label={tr("Chế độ", "Mode")}
           >
@@ -235,7 +236,7 @@ export function Observatory() {
               aria-selected={mode === "story"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "story" ? "bg-paper text-ink" : "text-mist")
+                (mode === "story" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -250,7 +251,7 @@ export function Observatory() {
               aria-selected={mode === "cast"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "cast" ? "bg-paper text-ink" : "text-mist")
+                (mode === "cast" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -265,7 +266,7 @@ export function Observatory() {
               aria-selected={mode === "orbit"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "orbit" ? "bg-paper text-ink" : "text-mist")
+                (mode === "orbit" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -280,7 +281,7 @@ export function Observatory() {
               aria-selected={mode === "trade"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "trade" ? "bg-paper text-ink" : "text-mist")
+                (mode === "trade" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -295,7 +296,7 @@ export function Observatory() {
               aria-selected={mode === "lab"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "lab" ? "bg-paper text-ink" : "text-mist")
+                (mode === "lab" ? "cosmic-btn" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -434,6 +435,9 @@ export function Observatory() {
 
       {mode === "cast" || mode === "story" ? null : (
         <aside className="surface dock-scroll w-full shrink-0 overflow-y-auto border-t border-line bg-paper text-ink lg:w-96 lg:border-t-0 lg:border-l">
+          <div className="hidden px-4 pt-4 lg:block">
+            <RoomCover room={mode} />
+          </div>
           {mode === "orbit" ? (
             <div className="flex flex-col gap-4 p-4 pb-8">
               <p className="font-serif text-xl leading-none">F = G m₁m₂ / r²</p>

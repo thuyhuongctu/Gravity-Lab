@@ -3,6 +3,8 @@ import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { ReferenceList } from "@/components/ReferenceList";
 import { FormulaBridge } from "@/components/FormulaBridge";
+import { VnWatermark } from "@/components/VnWatermark";
+import { RoomCover, type CoverRoom } from "@/components/RoomCover";
 import { tr } from "@/lib/prefs";
 
 type Room = "orbit" | "trade" | "lab";
@@ -13,6 +15,7 @@ type Chapter = {
   vi: { title: string; text: string };
   en: { title: string; text: string };
   formula?: string;
+  cover?: CoverRoom;
   open?: { room: Room; panel: LabPanel | null; vi: string; en: string };
 };
 
@@ -44,6 +47,7 @@ const CHAPTERS: Chapter[] = [
       text: "In the Principia (Newton, 1687/1999), Newton argued that the force pulling an apple to the ground also keeps the Moon in orbit around the Earth: all objects with mass attract each other, with a force that grows with the product of the masses and falls with the square of the distance. The apple story comes from Newton himself, told in old age (Stukeley, 1752/1936). He tied Galileo's (1638/1914) work on acceleration and Kepler's (1619/1997) on planetary motion into one theory for the sky and the ground, which stood until Einstein (1916) expanded on it in the 20th century.",
     },
     formula: "F = G m₁m₂ / r²",
+    cover: "orbit",
     open: { room: "orbit", panel: null, vi: "Mở Quỹ đạo", en: "Open Orbit" },
   },
   {
@@ -70,6 +74,7 @@ const CHAPTERS: Chapter[] = [
       text: "Tinbergen replaced mass with economic size: trade between two countries rises with both GDPs and falls with distance. The distance exponent is no longer locked at 2; it is estimated.",
     },
     formula: "Tᵢⱼ = G · YᵢYⱼ / Dᵢⱼᵞ",
+    cover: "trade",
     open: { room: "trade", panel: null, vi: "Mở Thương mại", en: "Open Trade" },
   },
   {
@@ -120,36 +125,64 @@ const CHAPTERS: Chapter[] = [
       title: "Distance, market size and FDI into Vietnam",
       text: "Sixteen partners, 2006–2015, eight random-effects models: geographic, institutional, cultural and economic distance. From Model 4 on, the geographic distance coefficient holds near −0.38.",
     },
+    cover: "lab",
     open: { room: "lab", panel: "coef", vi: "Mở Hệ số 2019", en: "Open 2019 coefficients" },
   },
 ];
 
 export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | null) => void }) {
   return (
-    <div className="surface absolute inset-0 overflow-y-auto bg-paper text-ink">
-      <div className="mx-auto max-w-2xl px-4 pt-4">
-        <p className="text-xs font-medium text-teal">
-          {tr("Câu chuyện lực hấp dẫn", "The story of gravity")}
-        </p>
-        <h2 className="mt-1 font-serif text-3xl leading-tight">
+    <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
+      <VnWatermark />
+      <div className="relative">
+      <div className="mx-auto max-w-2xl px-4 pt-5">
+        <p className="clay-tray inline-flex items-center gap-2 rounded-full bg-paper-2 py-1 ps-1 pe-3 text-xs font-semibold">
+          <span
+            aria-hidden="true"
+            className="inline-flex size-6 items-center justify-center rounded-full bg-[#da251d] text-xs leading-none text-[#ffde00]"
+          >
+            ★
+          </span>
           {tr(
-            "Từ quả táo của Newton đến dòng vốn vào Việt Nam",
-            "From Newton's apple to capital flowing into Vietnam",
+            "Thiết kế tại Đồng bằng sông Cửu Long · Đại học Cần Thơ",
+            "Made in the Mekong Delta · Can Tho University",
           )}
+        </p>
+        <h2 className="mt-3 font-serif text-4xl leading-[1.06] sm:text-5xl">
+          {tr("Từ quả táo của Newton đến ", "From Newton's apple to ")}
+          <span className="cosmic-text">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
+        <p className="mt-3 max-w-xl leading-relaxed text-muted">
           {tr(
             "Ba thế kỷ, một dạng phương trình: quy mô ở tử số, khoảng cách ở mẫu số. Mỗi chương dưới đây mở ra một phần của phòng thí nghiệm.",
             "Three centuries, one form of equation: size in the numerator, distance in the denominator. Each chapter below opens a part of the lab.",
           )}
         </p>
+        <figure className="mt-5">
+          <img
+            src={`${import.meta.env.BASE_URL}noir/vietnam.webp`}
+            alt={tr(
+              "Bản đồ Việt Nam bằng đất sét dưới ánh đèn rọi, có Hà Nội, Cần Thơ, quần đảo Hoàng Sa và quần đảo Trường Sa",
+              "A clay map of Vietnam under a spotlight, with Hà Nội, Cần Thơ, the Hoàng Sa and Trường Sa archipelagos",
+            )}
+            width={1600}
+            height={1000}
+            className="clay-card aspect-[8/5] w-full rounded-card bg-[#0b0a1f] object-cover"
+          />
+          <figcaption className="mt-2 text-xs text-muted">
+            {tr(
+              "Bản đồ đất sét: đường bờ biển theo Natural Earth; quần đảo Hoàng Sa và Trường Sa theo tọa độ các đảo chính.",
+              "Clay map: coastline from Natural Earth; the Hoàng Sa and Trường Sa archipelagos from the coordinates of their main islands.",
+            )}
+          </figcaption>
+        </figure>
       </div>
 
       <figure className="mx-auto mt-4 grid max-w-2xl grid-cols-[minmax(0,10rem)_1fr] items-center gap-4 px-4">
         <img
           src={art("newton.webp")}
-          alt={tr("Isaac Newton, phong cách đất sét", "Isaac Newton, clay style")}
-          className="aspect-square w-full rounded-card bg-[#2f5a4f] object-cover"
+          alt={tr("Quả táo rơi, quyển Principia và Mặt Trăng: đất sét phong cách noir", "The falling apple, the Principia and the Moon: clay noir")}
+          className="clay-card aspect-square w-full rounded-card bg-[#0b0a1f] object-cover"
         />
         <figcaption>
           <p className="font-serif text-xl leading-tight">Isaac Newton</p>
@@ -160,7 +193,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
               "Born 25 December 1642 Old Style (4 January 1643 New Style), Woolsthorpe, England; died 31 March 1727, London.",
             )}
           </p>
-          <p className="mt-2 font-serif text-lg">F = G m₁m₂ / r²</p>
+          <p className="mt-2 font-math text-lg">F = G m₁m₂ / r²</p>
         </figcaption>
       </figure>
 
@@ -179,8 +212,9 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
                   {c.year} · {c.who}
                 </p>
                 <h3 className="mt-1 font-serif text-xl leading-snug">{t}</h3>
-                {c.formula ? <p className="mt-1 font-serif text-lg">{c.formula}</p> : null}
+                {c.formula ? <p className="mt-1 font-math text-lg">{c.formula}</p> : null}
                 <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
+                {c.cover ? <RoomCover room={c.cover} className="mt-3" /> : null}
                 {c.open ? (
                   <button
                     type="button"
@@ -270,6 +304,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           </div>
         </li>
       </ol>
+      </div>
     </div>
   );
 }

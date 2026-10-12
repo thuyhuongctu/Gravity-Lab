@@ -6,24 +6,41 @@
 import { getTheme } from "@/lib/prefs";
 
 const LIGHT: Record<string, string> = {
-  "#101614": "#ebe4d6", // sky / stage
-  "#22302a": "#f4efe6", // sea, lit side
-  "#141c18": "#dcd4c4", // sea, limb
-  "#f3ece1": "#1c1915", // ink on the sky
-  "#c4bbb0": "#5c554c", // mist
-  "#8fd4c0": "#2f7a68", // teal
-  "#7ec8b8": "#3f8a78",
-  "#9ec4b6": "#4f7f72",
-  "#e7c27a": "#a2701c", // amber
-  "#d4a04a": "#8f6418",
-  "#e0a090": "#b0583a", // clay
-  "#c46a4a": "#a84e30",
-  "#f0dcc0": "#6b5a40",
+  "#101614": "#f4f1ff", // sky / stage: pearl dawn
+  "#22302a": "#fbfaff", // sea, lit side
+  "#141c18": "#e6e0ff", // sea, limb
+  "#f3ece1": "#1a1640", // ink on the sky: midnight indigo
+  "#c4bbb0": "#4b4577", // mist
+  "#8fd4c0": "#0b7285", // aurora
+  "#7ec8b8": "#0e7490",
+  "#9ec4b6": "#5b4bb5",
+  "#e7c27a": "#b4530a", // solar amber
+  "#d4a04a": "#9a4a0c",
+  "#e0a090": "#c2185b", // flare
+  "#c46a4a": "#a3134c",
+  "#f0dcc0": "#6d28d9", // nebula violet
 };
 
 /** The colour to draw for a dark-theme colour, under the current theme. */
+/** Dark theme: midnight indigo sky, aurora, solar amber, flare pink, nebula violet. */
+const DARK: Record<string, string> = {
+  "#101614": "#0b0a1f",
+  "#22302a": "#1b1942",
+  "#141c18": "#110f2b",
+  "#f3ece1": "#eeeafb",
+  "#c4bbb0": "#a9a3d6",
+  "#8fd4c0": "#5eead4",
+  "#7ec8b8": "#22d3ee",
+  "#9ec4b6": "#a78bfa",
+  "#e7c27a": "#ffc56b",
+  "#d4a04a": "#f59e0b",
+  "#e0a090": "#ff7a9c",
+  "#c46a4a": "#ff5e8a",
+  "#f0dcc0": "#c4b5fd",
+};
+
 export function paint(hex: string): string {
-  if (getTheme() !== "light") return hex;
+  if (getTheme() !== "light") return DARK[hex.toLowerCase()] ?? hex;
   return LIGHT[hex.toLowerCase()] ?? hex;
 }
 
