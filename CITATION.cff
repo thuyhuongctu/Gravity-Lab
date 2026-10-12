@@ -2,15 +2,15 @@ cff-version: 1.2.0
 message: "Nếu sử dụng phần mềm này trong giảng dạy hoặc nghiên cứu, vui lòng trích dẫn theo thông tin dưới đây. / If you use this software, please cite it as below."
 title: "Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam"
 type: software
-version: "2.3"
+version: "2.4"
 date-released: 2026-10-12
-# DOI của bản v2.3. DOI khái niệm 23307832 đại diện mọi phiên bản và luôn trỏ tới
-# bản mới nhất. / DOI of v2.3; the concept DOI 23307832 covers all versions.
-doi: "10.5281/zenodo.23313162"
+# DOI của bản v2.4. DOI khái niệm 23307832 đại diện mọi phiên bản và luôn trỏ tới
+# bản mới nhất. / DOI of v2.4; the concept DOI 23307832 covers all versions.
+doi: "10.5281/zenodo.23314318"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.23313162"
-    description: "Version DOI, v2.3 (cite this)"
+    value: "10.5281/zenodo.23314318"
+    description: "Version DOI, v2.4 (cite this)"
   - type: doi
     value: "10.5281/zenodo.23307832"
     description: "Concept DOI (all versions)"
