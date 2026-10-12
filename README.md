@@ -1,5 +1,7 @@
 # Gravity Lab — Trọng lực
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23307833.svg)](https://doi.org/10.5281/zenodo.23307833)
+
 Phòng thí nghiệm mô hình lực hấp dẫn, chạy trên trình duyệt, gồm ba chặng: (1) định luật vạn vật hấp dẫn của Newton qua mô phỏng quỹ đạo; (2) mô hình hấp dẫn thương mại Tinbergen với các nền kinh tế đối tác của Việt Nam; (3) phòng thí nghiệm FDI vào Việt Nam — đọc lại hệ số công bố (Phan & Đỗ, 2019; Xuan & Xing, 2008), mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS và PPML trên dữ liệu CSV tải lên.
 
 *A browser-based gravity-model laboratory in three stages: (1) Newtonian gravitation through an orbit simulator; (2) the Tinbergen gravity model of trade with Vietnam's partner economies; (3) an FDI-into-Vietnam lab that replicates published coefficients (Phan & Đỗ, 2019; Xuan & Xing, 2008), simulates distance and market-size effects, and runs OLS and PPML estimation on an uploaded CSV.*
@@ -39,9 +41,9 @@ Repo này là bản sao độc lập (standalone snapshot) của Gravity Lab, t�
 
 ## Trích dẫn / Citation
 
-Xem [`CITATION.cff`](CITATION.cff). Sau khi gắn với Zenodo, DOI sẽ được thêm vào tệp này.
+DOI: [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833). Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff). / *Full metadata in [`CITATION.cff`](CITATION.cff).*
 
-*See [`CITATION.cff`](CITATION.cff). The DOI will be added here once the repository is connected to Zenodo.*
+> Phan, A. T., & Đỗ, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
 
 ## Giấy phép / License
 
