@@ -299,6 +299,25 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
                     className="absolute -left-[7px] top-1 size-3 rounded-full border-2 border-paper bg-amber"
                     aria-hidden="true"
                   />
+                  <figure className="mb-4">
+                    <img
+                      src={`${import.meta.env.BASE_URL}cast/newton-tinbergen.webp`}
+                      alt={tr(
+                        "Newton cầm quả táo và Tinbergen cầm quả địa cầu đứng trước bảng đen có công thức lực hấp dẫn và mô hình thương mại, tạo hình đất sét",
+                        "Newton with an apple and Tinbergen with a globe in front of a blackboard showing the law of gravitation and the trade model, clay figures",
+                      )}
+                      width={688}
+                      height={384}
+                      loading="lazy"
+                      className="clay-card aspect-[43/24] w-full rounded-card bg-[#2f4a43] object-cover"
+                    />
+                    <figcaption className="mt-2 text-xs leading-relaxed text-muted">
+                      {tr(
+                        "Newton (1687/1999) và Tinbergen (1962) trước cùng một tấm bảng. Công thức trên bảng là dạng giản lược; phương trình đầy đủ và từng bước chuyển hóa ở ngay bên dưới.",
+                        "Newton (1687/1999) and Tinbergen (1962) at the same blackboard. The chalk shows a simplified form; the full equations and each step of the transition follow below.",
+                      )}
+                    </figcaption>
+                  </figure>
                   <FormulaBridge onOpen={onOpen} />
                 </li>
               ) : null}
