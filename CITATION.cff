@@ -4,11 +4,16 @@ title: "Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietn
 type: software
 version: "2.0"
 date-released: 2026-10-11
-doi: "10.5281/zenodo.23307833"
+# DOI khái niệm: đại diện mọi phiên bản, luôn dẫn tới bản mới nhất. Đây là DOI để
+# trích dẫn và không phải đổi khi có bản phát hành mới. / Concept DOI: cite this one.
+doi: "10.5281/zenodo.23307832"
 identifiers:
   - type: doi
+    value: "10.5281/zenodo.23307832"
+    description: "Concept DOI (all versions)"
+  - type: doi
     value: "10.5281/zenodo.23307833"
-    description: "Zenodo DOI"
+    description: "Version DOI of v1.0, the earlier static HTML lab"
 authors:
   - family-names: "Phan"
     given-names: "Anh Tu"
@@ -21,7 +26,7 @@ authors:
     email: thuyhuongctu@gmail.com
     affiliation: "Can Tho University"
 repository-code: "https://github.com/thuyhuongctu/gravity-lab"
-url: "https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html"
+url: "https://thuyhuongctu.github.io/Gravity-Lab/"
 license-url: "https://github.com/thuyhuongctu/gravity-lab/blob/main/LICENSE"
 keywords:
   - gravity model
