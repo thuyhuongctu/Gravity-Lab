@@ -17,7 +17,7 @@ Gravity Lab is an interactive teaching instrument for the gravity model in inter
 2. **The gravity model of trade.** Mass is replaced by economic size and the distance exponent becomes a parameter to be estimated (Tinbergen, 1962). Learners explore bilateral trade between Vietnam and its partner economies on a plane or on a globe.
 3. **FDI into Vietnam.** The laboratory reproduces published coefficients for FDI into Vietnam (Phan & Do, 2019; Xuan & Xing, 2008). It simulates the effects of distance and market size, explains why Poisson pseudo-maximum likelihood (PPML) is preferred when flows contain zeros (Santos Silva & Tenreyro, 2006), and estimates OLS and PPML models on data uploaded by the learner.
 
-A narrative page traces the development of the model from 1665 to the present. A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
+A narrative page opens on a live 3D scene (a clay Earth with Vietnam lit, the Moon and Newton's apple on their orbits, and FDI flows arriving from the main source economies) and traces the development of the model from 1665 to the present. A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
 
 ## Pedagogical rationale
 
@@ -131,7 +131,7 @@ Xuan, N. T., & Xing, Y. (2008). Foreign direct investment and exports: The exper
 
 ## Licence
 
-This is proprietary software, published openly for academic transparency and citation. See [`LICENSE`](LICENSE). Third-party components retain their own licences: Natural Earth data are in the public domain, and the typefaces are distributed under the SIL Open Font License 1.1.
+This is proprietary software, published openly for academic transparency and citation. See [`LICENSE`](LICENSE). Third-party components retain their own licences: Natural Earth data are in the public domain, three.js is distributed under the MIT License, and the typefaces are distributed under the SIL Open Font License 1.1.
 
 ---
 
