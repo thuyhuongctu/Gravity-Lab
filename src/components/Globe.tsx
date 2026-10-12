@@ -11,6 +11,7 @@ import {
 } from "@/sim/globe";
 import { paint, paintA } from "@/lib/paint";
 import { tr } from "@/lib/prefs";
+import { VN_OUTLINE } from "@/lib/vn-outline";
 
 export type GlobeNode = {
   id: string;
@@ -43,6 +44,24 @@ type Props = {
 };
 
 const RAD = Math.PI / 180;
+
+/** Clay globe (Clay Noir): sand land, a lit ocean, Vietnam in flare pink. */
+const CLAY = {
+  oceanLit: "#3c6f86",
+  oceanDeep: "#070b1c",
+  land: "#c9b48d",
+  landEdge: "#6d5a3a",
+  vn: "#ff5e8a",
+  islands: "#ffc56b",
+};
+
+const VN_RING: Vec3[] = VN_OUTLINE.map(([lon, lat]) => toVec(lon, lat));
+
+/** Hoàng Sa and Trường Sa: the main islands, drawn and labelled on every globe. */
+const ISLANDS: Array<{ vi: string; en: string; at: [number, number]; dots: Array<[number, number]> }> = [
+  { vi: "QĐ. Hoàng Sa", en: "Hoàng Sa (VN)", at: [112.0, 16.6], dots: [[111.6, 16.5], [112.3, 16.8], [111.2, 15.8]] },
+  { vi: "QĐ. Trường Sa", en: "Trường Sa (VN)", at: [114.3, 10.2], dots: [[114.3, 10.4], [112.9, 9.9], [115.8, 10.7], [114.4, 11.4]] },
+];
 const RING = { teal: "#8fd4c0", amber: "#e7c27a" } as const;
 
 const GRATICULE: Vec3[][] = (() => {
@@ -145,6 +164,30 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       ctx.stroke();
     };
 
+    // A filled ring on the visible hemisphere: points behind the globe are pushed out
+    // to the limb along their own bearing, so a country cut by the horizon is filled
+    // up to the edge. Each ring is filled on its own, so winding does not matter.
+    const fillRing = (pts: Vec3[]) => {
+      const R = radius();
+      const c = centre();
+      let seen = false;
+      ctx.beginPath();
+      for (let i = 0; i < pts.length; i++) {
+        const p = project(pts[i]!, view);
+        let x = p.x;
+        let y = p.y;
+        if (!p.front) {
+          const d = Math.hypot(x, y) || 1;
+          x /= d;
+          y /= d;
+        } else seen = true;
+        if (i === 0) ctx.moveTo(c.x + x * R, c.y + y * R);
+        else ctx.lineTo(c.x + x * R, c.y + y * R);
+      }
+      ctx.closePath();
+      return seen;
+    };
+
     const dotRadius = (n: GlobeNode) => Math.max(4, n.r * zoom);
 
     const nodeAt = (x: number, y: number) => {
@@ -184,24 +227,69 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       ctx.fillStyle = paint("#101614");
       ctx.fillRect(0, 0, viewW, viewH);
 
-      const sea = ctx.createRadialGradient(c.x - R * 0.3, c.y - R * 0.35, R * 0.1, c.x, c.y, R);
-      sea.addColorStop(0, paint("#22302a"));
-      sea.addColorStop(1, paint("#141c18"));
+      // Atmosphere: a teal rim light just outside the limb.
+      const halo = ctx.createRadialGradient(c.x, c.y, R * 0.96, c.x, c.y, R * 1.12);
+      halo.addColorStop(0, "rgba(94,234,212,0.28)");
+      halo.addColorStop(1, "rgba(94,234,212,0)");
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, R * 1.12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ocean, lit from the upper left by the amber key light.
+      const sea = ctx.createRadialGradient(c.x - R * 0.35, c.y - R * 0.4, R * 0.05, c.x, c.y, R);
+      sea.addColorStop(0, CLAY.oceanLit);
+      sea.addColorStop(1, CLAY.oceanDeep);
       ctx.fillStyle = sea;
       ctx.beginPath();
       ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
       ctx.fill();
 
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
+      ctx.clip();
+
       ctx.lineWidth = 0.6;
-      ctx.strokeStyle = paintA("#c4bbb0", 0.08);
+      ctx.strokeStyle = "rgba(214,255,248,0.07)";
       for (const line of GRATICULE) strokePath(line, false);
 
-      ctx.lineWidth = 0.9;
-      ctx.strokeStyle = paintA("#c4bbb0", 0.42);
-      for (const ring of land) strokePath(ring, true);
+      // Land as raised clay: a soft shadow below, the sand fill, a dark edge.
+      ctx.save();
+      ctx.translate(1.5, 2.5);
+      ctx.fillStyle = "rgba(0,0,0,0.35)";
+      for (const ring of land) if (fillRing(ring)) ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = CLAY.land;
+      ctx.strokeStyle = CLAY.landEdge;
+      ctx.lineWidth = 0.6;
+      for (const ring of land) {
+        if (!fillRing(ring)) continue;
+        ctx.fill();
+        ctx.stroke();
+      }
+      if (fillRing(VN_RING)) {
+        ctx.fillStyle = CLAY.vn;
+        ctx.fill();
+        ctx.strokeStyle = "rgba(125,26,58,0.8)";
+        ctx.stroke();
+      }
+
+      // Clay shading: a highlight where the light falls, darkening towards the limb.
+      const shine = ctx.createRadialGradient(c.x - R * 0.4, c.y - R * 0.45, 0, c.x - R * 0.4, c.y - R * 0.45, R * 0.9);
+      shine.addColorStop(0, "rgba(255,241,207,0.22)");
+      shine.addColorStop(1, "rgba(255,241,207,0)");
+      ctx.fillStyle = shine;
+      ctx.fillRect(c.x - R, c.y - R, R * 2, R * 2);
+      const limb = ctx.createRadialGradient(c.x, c.y, R * 0.55, c.x, c.y, R);
+      limb.addColorStop(0, "rgba(7,6,26,0)");
+      limb.addColorStop(1, "rgba(7,6,26,0.55)");
+      ctx.fillStyle = limb;
+      ctx.fillRect(c.x - R, c.y - R, R * 2, R * 2);
+      ctx.restore();
 
       ctx.lineWidth = 1;
-      ctx.strokeStyle = paintA("#8fd4c0", 0.35);
+      ctx.strokeStyle = "rgba(94,234,212,0.35)";
       ctx.beginPath();
       ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
       ctx.stroke();
@@ -209,8 +297,13 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       for (const arc of as) {
         const pts = arcPoints(toVec(arc.from.lon, arc.from.lat), toVec(arc.to.lon, arc.to.lat));
         const w = Math.max(0, Math.min(1, arc.weight));
-        ctx.lineWidth = 1 + w * 6;
-        ctx.strokeStyle = arc.highlight ? paintA("#e7c27a", 0.92) : paintA("#8fd4c0", 0.2 + w * 0.65);
+        const hue = arc.highlight ? "255,197,107" : "94,234,212";
+        ctx.lineCap = "round";
+        ctx.lineWidth = 4 + w * 10;
+        ctx.strokeStyle = `rgba(${hue},${0.08 + w * 0.12})`;
+        strokePath(pts, false);
+        ctx.lineWidth = 1 + w * 4;
+        ctx.strokeStyle = arc.highlight ? "rgba(255,214,140,0.95)" : `rgba(159,245,230,${0.35 + w * 0.6})`;
         strokePath(pts, false);
 
         if (!reduce) {
@@ -218,7 +311,7 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
           const t = (now * speed + arc.id.length * 0.13) % 1;
           const p = project(pts[Math.round(t * (pts.length - 1))]!, view);
           if (p.front) {
-            ctx.fillStyle = paint(arc.highlight ? RING.amber : RING.teal);
+            ctx.fillStyle = arc.highlight ? "#fff1cf" : "#d6fff8";
             ctx.beginPath();
             ctx.arc(c.x + p.x * R, c.y + p.y * R, 1.5 + w * 2.5, 0, Math.PI * 2);
             ctx.fill();
@@ -236,13 +329,22 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
         const y = c.y + p.y * R;
         const r = dotRadius(n);
         const glow = ctx.createRadialGradient(x, y, r * 0.2, x, y, r * 2.2);
-        glow.addColorStop(0, paintA("#8fd4c0", 0.3));
-        glow.addColorStop(1, paintA("#8fd4c0", 0));
+        glow.addColorStop(0, "rgba(94,234,212,0.3)");
+        glow.addColorStop(1, "rgba(94,234,212,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = paint(n.color);
+        // A clay ball: the economy's colour, lit from the upper left.
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.beginPath();
+        ctx.arc(x + 1, y + 2, r, 0, Math.PI * 2);
+        ctx.fill();
+        const ball = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+        ball.addColorStop(0, "#ffffff");
+        ball.addColorStop(0.45, paint(n.color));
+        ball.addColorStop(1, paintA(n.color, 0.75));
+        ctx.fillStyle = ball;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fill();
@@ -262,14 +364,39 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
         });
       }
 
+      // Hoàng Sa and Trường Sa: amber dots and their labels, placed before any other label.
+      ctx.font = "600 12px 'Be Vietnam Pro', sans-serif";
+      for (const isl of ISLANDS) {
+        let any = false;
+        for (const [lon, lat] of isl.dots) {
+          const p = project(toVec(lon, lat), view);
+          if (!p.front) continue;
+          any = true;
+          ctx.fillStyle = CLAY.islands;
+          ctx.beginPath();
+          ctx.arc(c.x + p.x * R, c.y + p.y * R, Math.max(1.6, 1.8 * zoom), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        const at = project(toVec(isl.at[0], isl.at[1]), view);
+        if (any && at.front) {
+          const text = tr(isl.vi, isl.en);
+          labels.push({ text, x: c.x + at.x * R + ctx.measureText(text).width / 2 + 8, y: c.y + at.y * R + 4, w: ctx.measureText(text).width, rank: -1 });
+        }
+      }
+
       // Ringed and fixed nodes label first; any later label that would overlap one already drawn is skipped.
       labels.sort((p, q) => p.rank - q.rank);
       const placed: Array<{ l: number; r: number; t: number; b: number }> = [];
-      ctx.fillStyle = paint("#f3ece1");
+      ctx.lineJoin = "round";
       for (const lab of labels) {
         const box = { l: lab.x - lab.w / 2 - 2, r: lab.x + lab.w / 2 + 2, t: lab.y - 11, b: lab.y + 3 };
         if (placed.some((o) => box.l < o.r && box.r > o.l && box.t < o.b && box.b > o.t)) continue;
         placed.push(box);
+        // Labels sit on sand or sea: white text with a dark halo reads on both.
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "rgba(7,6,26,0.85)";
+        ctx.strokeText(lab.text, lab.x, lab.y);
+        ctx.fillStyle = "#fbfaff";
         ctx.fillText(lab.text, lab.x, lab.y);
       }
 
