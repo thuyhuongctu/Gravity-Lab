@@ -12,6 +12,8 @@ export type Holder = {
   src: string;
   /** Full-length figure, shown on the cast page. */
   body: string;
+  /** Astronaut portrait, worn while exploring gravity in the orbit room. */
+  astro: string;
   alt: string;
   en: { symbol: string; line: string; alt: string };
   room: Room;
@@ -26,6 +28,7 @@ export const HOLDERS: Holder[] = [
     line: "Không chọn nước. Hỏi khoảng cách nào còn đứng khi vốn vào Việt Nam.",
     src: `${import.meta.env.BASE_URL}cast/face/lumina.webp`,
     body: `${import.meta.env.BASE_URL}cast/lumina-vest.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/lumina.webp`,
     alt: "Lumina",
     en: {
       symbol: "The question",
@@ -42,6 +45,7 @@ export const HOLDERS: Holder[] = [
     line: "Bài Phan và Đỗ (2019). Địa lý vào mô hình 3 chưa có ý nghĩa. Từ mô hình 4, β giữ −0,38.",
     src: `${import.meta.env.BASE_URL}cast/face/tu.webp`,
     body: `${import.meta.env.BASE_URL}cast/tu-vest.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/tu.webp`,
     alt: "Tú Phan",
     en: {
       symbol: "−0.14 → −0.38",
@@ -58,6 +62,7 @@ export const HOLDERS: Holder[] = [
     line: "Vũ trụ đi trước. Mũ khoảng cách đang khóa ở 2 (Newton, 1687/1999).",
     src: `${import.meta.env.BASE_URL}cast/face/minh-long.webp`,
     body: `${import.meta.env.BASE_URL}cast/minh-long.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/minh-long.webp`,
     alt: "Minh Long, jacket xanh, khăn rằn đỏ",
     en: {
       symbol: "exponent = 2",
@@ -74,6 +79,7 @@ export const HOLDERS: Holder[] = [
     line: "γ không còn khóa ở 2. Tinbergen (1962) để γ được ước lượng.",
     src: `${import.meta.env.BASE_URL}cast/face/lan-chi.webp`,
     body: `${import.meta.env.BASE_URL}cast/lan-chi.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/lan-chi.webp`,
     alt: "Lan Chi, jacket vàng, khăn rằn, loa",
     en: {
       symbol: "γ",
@@ -90,6 +96,7 @@ export const HOLDERS: Holder[] = [
     line: "Km tới nhà máy. Xa hơn 10% đi kèm FDI thấp hơn khoảng 3,6%.",
     src: `${import.meta.env.BASE_URL}cast/face/bao-ngoc.webp`,
     body: `${import.meta.env.BASE_URL}cast/bao-ngoc.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/bao-ngoc.webp`,
     alt: "Bảo Ngọc, jacket ô-liu, khoanh tay",
     en: {
       symbol: "β = −0.38",
@@ -106,6 +113,7 @@ export const HOLDERS: Holder[] = [
     line: "Vốn năm trước. Có FTA: ngắn hạn khoảng +174,6%, dài hạn khoảng +527,4%.",
     src: `${import.meta.env.BASE_URL}cast/face/thu-ha.webp`,
     body: `${import.meta.env.BASE_URL}cast/thu-ha.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/thu-ha.webp`,
     alt: "Thu Hà, jacket đất nung, sổ cái",
     en: {
       symbol: "0.45 · FTA",
@@ -122,6 +130,7 @@ export const HOLDERS: Holder[] = [
     line: "OLS bỏ năm vốn bằng không. PPML giữ cả mẫu (Santos Silva & Tenreyro, 2006).",
     src: `${import.meta.env.BASE_URL}cast/face/gia-han.webp`,
     body: `${import.meta.env.BASE_URL}cast/gia-han.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/gia-han.webp`,
     alt: "Gia Hân, jacket tím, kẹp hồ sơ",
     en: {
       symbol: "FDI = 0",
@@ -162,13 +171,26 @@ export function shownPeople(
   return facesFor(mode, panel).slice(0, 1);
 }
 
-export function HolderBar({ people, onBack }: { people: Holder[]; onBack: () => void }) {
+export function HolderBar({
+  people,
+  onBack,
+  suited = false,
+}: {
+  people: Holder[];
+  onBack: () => void;
+  /** Show the astronaut portrait (the orbit room). */
+  suited?: boolean;
+}) {
   return (
     <div className="surface flex items-center gap-2 rounded-card bg-paper p-2 text-ink">
       <div className="flex min-w-0 flex-1 gap-3 overflow-x-auto">
         {people.map((person) => (
           <div key={person.id} className="flex min-w-0 flex-1 items-center gap-2">
-            <img src={person.src} alt={say(person).alt} className="aspect-[4/5] h-16 w-auto shrink-0 rounded-lg object-cover object-center" />
+            <img
+              src={suited ? person.astro : person.src}
+              alt={suited ? tr(`${person.name}, trang phục phi hành gia`, `${person.name} in a spacesuit`) : say(person).alt}
+              className="aspect-[4/5] h-16 w-auto shrink-0 rounded-lg object-cover object-center"
+            />
             <div className="min-w-0">
               <p className="font-serif text-lg leading-tight">{say(person).symbol}</p>
               <p className="line-clamp-2 text-sm leading-snug text-muted">{person.name}. {say(person).line}</p>
@@ -263,5 +285,32 @@ function Advisor({
       <span className="block text-sm font-medium">{person.name}</span>
       <span className="mt-1 block text-sm leading-relaxed text-muted">{say(person).line}</span>
     </button>
+  );
+}
+
+/** The whole class, suited up for the orbit room. */
+const CREW: Array<{ id: string; name: string; src: string }> = [
+  ...HOLDERS.map((h) => ({ id: h.id, name: h.name, src: h.astro })),
+  { id: "huong", name: "Thùy Hương", src: `${import.meta.env.BASE_URL}cast/astro/huong.webp` },
+];
+
+export function Crew() {
+  return (
+    <div>
+      <p className="mb-2 text-xs font-medium text-muted">{tr("Phi hành đoàn khám phá trọng lực", "The crew exploring gravity")}</p>
+      <ul className="grid grid-cols-4 gap-2">
+        {CREW.map((c) => (
+          <li key={c.id} className="text-center">
+            <img
+              src={c.src}
+              alt={tr(`${c.name}, trang phục phi hành gia`, `${c.name} in a spacesuit`)}
+              loading="lazy"
+              className="aspect-[4/5] w-full rounded-lg bg-[#f4ede1] object-cover"
+            />
+            <span className="mt-1 block truncate text-xs text-muted">{c.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
