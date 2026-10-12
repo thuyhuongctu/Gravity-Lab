@@ -116,7 +116,7 @@ const CHAPTERS: Chapter[] = [
   },
   {
     year: "2019",
-    who: "Phan Anh Tú & Đỗ Thùy Hương",
+    who: "Phan Anh Tu & Do Thuy Huong",
     vi: {
       title: "Khoảng cách và quy mô thị trường của FDI vào Việt Nam",
       text: "Mười sáu đối tác, 2006–2015, tám mô hình hiệu ứng ngẫu nhiên: khoảng cách địa lý, thể chế, văn hóa và kinh tế. Từ mô hình 4, hệ số khoảng cách địa lý giữ quanh −0,38.",
@@ -254,15 +254,15 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
               <img
                 src={art("tu-vest.webp")}
                 alt={tr(
-                  "PGS.TS. Phan Anh Tú, phong cách đất sét",
-                  "Assoc. Prof. Phan Anh Tú, clay style",
+                  "PGS.TS. Phan Anh Tu, phong cách đất sét",
+                  "Assoc. Prof. Phan Anh Tu, clay style",
                 )}
                 loading="lazy"
                 className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom"
               />
               <figcaption className="mt-2">
                 <p className="text-sm font-medium">
-                  {tr("PGS.TS. Phan Anh Tú", "Assoc. Prof. Phan Anh Tú")}
+                  {tr("PGS.TS. Phan Anh Tu", "Assoc. Prof. Phan Anh Tu")}
                 </p>
               </figcaption>
             </figure>
@@ -270,15 +270,15 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
               <img
                 src={art("huong.webp")}
                 alt={tr(
-                  "NCS. Đỗ Thùy Hương, phong cách đất sét",
-                  "Đỗ Thùy Hương, PhD candidate, clay style",
+                  "NCS. Do Thuy Huong, phong cách đất sét",
+                  "Do Thuy Huong, PhD candidate, clay style",
                 )}
                 loading="lazy"
                 className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom"
               />
               <figcaption className="mt-2">
                 <p className="text-sm font-medium">
-                  {tr("NCS. Đỗ Thùy Hương", "Đỗ Thùy Hương, PhD candidate")}
+                  {tr("NCS. Do Thuy Huong", "Do Thuy Huong, PhD candidate")}
                 </p>
               </figcaption>
             </figure>
