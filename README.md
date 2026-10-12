@@ -4,7 +4,7 @@
 
 **Gravity Lab: a browser-based gravity-model laboratory for foreign direct investment into Vietnam**
 
-Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137)) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487))
+Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137); patu@ctu.edu.vn) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487); thuyhuongctu@gmail.com)
 School of Economics, Can Tho University, Vietnam
 
 Live application: **https://thuyhuongctu.github.io/Gravity-Lab/**
