@@ -1,6 +1,8 @@
+import { Fragment } from "react";
 import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { ReferenceList } from "@/components/ReferenceList";
+import { FormulaBridge } from "@/components/FormulaBridge";
 import { tr } from "@/lib/prefs";
 
 type Room = "orbit" | "trade" | "lab";
@@ -167,27 +169,38 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           const t = tr(c.vi.title, c.en.title);
           const body = tr(c.vi.text, c.en.text);
           return (
-            <li key={c.year} className="relative border-l-2 border-line pb-6 pl-5">
-              <span
-                className="absolute -left-[7px] top-1 size-3 rounded-full border-2 border-paper bg-teal"
-                aria-hidden="true"
-              />
-              <p className="text-xs font-medium tabular-nums text-teal">
-                {c.year} · {c.who}
-              </p>
-              <h3 className="mt-1 font-serif text-xl leading-snug">{t}</h3>
-              {c.formula ? <p className="mt-1 font-serif text-lg">{c.formula}</p> : null}
-              <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
-              {c.open ? (
-                <button
-                  type="button"
-                  onClick={() => onOpen(c.open!.room, c.open!.panel)}
-                  className="mt-2 min-h-11 rounded-full border border-line px-3 text-sm font-medium"
-                >
-                  {tr(c.open.vi, c.open.en)} →
-                </button>
+            <Fragment key={c.year}>
+              <li className="relative border-l-2 border-line pb-6 pl-5">
+                <span
+                  className="absolute -left-[7px] top-1 size-3 rounded-full border-2 border-paper bg-teal"
+                  aria-hidden="true"
+                />
+                <p className="text-xs font-medium tabular-nums text-teal">
+                  {c.year} · {c.who}
+                </p>
+                <h3 className="mt-1 font-serif text-xl leading-snug">{t}</h3>
+                {c.formula ? <p className="mt-1 font-serif text-lg">{c.formula}</p> : null}
+                <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
+                {c.open ? (
+                  <button
+                    type="button"
+                    onClick={() => onOpen(c.open!.room, c.open!.panel)}
+                    className="mt-2 min-h-11 rounded-full border border-line px-3 text-sm font-medium"
+                  >
+                    {tr(c.open.vi, c.open.en)} →
+                  </button>
+                ) : null}
+              </li>
+              {c.year === "1962" ? (
+                <li className="relative border-l-2 border-line pb-6 pl-5">
+                  <span
+                    className="absolute -left-[7px] top-1 size-3 rounded-full border-2 border-paper bg-amber"
+                    aria-hidden="true"
+                  />
+                  <FormulaBridge onOpen={onOpen} />
+                </li>
               ) : null}
-            </li>
+            </Fragment>
           );
         })}
         <li className="relative pl-5">

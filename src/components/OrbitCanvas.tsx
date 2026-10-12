@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { circularSpeed, EPS, radiusFor, type Simulation } from "@/sim/engine";
 import { paint, paintA } from "@/lib/paint";
 import { tr } from "@/lib/prefs";
+import { orbitFrame } from "@/lib/sound";
 
 const LAUNCH = 1.55;
 
@@ -568,6 +569,7 @@ export function OrbitCanvas({
         }
         publish();
       }
+      orbitFrame(sim.bodies, propsRef.current.active && !sim.paused, now);
       draw();
       raf = requestAnimationFrame(loop);
     };

@@ -1,6 +1,6 @@
 # Gravity Lab — Trọng lực
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23307833.svg)](https://doi.org/10.5281/zenodo.23307833)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23307832.svg)](https://doi.org/10.5281/zenodo.23307832)
 
 Phòng thí nghiệm mô hình lực hấp dẫn, chạy trên trình duyệt, gồm ba chặng: (1) định luật vạn vật hấp dẫn của Newton qua mô phỏng quỹ đạo; (2) mô hình hấp dẫn thương mại Tinbergen với các nền kinh tế đối tác của Việt Nam; (3) phòng thí nghiệm FDI vào Việt Nam — đọc lại hệ số công bố (Phan & Đỗ, 2019; Xuan & Xing, 2008), mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS và PPML trên dữ liệu CSV tải lên.
 
@@ -45,11 +45,11 @@ Repo này là bản sao độc lập (standalone snapshot) của Gravity Lab, t�
 
 ## Trích dẫn / Citation
 
-DOI: **[10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833)**. DOI khái niệm, đại diện mọi phiên bản: [10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832). Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff).
+DOI khái niệm, đại diện mọi phiên bản và luôn trỏ tới bản mới nhất: **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**. Bản v2.1: [10.5281/zenodo.23308307](https://doi.org/10.5281/zenodo.23308307); v2.0: 10.5281/zenodo.23308130; v1.0: 10.5281/zenodo.23307833. Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff).
 
-*DOI: 10.5281/zenodo.23307833. Concept DOI, covering all versions: 10.5281/zenodo.23307832. Full metadata in [`CITATION.cff`](CITATION.cff).*
+*Concept DOI, covering all versions and resolving to the latest: 10.5281/zenodo.23307832. Version DOIs: v2.1 10.5281/zenodo.23308307; v2.0 10.5281/zenodo.23308130; v1.0 10.5281/zenodo.23307833. Full metadata in [`CITATION.cff`](CITATION.cff).*
 
-> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam* (Version v1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23308307
 
 Tệp trên Zenodo đang ở chế độ giới hạn: có thể xin truy cập để đọc, tham khảo và trích dẫn. / *Files on Zenodo are restricted and available on request for reading, consultation and citation.*
 
