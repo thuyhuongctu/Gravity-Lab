@@ -106,7 +106,7 @@ Please cite the version you used. The concept DOI covers all versions and always
 | v2.0 | [10.5281/zenodo.23308130](https://doi.org/10.5281/zenodo.23308130) |
 | v1.0 | [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833) |
 
-Complete metadata are provided in [`CITATION.cff`](CITATION.cff). The deposited files on Zenodo are under restricted access and are available on request for reading, consultation and citation.
+Complete metadata are provided in [`CITATION.cff`](CITATION.cff). From v2.3 the deposited files on Zenodo are openly downloadable for reading, consultation and citation; earlier versions were deposited with restricted access. Open access to the files does not change the licence: the software remains proprietary (see [`LICENSE`](LICENSE)).
 
 ## References
 
