@@ -134,7 +134,18 @@ export function useLabState() {
         yLevel,
       });
       setEst(result);
-      setEstMsg(result.note || tr(`${result.fits[0]?.fit.n ?? 0} quan sát.`, `${result.fits[0]?.fit.n ?? 0} observations.`));
+      setEstMsg(
+        result.note ||
+          tr(
+            `${result.fits[0]?.fit.n ?? 0} quan sát.`,
+            `${result.fits[0]?.fit.n ?? 0} observations.`,
+          ),
+      );
+      // On phones the table sits behind the panel: bring it into view.
+      window.setTimeout(() => {
+        const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        document.getElementById("fdi-results")?.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+      }, 60);
     } catch (err) {
       setEst(null);
       setEstMsg(tr("Không ước lượng được: ", "Could not estimate: ") + (err instanceof Error ? err.message : tr("lỗi không rõ", "unknown error")));
@@ -624,7 +635,7 @@ function DataStage({ lab }: { lab: LabState }) {
       {!est ? (
         <p className="text-sm text-mist">{lab.estMsg}</p>
       ) : (
-        <div className="overflow-x-auto">
+        <div id="fdi-results" className="scroll-mt-4 overflow-x-auto">
           <table className="w-full min-w-72 text-sm text-paper">
             <thead>
               <tr className="text-xs text-mist">
@@ -955,7 +966,10 @@ function DataDock({ lab }: { lab: LabState }) {
           </button>
         </>
       ) : null}
-      <p className="text-sm text-muted">{lab.estMsg}</p>
+      <p className="text-sm text-muted">
+        {lab.estMsg}
+        {lab.est ? tr(" Kết quả ở bảng phía trên.", " Results are in the table above.") : ""}
+      </p>
       <ReferenceList />
     </div>
   );
