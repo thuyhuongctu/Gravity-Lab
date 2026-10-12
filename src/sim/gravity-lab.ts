@@ -1,12 +1,12 @@
 /** Published gravity-lab numbers and the in-browser estimators behind them.
- * Coefficients are copied from Phan & Đỗ (2019), Table 6, and Xuan & Xing (2008), Table 1.
+ * Coefficients are copied from Phan & Do (2019), Table 6, and Xuan & Xing (2008), Table 1.
  */
 
 import { tr } from "../lib/prefs.ts";
 
 export const HANOI: [number, number] = [21.0285, 105.8542];
 
-export const CITE_2019 = "Phan, A. T., & Đỗ, T. H. (2019). Tạp chí Kinh tế Đối ngoại, (114), 14–26.";
+export const CITE_2019 = "Phan, A. T., & Do, T. H. (2019). Tạp chí Kinh tế Đối ngoại, (114), 14–26.";
 export const CITE_2008 = "Xuan, N. T., & Xing, Y. (2008). Economics of Transition, 16(2), 183–197.";
 
 export type Coef = [b: number, se: number, stars: string];
