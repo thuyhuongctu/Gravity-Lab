@@ -156,7 +156,7 @@ export function Observatory() {
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-3 py-3 sm:px-4">
+        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b sm:gap-3 border-paper/15 px-3 py-3 sm:px-4">
           <div className="flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
             <img
               src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=4`}
@@ -166,7 +166,7 @@ export function Observatory() {
               className="size-9 shrink-0 rounded-xl sm:size-11"
             />
             <div className="min-w-0">
-              <h1 className="truncate font-serif text-lg leading-tight text-paper sm:text-2xl sm:leading-none">
+              <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">
                 {tr("Trọng lực", "Gravity Lab")}
               </h1>
               <p className="mt-1 hidden text-xs text-mist sm:block">
