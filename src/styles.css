@@ -242,7 +242,7 @@
 }
 
 @utility dock-scroll {
-  max-height: 20rem;
+  max-height: min(20rem, 42dvh);
 }
 
 @media (min-width: 1024px) {
@@ -359,6 +359,13 @@
 
 summary {
   cursor: pointer;
+}
+
+input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  accent-color: var(--color-teal);
 }
 
 input[type="range"] {

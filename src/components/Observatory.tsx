@@ -155,20 +155,20 @@ export function Observatory() {
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-4 py-3">
-          <div className="flex min-w-0 items-center gap-3">
+        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-3 py-3 sm:px-4">
+          <div className="flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
             <img
               src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=4`}
               alt=""
               width={44}
               height={44}
-              className="size-11 shrink-0 rounded-xl"
+              className="size-9 shrink-0 rounded-xl sm:size-11"
             />
             <div className="min-w-0">
-              <h1 className="font-serif text-2xl leading-none text-paper">
+              <h1 className="truncate font-serif text-lg leading-tight text-paper sm:text-2xl sm:leading-none">
                 {tr("Trọng lực", "Gravity Lab")}
               </h1>
-              <p className="mt-1 text-xs text-mist">
+              <p className="mt-1 hidden text-xs text-mist sm:block">
                 {mode === "story"
                   ? tr("Từ Newton đến dòng vốn", "From Newton to capital flows")
                   : mode === "cast"
@@ -177,7 +177,7 @@ export function Observatory() {
               </p>
             </div>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <a
               href={APP_DOI_URL}
               target="_blank"
@@ -203,7 +203,7 @@ export function Observatory() {
                   aria-pressed={lang === l}
                   onClick={() => setLang(l)}
                   className={
-                    "min-h-9 min-w-10 rounded-full px-2 text-xs font-semibold uppercase " +
+                    "min-h-9 min-w-9 rounded-full px-2 text-xs font-semibold uppercase sm:min-w-10 " +
                     (lang === l ? "cosmic-btn" : "text-mist")
                   }
                 >
@@ -220,7 +220,7 @@ export function Observatory() {
                   ? tr("Chuyển sang giao diện sáng", "Switch to light theme")
                   : tr("Chuyển sang giao diện tối", "Switch to dark theme")
               }
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-void-2 text-paper"
+              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full bg-void-2 text-paper sm:min-h-11 sm:min-w-11"
             >
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
             </button>
@@ -385,7 +385,7 @@ export function Observatory() {
           {mode === "orbit" ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-3">
               {hint ? (
-                <p className="max-w-xs rounded-card bg-void-2 px-3 py-2 text-sm text-paper">
+                <p className="max-w-[15rem] rounded-card bg-void-2/90 px-3 py-2 text-xs text-paper sm:max-w-xs sm:text-sm">
                   {tr(
                     "Kéo để phóng. Vạch «vòng» là quỹ đạo tròn, vạch «thoát» là rời hệ. Đường chấm là vài giây tới.",
                     "Drag to launch. The “circular” tick is a circular orbit, the “escape” tick leaves the system. The dotted line is the next few seconds.",
@@ -417,7 +417,7 @@ export function Observatory() {
             </div>
           ) : mode === "trade" ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
-              <p className="max-w-sm rounded-card bg-void-2 px-3 py-2 text-sm text-paper">
+              <p className="max-w-[16rem] rounded-card bg-void-2/90 px-3 py-2 text-xs text-paper sm:max-w-sm sm:text-sm">
                 {tradeView === "globe"
                   ? tr(
                       "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy.",
