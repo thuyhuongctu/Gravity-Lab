@@ -1,14 +1,24 @@
 import { getSound, setAmbient, subscribeSound } from "@/lib/sound";
 
-/** The Gravity Lab theme song, streamed from public/music on demand. */
-export const SONG = {
-  title: "Từ một quả táo rơi",
-  src: `${import.meta.env.BASE_URL}music/tu-mot-qua-tao-roi.mp3`,
+export type SongId = "vi" | "en";
+
+/** The Gravity Lab theme song in two versions, streamed from public/music on demand. */
+export const SONGS: Record<SongId, { title: string; src: string; lyrics: Stanza[] }> = {
+  vi: {
+    title: "Từ một quả táo rơi",
+    src: `${import.meta.env.BASE_URL}music/tu-mot-qua-tao-roi.mp3`,
+    lyrics: [],
+  },
+  en: {
+    title: "From an Apple to the Stars",
+    src: `${import.meta.env.BASE_URL}music/from-an-apple-to-the-stars.mp3`,
+    lyrics: [],
+  },
 };
 
-export type SongState = { playing: boolean; time: number; duration: number };
+export type SongState = { id: SongId; playing: boolean; time: number; duration: number };
 
-let state: SongState = { playing: false, time: 0, duration: 0 };
+let state: SongState = { id: "vi", playing: false, time: 0, duration: 0 };
 const listeners = new Set<() => void>();
 let el: HTMLAudioElement | null = null;
 
@@ -19,7 +29,7 @@ function set(next: Partial<SongState>) {
 
 function audio(): HTMLAudioElement {
   if (el) return el;
-  el = new Audio(SONG.src);
+  el = new Audio();
   el.preload = "none";
   el.volume = getSound().volume;
   subscribeSound(() => {
@@ -42,10 +52,22 @@ export function getSong(): SongState {
   return state;
 }
 
+/** Choose the version; switching stops the one that was playing. */
+export function pickSong(id: SongId) {
+  if (id === state.id) return;
+  if (el) {
+    el.pause();
+    el.removeAttribute("src");
+    el.load();
+  }
+  set({ id, playing: false, time: 0, duration: 0 });
+}
+
 /** Play or pause. The space ambience is switched off so the two do not clash. */
 export function toggleSong() {
   const a = audio();
   if (a.paused) {
+    if (!a.getAttribute("src")) a.src = SONGS[state.id].src;
     if (getSound().ambient) setAmbient(false);
     void a.play().catch(() => set({ playing: false }));
   } else {
@@ -225,3 +247,168 @@ export const LYRICS_VI: Stanza[] = [
     lines: ["Gravity Lab…", "Câu hỏi tiếp theo…", "Bắt đầu từ bạn."],
   },
 ];
+
+/** Lyrics as sung (English version). */
+export const LYRICS_EN: Stanza[] = [
+  {
+    vi: "Mở đầu",
+    en: "Intro",
+    lines: [
+      "An apple falls beneath the stars,",
+      "A question travels near and far.",
+      "From orchard skies to worlds we draw,",
+      "Come feel the wonder, find the law.",
+    ],
+  },
+  {
+    vi: "Đoạn 1",
+    en: "Verse 1",
+    lines: [
+      "Sixteen sixty-five, the school doors closed,",
+      "Back home, a young mind watched and wondered.",
+      "An apple fell; the Moon still glowed—",
+      "What tied the sky to earth below?",
+      "",
+      "One simple question, reaching high:",
+      "Could one force link the earth and sky?",
+      "From falling fruit to worlds afar,",
+      "A thread of wonder, star to star.",
+    ],
+  },
+  {
+    vi: "Tiền điệp khúc",
+    en: "Pre-chorus",
+    lines: [
+      "Mass pulls mass across the night,",
+      "Less space between, a stronger tide.",
+      "A world of questions in our hands—",
+      "Let’s build a model, understand.",
+    ],
+  },
+  {
+    vi: "Điệp khúc",
+    en: "Chorus",
+    lines: [
+      "Gravity Lab, let your questions fly,",
+      "From the world below to the stars up high.",
+      "Move a little closer, watch the patterns grow,",
+      "Change a little number, see where it can go.",
+      "",
+      "From an apple falling to trade across the sea,",
+      "Find a new connection, see what it could mean.",
+      "Gravity Lab, a world to explore—",
+      "One small question opens one more door.",
+    ],
+  },
+  {
+    vi: "Đoạn 2",
+    en: "Verse 2",
+    lines: [
+      "Nineteen sixty-two, a map, a pen,",
+      "Tinbergen traced the links again.",
+      "Not stars this time, but markets wide,",
+      "With size and distance side by side.",
+      "",
+      "Bigger markets, stronger flows,",
+      "Across the borders, trade routes grow.",
+      "No fixed “square” to tell us how—",
+      "We let the data guide us now.",
+    ],
+  },
+  {
+    vi: "Tiền điệp khúc",
+    en: "Pre-chorus",
+    lines: [
+      "When trade is zero, let it stay,",
+      "Don’t let the logs sweep it away.",
+      "P-P-M-L keeps zeros in,",
+      "Another place for us to begin.",
+    ],
+  },
+  {
+    vi: "Điệp khúc",
+    en: "Chorus",
+    lines: [
+      "Gravity Lab, let your questions fly,",
+      "From the world below to the stars up high.",
+      "Move a little closer, watch the patterns grow,",
+      "Change a little number, see where it can go.",
+      "",
+      "From an apple falling to trade across the sea,",
+      "Find a new connection, see what it could mean.",
+      "Gravity Lab, a world to explore—",
+      "One small question opens one more door.",
+    ],
+  },
+  {
+    vi: "Nhịp cầu",
+    en: "Bridge",
+    lines: [
+      "By the Hau River, dreams take flight,",
+      "Can Tho classrooms glow with light.",
+      "Distance lives beyond the miles—",
+      "In rules and trust, in words and ties.",
+      "",
+      "Not every pattern fits our plans,",
+      "We read the numbers, understand.",
+      "Not just the answer we hoped to see—",
+      "But what the evidence lets us see.",
+    ],
+  },
+  {
+    vi: "Đoạn 3",
+    en: "Verse 3",
+    lines: [
+      "Build a little world and watch it move,",
+      "Change one thing—what can we prove?",
+      "Let a question lead the way,",
+      "Try, compare, then try again.",
+      "",
+      "Teachers, students, side by side,",
+      "Bring a new idea to life.",
+      "Every model, every test,",
+      "Helps us ask what’s coming next.",
+    ],
+  },
+  {
+    vi: "Điệp khúc cuối",
+    en: "Final chorus",
+    lines: [
+      "Gravity Lab, let your questions fly,",
+      "From the world below to the stars up high.",
+      "Move a little closer, watch the patterns grow,",
+      "Change a little number, see where it can go.",
+      "",
+      "From an apple falling to the links we’ve never known,",
+      "Find a new connection, make a world your own.",
+      "Gravity Lab, a world to explore—",
+      "One small question opens one more door.",
+    ],
+  },
+  {
+    vi: "Kết",
+    en: "Outro",
+    lines: [
+      "An apple falls… a question starts,",
+      "A spark of wonder lights our hearts.",
+      "From Can Tho skies to stars unknown,",
+      "We learn, we dream, we build our own.",
+      "",
+      "The music fades, the questions stay,",
+      "One more discovery lights the way.",
+      "Gravity Lab… let your questions fly,",
+      "One little apple… an endless sky.",
+    ],
+  },
+  {
+    vi: "Lời thì thầm",
+    en: "Whispered",
+    lines: [
+      "Gravity Lab…",
+      "The next question starts with you.",
+    ],
+  },
+];
+
+SONGS.vi.lyrics = LYRICS_VI;
+SONGS.en.lyrics = LYRICS_EN;
