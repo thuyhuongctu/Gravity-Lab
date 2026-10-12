@@ -22,9 +22,9 @@ Bản dựng dùng preset Vercel (có kết xuất phía máy chủ), nên cần
 
 ## Dữ liệu bản đồ / Map data
 
-Chế độ Thương mại có thêm chế độ xem địa cầu: các nền kinh tế đặt theo tọa độ thật, dòng chảy vẽ bằng cung đường tròn lớn. Đường biên quốc gia lấy từ Natural Earth (`ne_10m_admin_0_countries`, phạm vi công cộng), rút gọn bằng `scripts/build-land.py` thành `src/data/land.ts`.
+Chế độ Thương mại có thêm chế độ xem địa cầu: các nền kinh tế đặt theo tọa độ thật, dòng chảy vẽ bằng cung đường tròn lớn. Trình mô phỏng FDI có một địa cầu các nước nguồn vốn, mỗi cung nối thủ đô với Hà Nội, độ dày theo D^β của mô hình 8; chạm một nước để so sánh. Đường biên quốc gia lấy từ Natural Earth (`ne_10m_admin_0_countries`, phạm vi công cộng), rút gọn bằng `scripts/build-land.py` thành `src/data/land.ts`.
 
-*The trade mode adds a globe view: economies sit at their real coordinates and flows are drawn as great-circle arcs. Country outlines come from Natural Earth (`ne_10m_admin_0_countries`, public domain), simplified by `scripts/build-land.py` into `src/data/land.ts`.*
+*The trade mode adds a globe view: economies sit at their real coordinates and flows are drawn as great-circle arcs. The FDI simulator adds a globe of source countries, each arc joining a capital to Hanoi with its width set by D^β from Model 8; tap a country to compare it. Country outlines come from Natural Earth (`ne_10m_admin_0_countries`, public domain), simplified by `scripts/build-land.py` into `src/data/land.ts`.*
 
 ## Nguồn gốc / Provenance
 

@@ -4,6 +4,7 @@ import {
   CITE_2019,
   COUNTRIES,
   CSV_TEMPLATE,
+  HANOI,
   MODELS,
   coefRows,
   distanceLesson,
@@ -20,6 +21,7 @@ import {
   type PanelEstimate,
 } from "@/sim/gravity-lab";
 import { ReferenceList } from "@/components/ReferenceList";
+import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
 
 export type LabPanel = "coef" | "sim" | "ppml" | "data";
 
@@ -167,6 +169,55 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
   );
 }
 
+/** Source countries on the globe, each arc weighted by the distance-only gravity term D^β (Model 8). */
+function FdiGlobe({ lab }: { lab: LabState }) {
+  const beta = MODELS[7]!.c.geo![0];
+  const hanoi = { lon: HANOI[1], lat: HANOI[0] };
+  const terms = COUNTRIES.map((c) => ({ c, term: Math.pow(kmFromHanoi(c.id), beta) }));
+  const maxTerm = Math.max(...terms.map((t) => t.term));
+  const nodes: GlobeNode[] = [
+    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: "Hà Nội", r: 7, color: "#8fd4c0", tappable: false },
+    ...COUNTRIES.map(
+      (c): GlobeNode => ({
+        id: c.id,
+        lon: c.cap[1],
+        lat: c.cap[0],
+        label: c.id,
+        r: 5,
+        color: c.id === lab.b ? "#e7c27a" : "#f3ece1",
+        ring: c.id === lab.a ? "teal" : c.id === lab.b ? "amber" : undefined,
+      }),
+    ),
+  ];
+  const arcs: GlobeArc[] = terms.map(({ c, term }) => ({
+    id: c.id,
+    from: { lon: c.cap[1], lat: c.cap[0] },
+    to: hanoi,
+    weight: term / maxTerm,
+    highlight: c.id === lab.b,
+  }));
+  const chosen = COUNTRIES.find((c) => c.id === lab.b);
+  return (
+    <div className="flex max-w-xl flex-col gap-2">
+      <div className="h-80 overflow-hidden rounded-card sm:h-96">
+        <Globe
+          nodes={nodes}
+          arcs={arcs}
+          focus={chosen ? [hanoi, { lon: chosen.cap[1], lat: chosen.cap[0] }] : [hanoi]}
+          onTap={(id) => {
+            if (id !== lab.a) lab.setB(id);
+          }}
+          label={`Địa cầu các nước nguồn FDI vào Việt Nam. Chạm một nước để so với ${lab.name(lab.a)}.`}
+        />
+      </div>
+      <p className="text-xs text-mist">
+        Chạm một nước để so với {lab.name(lab.a)} (vòng xanh). Độ dày cung là phần do khoảng cách: D^β với β ={" "}
+        {num(beta)} (mô hình 8), so với nước gần Hà Nội nhất. D đo giữa hai thủ đô theo đường tròn lớn.
+      </p>
+    </div>
+  );
+}
+
 function SimStage({ lab }: { lab: LabState }) {
   const { impact, name, a, b } = lab;
   const geoTen = pctChange(MODELS[7]!.c.geo![0], Math.log(1.1));
@@ -179,6 +230,7 @@ function SimStage({ lab }: { lab: LabState }) {
         {name(a)} cách Hà Nội {Math.round(impact.kmA).toLocaleString("vi-VN")} km, {name(b)} cách{" "}
         {Math.round(impact.kmB).toLocaleString("vi-VN")} km.
       </p>
+      <FdiGlobe lab={lab} />
       {idle ? (
         <div className="max-w-xl rounded-card bg-void-2 px-3 py-3">
           <p className="text-xs text-mist">Xa hơn 10%, mô hình 8</p>
