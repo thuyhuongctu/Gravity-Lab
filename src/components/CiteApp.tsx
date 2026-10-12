@@ -4,8 +4,8 @@ import { tr } from "@/lib/prefs";
 export const APP_DOI = "10.5281/zenodo.23307832";
 export const APP_DOI_URL = `https://doi.org/${APP_DOI}`;
 /** The archived release this build is cited as. */
-export const APP_VERSION = "v2.1";
-export const VERSION_DOI = "10.5281/zenodo.23308307";
+export const APP_VERSION = "v2.2";
+export const VERSION_DOI = "10.5281/zenodo.23308587";
 export const VERSION_DOI_URL = `https://doi.org/${VERSION_DOI}`;
 
 /** How to cite Gravity Lab itself, with its Zenodo DOI. */
