@@ -10,7 +10,9 @@ const REFS: Ref[] = [
   {
     id: "anderson-2003",
     parts: [
-      { text: "Anderson, J. E., & van Wincoop, E. (2003). Gravity with gravitas: A solution to the border puzzle. " },
+      {
+        text: "Anderson, J. E., & van Wincoop, E. (2003). Gravity with gravitas: A solution to the border puzzle. ",
+      },
       { text: "American Economic Review, 93", em: true },
       { text: "(1), 170–192. https://doi.org/10.1257/000282803321455214" },
     ],
@@ -21,6 +23,34 @@ const REFS: Ref[] = [
       { text: "Cavendish, H. (1798). Experiments to determine the density of the earth. " },
       { text: "Philosophical Transactions of the Royal Society of London, 88", em: true },
       { text: ", 469–526. https://doi.org/10.1098/rstl.1798.0022" },
+    ],
+  },
+  {
+    id: "einstein-1916",
+    parts: [
+      {
+        text: "Einstein, A. (1916). Die Grundlage der allgemeinen Relativitätstheorie [The foundation of the general theory of relativity]. ",
+      },
+      { text: "Annalen der Physik, 354", em: true },
+      { text: "(7), 769–822. https://doi.org/10.1002/andp.19163540702" },
+    ],
+  },
+  {
+    id: "galilei-1914",
+    parts: [
+      { text: "Galilei, G. (1914). " },
+      { text: "Dialogues concerning two new sciences", em: true },
+      { text: " (H. Crew & A. de Salvio, Trans.). Macmillan. (Original work published 1638)" },
+    ],
+  },
+  {
+    id: "kepler-1997",
+    parts: [
+      { text: "Kepler, J. (1997). " },
+      { text: "The harmony of the world", em: true },
+      {
+        text: " (E. J. Aiton, A. M. Duncan, & J. V. Field, Trans.). American Philosophical Society. (Original work published 1619)",
+      },
     ],
   },
   {
@@ -62,17 +92,38 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "stukeley-1936",
+    parts: [
+      { text: "Stukeley, W. (1936). " },
+      { text: "Memoirs of Sir Isaac Newton's life", em: true },
+      { text: " (A. H. White, Ed.). Taylor & Francis. (Original work written 1752)" },
+    ],
+  },
+  {
     id: "tinbergen-1962",
     parts: [
       { text: "Tinbergen, J. (1962). " },
-      { text: "Shaping the world economy: Suggestions for an international economic policy", em: true },
+      {
+        text: "Shaping the world economy: Suggestions for an international economic policy",
+        em: true,
+      },
       { text: ". Twentieth Century Fund." },
+    ],
+  },
+  {
+    id: "westfall-1980",
+    parts: [
+      { text: "Westfall, R. S. (1980). " },
+      { text: "Never at rest: A biography of Isaac Newton", em: true },
+      { text: ". Cambridge University Press." },
     ],
   },
   {
     id: "xuan-2008",
     parts: [
-      { text: "Xuan, N. T., & Xing, Y. (2008). Foreign direct investment and exports: The experiences of Vietnam. " },
+      {
+        text: "Xuan, N. T., & Xing, Y. (2008). Foreign direct investment and exports: The experiences of Vietnam. ",
+      },
       { text: "Economics of Transition, 16", em: true },
       { text: "(2), 183–197. https://doi.org/10.1111/j.1468-0351.2008.00321.x" },
     ],
@@ -82,16 +133,17 @@ const REFS: Ref[] = [
 export function ReferenceList() {
   return (
     <details>
-      <summary className="min-h-11 cursor-pointer text-sm font-medium">{tr("Tài liệu tham khảo (APA 7)", "References (APA 7)")}</summary>
+      <summary className="min-h-11 cursor-pointer text-sm font-medium">
+        {tr("Tài liệu tham khảo (APA 7)", "References (APA 7)")}
+      </summary>
       <ul className="flex flex-col gap-3 pb-2">
         {REFS.map((ref) => (
-          <li key={ref.id} className="ps-6 text-sm leading-relaxed text-muted [text-indent:-1.5rem]">
+          <li
+            key={ref.id}
+            className="ps-6 text-sm leading-relaxed text-muted [text-indent:-1.5rem]"
+          >
             {ref.parts.map((part, index) =>
-              part.em ? (
-                <em key={index}>{part.text}</em>
-              ) : (
-                <span key={index}>{part.text}</span>
-              ),
+              part.em ? <em key={index}>{part.text}</em> : <span key={index}>{part.text}</span>,
             )}
           </li>
         ))}

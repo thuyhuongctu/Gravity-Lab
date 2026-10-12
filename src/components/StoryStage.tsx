@@ -1,5 +1,6 @@
 import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
+import { ReferenceList } from "@/components/ReferenceList";
 import { tr } from "@/lib/prefs";
 
 type Room = "orbit" | "trade" | "lab";
@@ -22,11 +23,11 @@ const CHAPTERS: Chapter[] = [
     who: "Isaac Newton · Woolsthorpe",
     vi: {
       title: "Những năm dịch hạch",
-      text: "Dịch hạch đóng cửa Cambridge, Newton về quê ở Woolsthorpe gần hai năm. Ông nghiên cứu chuyển động tròn, áp dụng cho Mặt Trăng và các hành tinh, và rút ra rằng lực hướng tâm giảm theo bình phương khoảng cách. Khi ấy thế giới chưa biết gì về những phát hiện này.",
+      text: "Dịch hạch đóng cửa Cambridge, Newton về quê ở Woolsthorpe gần hai năm. Ông nghiên cứu chuyển động tròn, áp dụng cho Mặt Trăng và các hành tinh, và rút ra rằng lực hướng tâm giảm theo bình phương khoảng cách. Khi ấy thế giới chưa biết gì về những phát hiện này (Westfall, 1980).",
     },
     en: {
       title: "The plague years",
-      text: "The plague closed Cambridge, and Newton spent most of two years at home in Woolsthorpe. He studied circular motion, applied it to the Moon and the planets, and derived that the force pulling them inward falls with the square of the distance. The world heard nothing of it at the time.",
+      text: "The plague closed Cambridge, and Newton spent most of two years at home in Woolsthorpe. He studied circular motion, applied it to the Moon and the planets, and derived that the force pulling them inward falls with the square of the distance. The world heard nothing of it at the time (Westfall, 1980).",
     },
   },
   {
@@ -34,11 +35,11 @@ const CHAPTERS: Chapter[] = [
     who: "Isaac Newton",
     vi: {
       title: "Quả táo và mặt trăng cùng một lực",
-      text: "Trong Principia, Newton cho rằng lực kéo quả táo rơi cũng giữ Mặt Trăng trên quỹ đạo quanh Trái Đất: mọi vật có khối lượng hút nhau, lực tỷ lệ với tích hai khối lượng và nghịch với bình phương khoảng cách. Ông nối công trình của Galileo về gia tốc và của Kepler về chuyển động hành tinh thành một lý thuyết cho cả bầu trời lẫn mặt đất; lý thuyết ấy đứng vững cho đến khi Einstein mở rộng ở thế kỷ 20.",
+      text: "Trong Principia (Newton, 1687/1999), Newton cho rằng lực kéo quả táo rơi cũng giữ Mặt Trăng trên quỹ đạo quanh Trái Đất: mọi vật có khối lượng hút nhau, lực tỷ lệ với tích hai khối lượng và nghịch với bình phương khoảng cách. Giai thoại quả táo do chính Newton kể lại lúc tuổi già (Stukeley, 1752/1936). Ông nối công trình của Galileo (1638/1914) về gia tốc và của Kepler (1619/1997) về chuyển động hành tinh thành một lý thuyết cho cả bầu trời lẫn mặt đất; lý thuyết ấy đứng vững cho đến khi Einstein (1916) mở rộng ở thế kỷ 20.",
     },
     en: {
       title: "The apple and the moon share one force",
-      text: "In the Principia, Newton argued that the force pulling an apple to the ground also keeps the Moon in orbit around the Earth: all objects with mass attract each other, with a force that grows with the product of the masses and falls with the square of the distance. He tied Galileo's work on acceleration and Kepler's on planetary motion into one theory for the sky and the ground, which stood until Einstein expanded on it in the 20th century.",
+      text: "In the Principia (Newton, 1687/1999), Newton argued that the force pulling an apple to the ground also keeps the Moon in orbit around the Earth: all objects with mass attract each other, with a force that grows with the product of the masses and falls with the square of the distance. The apple story comes from Newton himself, told in old age (Stukeley, 1752/1936). He tied Galileo's (1638/1914) work on acceleration and Kepler's (1619/1997) on planetary motion into one theory for the sky and the ground, which stood until Einstein (1916) expanded on it in the 20th century.",
     },
     formula: "F = G m₁m₂ / r²",
     open: { room: "orbit", panel: null, vi: "Mở Quỹ đạo", en: "Open Orbit" },
@@ -48,11 +49,11 @@ const CHAPTERS: Chapter[] = [
     who: "Henry Cavendish",
     vi: {
       title: "Cân xoắn trong phòng thí nghiệm",
-      text: "Cavendish đo lực hút giữa các quả cầu chì để tính mật độ Trái Đất. Từ phép đo ấy, về sau người ta suy ra hằng số G.",
+      text: "Cavendish đo lực hút giữa các quả cầu chì để tính mật độ Trái Đất (Cavendish, 1798). Từ phép đo ấy, về sau người ta suy ra hằng số G.",
     },
     en: {
       title: "A torsion balance in the laboratory",
-      text: "Cavendish measured the pull between lead spheres to find the density of the Earth. The constant G was later derived from his measurement.",
+      text: "Cavendish measured the pull between lead spheres to find the density of the Earth (Cavendish, 1798). The constant G was later derived from his measurement.",
     },
   },
   {
@@ -125,9 +126,14 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
   return (
     <div className="surface absolute inset-0 overflow-y-auto bg-paper text-ink">
       <div className="mx-auto max-w-2xl px-4 pt-4">
-        <p className="text-xs font-medium text-teal">{tr("Câu chuyện lực hấp dẫn", "The story of gravity")}</p>
+        <p className="text-xs font-medium text-teal">
+          {tr("Câu chuyện lực hấp dẫn", "The story of gravity")}
+        </p>
         <h2 className="mt-1 font-serif text-3xl leading-tight">
-          {tr("Từ quả táo của Newton đến dòng vốn vào Việt Nam", "From Newton's apple to capital flowing into Vietnam")}
+          {tr(
+            "Từ quả táo của Newton đến dòng vốn vào Việt Nam",
+            "From Newton's apple to capital flowing into Vietnam",
+          )}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           {tr(
@@ -162,7 +168,10 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           const body = tr(c.vi.text, c.en.text);
           return (
             <li key={c.year} className="relative border-l-2 border-line pb-6 pl-5">
-              <span className="absolute -left-[7px] top-1 size-3 rounded-full border-2 border-paper bg-teal" aria-hidden="true" />
+              <span
+                className="absolute -left-[7px] top-1 size-3 rounded-full border-2 border-paper bg-teal"
+                aria-hidden="true"
+              />
               <p className="text-xs font-medium tabular-nums text-teal">
                 {c.year} · {c.who}
               </p>
@@ -182,32 +191,48 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           );
         })}
         <li className="relative pl-5">
-          <span className="absolute -left-[5px] top-1 size-3 rounded-full bg-amber" aria-hidden="true" />
+          <span
+            className="absolute -left-[5px] top-1 size-3 rounded-full bg-amber"
+            aria-hidden="true"
+          />
           <p className="text-xs font-medium tabular-nums text-amber">2026 · Gravity Lab</p>
           <h3 className="mt-1 font-serif text-2xl leading-snug">
-            {tr("Phòng thí nghiệm của nhóm, mở cho lớp học", "The team's lab, opened to the classroom")}
+            {tr(
+              "Phòng thí nghiệm của nhóm, mở cho lớp học",
+              "The team's lab, opened to the classroom",
+            )}
           </h3>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <figure>
               <img
                 src={art("tu-vest.webp")}
-                alt={tr("PGS.TS. Phan Anh Tú, phong cách đất sét", "Assoc. Prof. Phan Anh Tú, clay style")}
+                alt={tr(
+                  "PGS.TS. Phan Anh Tú, phong cách đất sét",
+                  "Assoc. Prof. Phan Anh Tú, clay style",
+                )}
                 loading="lazy"
                 className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom"
               />
               <figcaption className="mt-2">
-                <p className="text-sm font-medium">{tr("PGS.TS. Phan Anh Tú", "Assoc. Prof. Phan Anh Tú")}</p>
+                <p className="text-sm font-medium">
+                  {tr("PGS.TS. Phan Anh Tú", "Assoc. Prof. Phan Anh Tú")}
+                </p>
               </figcaption>
             </figure>
             <figure>
               <img
                 src={art("huong.webp")}
-                alt={tr("NCS. Đỗ Thùy Hương, phong cách đất sét", "Đỗ Thùy Hương, PhD candidate, clay style")}
+                alt={tr(
+                  "NCS. Đỗ Thùy Hương, phong cách đất sét",
+                  "Đỗ Thùy Hương, PhD candidate, clay style",
+                )}
                 loading="lazy"
                 className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom"
               />
               <figcaption className="mt-2">
-                <p className="text-sm font-medium">{tr("NCS. Đỗ Thùy Hương", "Đỗ Thùy Hương, PhD candidate")}</p>
+                <p className="text-sm font-medium">
+                  {tr("NCS. Đỗ Thùy Hương", "Đỗ Thùy Hương, PhD candidate")}
+                </p>
               </figcaption>
             </figure>
           </div>
@@ -218,15 +243,18 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
             )}
           </p>
           <p className="mt-2 text-sm">
-            <a className="underline decoration-line underline-offset-2" href={APP_DOI_URL} target="_blank" rel="noreferrer">
+            <a
+              className="underline decoration-line underline-offset-2"
+              href={APP_DOI_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
               DOI {APP_DOI}
             </a>
           </p>
-          <p className="mt-4 pb-10 text-xs leading-relaxed text-muted">
-            {tr("Nguồn cho phần Newton: ", "Sources for the Newton chapters: ")}
-            Britannica Editors (2026, October 1). <em>How was gravity discovered?</em> Encyclopaedia Britannica; Westfall, R. S.
-            (2026). <em>Isaac Newton</em>. Encyclopaedia Britannica.
-          </p>
+          <div className="mt-4 pb-10">
+            <ReferenceList />
+          </div>
         </li>
       </ol>
     </div>
