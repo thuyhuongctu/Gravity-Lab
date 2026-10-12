@@ -18,15 +18,27 @@ const art = (file: string) => `${import.meta.env.BASE_URL}cast/${file}`;
 /** From Newton's apple to the 2026 lab: the line the app follows, chapter by chapter. */
 const CHAPTERS: Chapter[] = [
   {
+    year: "1665–1666",
+    who: "Isaac Newton · Woolsthorpe",
+    vi: {
+      title: "Những năm dịch hạch",
+      text: "Dịch hạch đóng cửa Cambridge, Newton về quê ở Woolsthorpe gần hai năm. Ông nghiên cứu chuyển động tròn, áp dụng cho Mặt Trăng và các hành tinh, và rút ra rằng lực hướng tâm giảm theo bình phương khoảng cách. Khi ấy thế giới chưa biết gì về những phát hiện này.",
+    },
+    en: {
+      title: "The plague years",
+      text: "The plague closed Cambridge, and Newton spent most of two years at home in Woolsthorpe. He studied circular motion, applied it to the Moon and the planets, and derived that the force pulling them inward falls with the square of the distance. The world heard nothing of it at the time.",
+    },
+  },
+  {
     year: "1687",
     who: "Isaac Newton",
     vi: {
       title: "Quả táo và mặt trăng cùng một lực",
-      text: "Trong Principia, Newton cho rằng lực kéo quả táo rơi cũng giữ mặt trăng trên quỹ đạo: lực tỷ lệ với tích hai khối lượng và nghịch với bình phương khoảng cách.",
+      text: "Trong Principia, Newton cho rằng lực kéo quả táo rơi cũng giữ Mặt Trăng trên quỹ đạo quanh Trái Đất: mọi vật có khối lượng hút nhau, lực tỷ lệ với tích hai khối lượng và nghịch với bình phương khoảng cách. Ông nối công trình của Galileo về gia tốc và của Kepler về chuyển động hành tinh thành một lý thuyết cho cả bầu trời lẫn mặt đất; lý thuyết ấy đứng vững cho đến khi Einstein mở rộng ở thế kỷ 20.",
     },
     en: {
       title: "The apple and the moon share one force",
-      text: "In the Principia, Newton argued that the force that pulls an apple down also holds the moon in its orbit: it grows with the product of the two masses and falls with the square of the distance.",
+      text: "In the Principia, Newton argued that the force pulling an apple to the ground also keeps the Moon in orbit around the Earth: all objects with mass attract each other, with a force that grows with the product of the masses and falls with the square of the distance. He tied Galileo's work on acceleration and Kepler's on planetary motion into one theory for the sky and the ground, which stood until Einstein expanded on it in the 20th century.",
     },
     formula: "F = G m₁m₂ / r²",
     open: { room: "orbit", panel: null, vi: "Mở Quỹ đạo", en: "Open Orbit" },
@@ -134,6 +146,12 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
         <figcaption>
           <p className="font-serif text-xl leading-tight">Isaac Newton</p>
           <p className="text-sm text-muted">1643–1727</p>
+          <p className="text-xs text-muted">
+            {tr(
+              "Sinh 25/12/1642 theo lịch cũ (4/1/1643 lịch mới), Woolsthorpe, Anh; mất 31/3/1727, London.",
+              "Born 25 December 1642 Old Style (4 January 1643 New Style), Woolsthorpe, England; died 31 March 1727, London.",
+            )}
+          </p>
           <p className="mt-2 font-serif text-lg">F = G m₁m₂ / r²</p>
         </figcaption>
       </figure>
@@ -183,7 +201,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
             </figure>
             <figure>
               <img
-                src={art("huong-ao-dai.webp")}
+                src={art("huong.webp")}
                 alt={tr("NCS. Đỗ Thùy Hương, phong cách đất sét", "Đỗ Thùy Hương, PhD candidate, clay style")}
                 loading="lazy"
                 className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom"
@@ -199,10 +217,15 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
               "School of Economics, Can Tho University. Gravity Lab puts the whole journey in the browser: Newton's orbits, Tinbergen's trade model, the 2019 FDI coefficients, the PPML test and estimation on the learner's own data.",
             )}
           </p>
-          <p className="mt-2 pb-10 text-sm">
+          <p className="mt-2 text-sm">
             <a className="underline decoration-line underline-offset-2" href={APP_DOI_URL} target="_blank" rel="noreferrer">
               DOI {APP_DOI}
             </a>
+          </p>
+          <p className="mt-4 pb-10 text-xs leading-relaxed text-muted">
+            {tr("Nguồn cho phần Newton: ", "Sources for the Newton chapters: ")}
+            Britannica Editors (2026, October 1). <em>How was gravity discovered?</em> Encyclopaedia Britannica; Westfall, R. S.
+            (2026). <em>Isaac Newton</em>. Encyclopaedia Britannica.
           </p>
         </li>
       </ol>

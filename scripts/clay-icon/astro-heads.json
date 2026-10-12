@@ -1,0 +1,50 @@
+{
+ "lumina": {
+  "file": "lumina-vest",
+  "cx": 212,
+  "top": 40,
+  "chin": 311
+ },
+ "tu": {
+  "file": "tu-vest",
+  "cx": 372,
+  "top": 96,
+  "chin": 330
+ },
+ "minh-long": {
+  "file": "minh-long",
+  "cx": 492,
+  "top": 50,
+  "chin": 351
+ },
+ "lan-chi": {
+  "file": "lan-chi",
+  "cx": 411,
+  "top": 50,
+  "chin": 441
+ },
+ "bao-ngoc": {
+  "file": "bao-ngoc",
+  "cx": 246,
+  "top": 50,
+  "chin": 341
+ },
+ "thu-ha": {
+  "file": "thu-ha",
+  "cx": 211,
+  "top": 50,
+  "chin": 361
+ },
+ "gia-han": {
+  "file": "gia-han",
+  "cx": 226,
+  "top": 50,
+  "chin": 331
+ },
+ "huong": {
+  "file": "huong",
+  "cx": 306,
+  "top": 46,
+  "chin": 262
+ }
+}

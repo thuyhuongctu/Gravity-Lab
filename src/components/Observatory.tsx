@@ -4,7 +4,7 @@ import { OrbitCanvas, type OrbitSnap } from "@/components/OrbitCanvas";
 import { TradeCanvas } from "@/components/TradeCanvas";
 import { GlobeCanvas } from "@/components/GlobeCanvas";
 import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiLab";
-import { CastStage, HolderBar, shownPeople } from "@/components/CastStage";
+import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
@@ -344,7 +344,7 @@ export function Observatory() {
 
         {mode === "orbit" || mode === "trade" ? (
           <div className="absolute inset-x-0 top-0 z-20 p-3">
-            <HolderBar people={shownPeople(mode, lab.panel, who)} onBack={() => setMode("cast")} />
+            <HolderBar people={shownPeople(mode, lab.panel, who)} onBack={() => setMode("cast")} suited={mode === "orbit"} />
           </div>
         ) : null}
 
@@ -501,6 +501,7 @@ export function Observatory() {
               </button>
             </div>
             <p className="text-sm tabular-nums text-muted">{snap.count} {tr("thiên thể", snap.count === 1 ? "body" : "bodies")}</p>
+            <Crew />
             <ReferenceList />
             <button
               type="button"
