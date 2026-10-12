@@ -14,7 +14,7 @@ Live application: **https://thuyhuongctu.github.io/Gravity-Lab/**
 Gravity Lab is an interactive teaching instrument for the gravity model in international economics and international business. It follows the model from its origin in Newtonian mechanics to its use in the empirical study of trade and foreign direct investment (FDI). The application is organised in three stages:
 
 1. **Universal gravitation.** An N-body orbit simulator presents Newton's law, in which the attraction between two bodies is proportional to the product of their masses and inversely proportional to the square of their distance (Newton, 1687/1999).
-2. **The gravity model of trade.** Mass is replaced by economic size and the distance exponent becomes a parameter to be estimated (Tinbergen, 1962). Learners explore bilateral trade between Vietnam and its partner economies on a plane or on a globe.
+2. **The gravity model of trade.** Mass is replaced by economic size and the distance exponent becomes a parameter to be estimated (Tinbergen, 1962). Learners explore bilateral trade between Vietnam and its partner economies on a world map, a plane or a globe.
 3. **FDI into Vietnam.** The laboratory reproduces published coefficients for FDI into Vietnam (Phan & Do, 2019; Xuan & Xing, 2008). It simulates the effects of distance and market size, explains why Poisson pseudo-maximum likelihood (PPML) is preferred when flows contain zeros (Santos Silva & Tenreyro, 2006), and estimates OLS and PPML models on data uploaded by the learner.
 
 A narrative page opens on a live 3D scene (a clay Earth with Vietnam lit, the Moon and Newton's apple on their orbits, and FDI flows arriving from the main source economies) and traces the development of the model from 1665 to the present. A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
@@ -57,7 +57,7 @@ Majumdar and Basu (2023) augment the equation with an exchange-rate uncertainty 
 
 - **Bilingual interface** in Vietnamese and English. Use the VI/EN switch or open the application with `?lang=en`.
 - **Light and dark themes.** The default follows the device setting, and the choice is remembered on the device.
-- **Theme song and sonification.** A theme song in Vietnamese and English, with lyrics, can be played from the sound panel. The orbit simulator can be heard: each body is assigned a pitch proportional to its angular speed, so inner orbits sound higher, as Kepler's third law implies. A separate panel transposes the sidereal orbital periods of the planets by whole octaves into the audible range (Kepler, 1619/1997; Williams, n.d.). All sound is synthesised in the browser and is off until the user enables it.
+- **Theme song and sonification.** A theme song in Vietnamese and English, with lyrics, can be played from the sound panel. The orbit simulator can be heard: each body is assigned a pitch proportional to its angular speed, so inner orbits sound higher, as Kepler's third law implies. A separate panel transposes the sidereal orbital periods of the planets by whole octaves into the audible range (Kepler, 1619/1997; Williams, n.d.). The ambience and tones are synthesised in the browser, the song is streamed only on request, and all sound is off until the user enables it.
 - **Installable progressive web application** with its own icon. There is no sign-in, no database and no call to an external service.
 - **Citation support.** The concept DOI is shown in the header, and an APA 7 reference list is available in every room.
 
@@ -83,7 +83,7 @@ npm run dev        # development server at http://localhost:8080
 npm run build      # static build in dist/
 npm run typecheck  # TypeScript
 npm run lint       # ESLint
-npm test           # unit tests: globe geometry, FDI model, sound mappings
+npm test           # unit tests: globe and world-map geometry, FDI model, sound mappings
 ```
 
 The build uses relative paths and can be served from any static host. The repository deploys automatically to GitHub Pages on each change to `main` (`.github/workflows/pages.yml`).

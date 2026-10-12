@@ -179,7 +179,11 @@ export function SoundPanel() {
 
           <Toggle
             on={sound.ambient}
-            onChange={setAmbient}
+            onChange={(on) => {
+              // One at a time: the ambience and the song do not mix.
+              if (on && getSong().playing) toggleSong();
+              setAmbient(on);
+            }}
             label={tr("Nhạc nền không gian", "Space ambience")}
             hint={tr(
               "Hợp âm quãng năm trầm, tiếng gió Mặt Trời và những nốt sao lấp lánh, tổng hợp ngay trong trình duyệt.",
