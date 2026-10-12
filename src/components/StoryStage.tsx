@@ -16,6 +16,16 @@ type Chapter = {
   en: { title: string; text: string };
   formula?: string;
   cover?: CoverRoom;
+  /** A clay portrait beside the chapter, with name, dates and a short note. */
+  figure?: {
+    src: string;
+    name: string;
+    dates: string;
+    vi: { alt: string; note: string };
+    en: { alt: string; note: string };
+  };
+  /** A wide illustration under the chapter text. */
+  art?: { src: string; vi: string; en: string };
   open?: { room: Room; panel: LabPanel | null; vi: string; en: string };
 };
 
@@ -33,6 +43,11 @@ const CHAPTERS: Chapter[] = [
     en: {
       title: "The plague years",
       text: "The plague closed Cambridge, and Newton spent most of two years at home in Woolsthorpe. He studied circular motion, applied it to the Moon and the planets, and derived that the force pulling them inward falls with the square of the distance. The world heard nothing of it at the time (Westfall, 1980).",
+    },
+    art: {
+      src: "noir/newton-scene.webp",
+      vi: "Quả táo rơi, quyển Principia và Mặt Trăng: đất sét phong cách noir",
+      en: "The falling apple, the Principia and the Moon: clay noir",
     },
   },
   {
@@ -76,6 +91,19 @@ const CHAPTERS: Chapter[] = [
     formula: "Tᵢⱼ = G · YᵢYⱼ / Dᵢⱼᵞ",
     cover: "trade",
     open: { room: "trade", panel: null, vi: "Mở Thương mại", en: "Open Trade" },
+    figure: {
+      src: "cast/tinbergen.webp",
+      name: "Jan Tinbergen",
+      dates: "1903–1994",
+      vi: {
+        alt: "Jan Tinbergen cầm phấn và quả địa cầu, tạo hình đất sét cách điệu",
+        note: "Nhà kinh tế học Hà Lan. Năm 1969 ông cùng Ragnar Frisch nhận giải Nobel Kinh tế đầu tiên. Tạo hình đất sét cách điệu, không dựa trên một bức ảnh cụ thể.",
+      },
+      en: {
+        alt: "Jan Tinbergen holding chalk and a globe, a stylised clay figure",
+        note: "Dutch economist. In 1969 he shared the first Nobel Memorial Prize in Economic Sciences with Ragnar Frisch. A stylised clay figure, not based on any single photograph.",
+      },
+    },
   },
   {
     year: "2003",
@@ -181,8 +209,13 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
       <figure className="mx-auto mt-4 grid max-w-2xl grid-cols-[minmax(0,10rem)_1fr] items-center gap-4 px-4">
         <img
           src={art("newton.webp")}
-          alt={tr("Quả táo rơi, quyển Principia và Mặt Trăng: đất sét phong cách noir", "The falling apple, the Principia and the Moon: clay noir")}
-          className="clay-card aspect-square w-full rounded-card bg-[#0b0a1f] object-cover"
+          alt={tr(
+            "Isaac Newton cầm quả táo, tạo hình đất sét theo chân dung của Godfrey Kneller (1689)",
+            "Isaac Newton holding an apple, a clay figure after Godfrey Kneller's 1689 portrait",
+          )}
+          width={448}
+          height={600}
+          className="clay-card aspect-[3/4] w-full rounded-card bg-[#f1e8de] object-contain"
         />
         <figcaption>
           <p className="font-serif text-xl leading-tight">Isaac Newton</p>
@@ -194,6 +227,12 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
             )}
           </p>
           <p className="mt-2 font-math text-lg">F = G m₁m₂ / r²</p>
+          <p className="mt-2 text-xs text-muted">
+            {tr(
+              "Tạo hình đất sét theo chân dung của Godfrey Kneller (1689).",
+              "Clay figure after Godfrey Kneller's 1689 portrait.",
+            )}
+          </p>
         </figcaption>
       </figure>
 
@@ -214,6 +253,35 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
                 <h3 className="mt-1 font-serif text-xl leading-snug">{t}</h3>
                 {c.formula ? <p className="mt-1 font-math text-lg">{c.formula}</p> : null}
                 <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
+                {c.figure ? (
+                  <figure className="mt-3 grid grid-cols-[minmax(0,8rem)_1fr] items-center gap-4">
+                    <img
+                      src={`${import.meta.env.BASE_URL}${c.figure.src}`}
+                      alt={tr(c.figure.vi.alt, c.figure.en.alt)}
+                      width={448}
+                      height={600}
+                      loading="lazy"
+                      className="clay-card aspect-[3/4] w-full rounded-card bg-[#f1e8de] object-contain"
+                    />
+                    <figcaption>
+                      <p className="font-serif text-lg leading-tight">{c.figure.name}</p>
+                      <p className="text-sm text-muted">{c.figure.dates}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted">
+                        {tr(c.figure.vi.note, c.figure.en.note)}
+                      </p>
+                    </figcaption>
+                  </figure>
+                ) : null}
+                {c.art ? (
+                  <img
+                    src={`${import.meta.env.BASE_URL}${c.art.src}`}
+                    alt={tr(c.art.vi, c.art.en)}
+                    width={1024}
+                    height={1024}
+                    loading="lazy"
+                    className="clay-card mt-3 aspect-square w-full max-w-sm rounded-card bg-[#0b0a1f] object-cover"
+                  />
+                ) : null}
                 {c.cover ? <RoomCover room={c.cover} className="mt-3" /> : null}
                 {c.open ? (
                   <button
