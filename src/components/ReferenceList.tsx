@@ -26,6 +26,16 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "disdier-2008",
+    parts: [
+      {
+        text: "Disdier, A.-C., & Head, K. (2008). The puzzling persistence of the distance effect on bilateral trade. ",
+      },
+      { text: "The Review of Economics and Statistics, 90", em: true },
+      { text: "(1), 37–48. https://doi.org/10.1162/rest.90.1.37" },
+    ],
+  },
+  {
     id: "einstein-1916",
     parts: [
       {
@@ -116,6 +126,16 @@ const REFS: Ref[] = [
       { text: "Westfall, R. S. (1980). " },
       { text: "Never at rest: A biography of Isaac Newton", em: true },
       { text: ". Cambridge University Press." },
+    ],
+  },
+  {
+    id: "williams-nd",
+    parts: [
+      { text: "Williams, D. R. (n.d.). " },
+      { text: "Planetary fact sheet – Metric", em: true },
+      {
+        text: ". NASA Goddard Space Flight Center. Retrieved October 12, 2026, from https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+      },
     ],
   },
   {
