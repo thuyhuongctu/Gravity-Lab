@@ -6,24 +6,24 @@ Phòng thí nghiệm mô hình lực hấp dẫn, chạy trên trình duyệt, g
 
 ## Chạy thử / Run it
 
-Ứng dụng viết bằng React + TanStack Start (Vite, Tailwind). Cần Node.js 22 trở lên.
+Bản trực tuyến: **https://thuyhuongctu.github.io/Gravity-Lab/** (GitHub Pages, tự triển khai khi nhánh `main` thay đổi).
 
-*The app is built with React + TanStack Start (Vite, Tailwind). Node.js 22 or later is required.*
+*Live version at the URL above (GitHub Pages, deployed automatically from `main`).*
+
+Ứng dụng là một trang tĩnh viết bằng React, Vite và Tailwind. Cần Node.js 22 trở lên.
+
+*The app is a static single page built with React, Vite and Tailwind. Node.js 22 or later is required.*
 
 ```sh
 npm install
 npm run dev      # http://localhost:8080
-npm run build    # bản dựng triển khai (Nitro, preset Vercel) / deployable build
+npm run build    # bản tĩnh trong dist/ / static build in dist/
 npm test         # kiểm tra phần toán: địa cầu, mô hình FDI / unit tests for the globe and FDI maths
 ```
 
-Ứng dụng chạy độc lập: không đăng nhập, không cơ sở dữ liệu, không gọi dịch vụ bên ngoài ngoài Google Fonts.
+Thư mục `dist/` dùng đường dẫn tương đối nên chạy được ở bất kỳ máy chủ tĩnh nào (GitHub Pages, Vercel, Netlify, máy chủ trường). Ứng dụng không đăng nhập, không cơ sở dữ liệu, không gọi dịch vụ bên ngoài ngoài Google Fonts. Phiên bản HTML tĩnh trước đây vẫn có tại **https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html** và trong lịch sử git (commit `1857067`).
 
-*The app is self-contained: no sign-in, no database, and no external calls other than Google Fonts.*
-
-Bản dựng dùng preset Vercel (có kết xuất phía máy chủ), nên cần triển khai lên Vercel hoặc một nền tảng tương thích, không phải GitHub Pages. Phiên bản HTML tĩnh trước đây vẫn được duy trì tại **https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html** và được lưu trong lịch sử git của repo này (commit `1857067`).
-
-*The build targets the Vercel preset (server-side rendering), so it must be deployed to Vercel or a compatible platform rather than GitHub Pages. The earlier static HTML version remains online at the URL above and is preserved in this repository's git history (commit `1857067`).*
+*`dist/` uses relative paths, so it runs from any static host (GitHub Pages, Vercel, Netlify, a university server). The app has no sign-in, no database, and no external calls other than Google Fonts. The earlier static HTML version remains at the BizOn URL above and in git history (commit `1857067`).*
 
 ## Dữ liệu bản đồ / Map data
 
