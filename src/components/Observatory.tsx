@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { LocateFixed, Moon, Move, Pause, Play, Sun, Trash2 } from "lucide-react";
+import { ArrowRight, LocateFixed, Moon, Move, Pause, Play, Sun, Trash2 } from "lucide-react";
 import { OrbitCanvas, type OrbitSnap } from "@/components/OrbitCanvas";
 import { TradeCanvas } from "@/components/TradeCanvas";
 import { GlobeCanvas } from "@/components/GlobeCanvas";
@@ -32,14 +32,17 @@ function comma(n: number, digits = 0): string {
   return fmt(n, digits);
 }
 
+/** A chip: a white clay pill when on. Inside a track it sits flat when off; alone it is raised. */
 function Chip({
   active,
   onClick,
   children,
+  flat = false,
 }: {
   active?: boolean;
   onClick: () => void;
   children: ReactNode;
+  flat?: boolean;
 }) {
   return (
     <button
@@ -47,14 +50,47 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={
-        "min-h-11 shrink-0 rounded-full border px-3 text-sm font-medium " +
-        (active ? "border-ink bg-ink text-paper" : "border-line bg-paper text-ink")
+        "min-h-10 shrink-0 rounded-full px-3.5 text-sm font-medium " +
+        (active ? "pill-on" : flat ? "text-muted" : "noir-raise text-ink")
       }
     >
       {children}
     </button>
   );
 }
+
+/** A pressed-in track holding a row of chips. */
+function Track({ children, label }: { children: ReactNode; label?: string }) {
+  return (
+    <div role={label ? "group" : undefined} aria-label={label} className="noir-track flex gap-1 overflow-x-auto rounded-full p-1">
+      {children}
+    </div>
+  );
+}
+
+/** "The same equation …" call to action with the amber arrow. */
+function NextCard({ kicker, title, onClick, children }: { kicker: string; title: string; onClick: () => void; children?: ReactNode }) {
+  return (
+    <button type="button" onClick={onClick} className="noir-card noir-amber flex items-center gap-3 rounded-[22px] p-3.5 text-left">
+      <span className="min-w-0 flex-1">
+        <span className="block text-xs text-muted">{kicker}</span>
+        <span className="mt-0.5 block font-serif text-base leading-snug">{title}</span>
+        {children}
+      </span>
+      <span aria-hidden="true" className="amber-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full">
+        <ArrowRight className="size-4" />
+      </span>
+    </button>
+  );
+}
+
+const MASS_BALL: Record<string, { ball: string; size: number }> = {
+  dust: { ball: "ball-moon", size: 8 },
+  moon: { ball: "ball-moon", size: 12 },
+  planet: { ball: "ball-teal", size: 18 },
+  giant: { ball: "ball-violet", size: 24 },
+  star: { ball: "ball-amber", size: 28 },
+};
 
 export function Observatory() {
   const { lang, theme } = usePrefs();
@@ -156,20 +192,20 @@ export function Observatory() {
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b sm:gap-3 border-paper/15 px-3 py-3 sm:px-4">
-          <div className="flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
+        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper/10 px-3 py-3 sm:gap-3 sm:px-5 xl:flex-nowrap">
+          <div className="order-1 flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
             <img
               src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=4`}
               alt=""
               width={44}
               height={44}
-              className="size-9 shrink-0 rounded-xl sm:size-11"
+              className="size-9 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(94,234,212,0.25)] sm:size-11"
             />
             <div className="min-w-0">
               <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">
                 {tr("Trọng lực", "Gravity Lab")}
               </h1>
-              <p className="mt-1 hidden text-xs text-mist sm:block">
+              <p className={"mt-1 hidden truncate text-xs text-mist sm:block " + (mode === "story" || mode === "cast" ? "" : "xl:max-2xl:hidden")}>
                 {mode === "story"
                   ? tr("Từ Newton đến dòng vốn", "From Newton to capital flows")
                   : mode === "cast"
@@ -178,7 +214,7 @@ export function Observatory() {
               </p>
             </div>
           </div>
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div className="order-2 flex shrink-0 items-center gap-1.5 sm:gap-2 xl:order-3">
             <a
               href={APP_DOI_URL}
               target="_blank"
@@ -192,7 +228,7 @@ export function Observatory() {
               DOI {APP_DOI}
             </a>
             <div
-              className="clay-tray flex rounded-full bg-void-2 p-1"
+              className="noir-track flex rounded-full p-1"
               role="group"
               aria-label={tr("Ngôn ngữ", "Language")}
             >
@@ -228,13 +264,13 @@ export function Observatory() {
                   ? tr("Chuyển sang giao diện sáng", "Switch to light theme")
                   : tr("Chuyển sang giao diện tối", "Switch to dark theme")
               }
-              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full bg-void-2 text-paper sm:min-h-11 sm:min-w-11"
+              className="noir-raise inline-flex min-h-10 min-w-10 items-center justify-center rounded-full text-paper sm:min-h-11 sm:min-w-11"
             >
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
             </button>
           </div>
           <div
-            className="clay-tray flex w-full overflow-x-auto rounded-full bg-void-2 p-1"
+            className="noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 xl:order-2 xl:w-auto"
             role="tablist"
             aria-label={tr("Chế độ", "Mode")}
           >
@@ -379,7 +415,22 @@ export function Observatory() {
                 setWho(null);
                 setMode(room);
               }}
+              onCast={() => {
+                setWho(null);
+                setMode("cast");
+              }}
             />
+          ) : null}
+
+          {mode === "orbit" || mode === "trade" ? (
+            <>
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_45%_0%,rgba(255,197,107,0.16),transparent_70%),radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(94,234,212,0.07),transparent_70%)]"
+              />
+              <div aria-hidden="true" className="noir-vignette pointer-events-none absolute inset-0" />
+              <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0" />
+            </>
           ) : null}
 
           {mode === "orbit" || mode === "trade" ? (
@@ -395,7 +446,7 @@ export function Observatory() {
           {mode === "orbit" ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-3">
               {hint ? (
-                <p className="max-w-[15rem] rounded-card bg-void-2/90 px-3 py-2 text-xs text-paper sm:max-w-xs sm:text-sm">
+                <p className="max-w-[15rem] noir-hint rounded-[20px] px-3.5 py-2.5 text-xs sm:max-w-xs sm:text-sm">
                   {tr(
                     "Kéo để phóng. Vạch «vòng» là quỹ đạo tròn, vạch «thoát» là rời hệ. Đường chấm là vài giây tới.",
                     "Drag to launch. The “circular” tick is a circular orbit, the “escape” tick leaves the system. The dotted line is the next few seconds.",
@@ -408,13 +459,13 @@ export function Observatory() {
                 </p>
               ) : null}
               {snap.selected ? (
-                <div className="rounded-card bg-void-2 px-3 py-2 text-sm text-paper tabular-nums">
+                <div className="noir-hint rounded-[20px] px-3.5 py-2.5 text-sm tabular-nums">
                   <p>
                     {tr("Khối lượng", "Mass")} {comma(snap.selected.mass)} · {tr("tốc độ", "speed")}{" "}
                     {comma(snap.selected.speed)}
                   </p>
                   {snap.selected.vCirc != null && snap.selected.vEsc != null ? (
-                    <p className="text-mist">
+                    <p className="opacity-80">
                       {tr("Vòng", "Circular")} {comma(snap.selected.vCirc)} ·{" "}
                       {tr("thoát", "escape")} {comma(snap.selected.vEsc)} ·{" "}
                       {snap.selected.bound
@@ -427,7 +478,7 @@ export function Observatory() {
             </div>
           ) : mode === "trade" ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
-              <p className="max-w-[16rem] rounded-card bg-void-2/90 px-3 py-2 text-xs text-paper sm:max-w-sm sm:text-sm">
+              <p className="max-w-[16rem] noir-hint rounded-[20px] px-3.5 py-2.5 text-xs sm:max-w-sm sm:text-sm">
                 {tradeView === "map"
                   ? tr(
                       "Kéo để di chuyển bản đồ, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy.",
@@ -449,13 +500,13 @@ export function Observatory() {
       </div>
 
       {mode === "cast" || mode === "story" ? null : (
-        <aside className="surface dock-scroll w-full shrink-0 overflow-y-auto border-t border-line bg-paper text-ink lg:w-96 lg:border-t-0 lg:border-l">
+        <aside className="surface noir-panel dock-scroll w-full shrink-0 overflow-y-auto border-t border-line text-ink lg:w-[23.75rem] lg:border-t-0">
           <div className="hidden px-4 pt-4 lg:block">
             <RoomCover room={mode} />
           </div>
           {mode === "orbit" ? (
             <div className="flex flex-col gap-4 p-4 pb-8">
-              <p className="font-serif text-xl leading-none">F = G m₁m₂ / r²</p>
+              <p className="font-serif text-2xl leading-none">F = G m₁m₂ / r²</p>
               <p className="text-sm text-muted">{tr(sceneMeta.blurb, sceneMeta.blurbEn)}</p>
               <p className="text-sm leading-relaxed text-muted">
                 {tr(
@@ -467,44 +518,66 @@ export function Observatory() {
                 <p className="mb-2 text-xs font-medium text-muted">
                   {tr("Khối lượng khi phóng", "Launch mass")}
                 </p>
-                <div className="flex gap-2 overflow-x-auto">
-                  {MASS_PRESETS.map((m) => (
-                    <Chip key={m.id} active={massId === m.id} onClick={() => setMassId(m.id)}>
-                      {tr(m.label, m.en)}
-                    </Chip>
-                  ))}
+                <div className="grid grid-cols-5 gap-2">
+                  {MASS_PRESETS.map((m) => {
+                    const look = MASS_BALL[m.id] ?? { ball: "ball-moon", size: 14 };
+                    const on = massId === m.id;
+                    return (
+                      <button
+                        key={m.id}
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() => setMassId(m.id)}
+                        className={
+                          "noir-raise flex min-h-[4.5rem] flex-col items-center justify-end gap-1.5 rounded-[18px] pt-2 pb-2 text-xs font-medium " +
+                          (on ? "ring-2 ring-teal" : "")
+                        }
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={"clay-ball " + look.ball}
+                          style={{ width: look.size, height: look.size }}
+                        />
+                        {tr(m.label, m.en)}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
               <div>
                 <p className="mb-2 text-xs font-medium text-muted">
                   {tr("Tỷ lệ thời gian", "Time scale")}
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center gap-2.5">
                   <button
                     type="button"
                     aria-label={paused ? tr("Tiếp tục", "Resume") : tr("Tạm dừng", "Pause")}
                     aria-pressed={paused}
                     onClick={() => setPaused((p) => !p)}
-                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-ink bg-ink text-paper"
+                    className="cosmic-btn inline-flex size-12 shrink-0 items-center justify-center rounded-full"
                   >
                     {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
                   </button>
-                  {TIME_STEPS.map((t) => (
-                    <Chip key={t} active={timeScale === t} onClick={() => setTimeScale(t)}>
-                      {t === 0.25 ? "¼×" : t === 0.5 ? "½×" : `${t}×`}
-                    </Chip>
-                  ))}
+                  <div className="min-w-0 flex-1">
+                    <Track>
+                      {TIME_STEPS.map((t) => (
+                        <Chip key={t} flat active={timeScale === t} onClick={() => setTimeScale(t)}>
+                          {t === 0.25 ? "¼×" : t === 0.5 ? "½×" : `${t}×`}
+                        </Chip>
+                      ))}
+                    </Track>
+                  </div>
                 </div>
               </div>
               <div>
                 <p className="mb-2 text-xs font-medium text-muted">{tr("Bối cảnh", "Scene")}</p>
-                <div className="flex gap-2 overflow-x-auto">
+                <Track>
                   {SCENES.map((s) => (
-                    <Chip key={s.id} active={scene === s.id} onClick={() => applyScene(s.id)}>
+                    <Chip key={s.id} flat active={scene === s.id} onClick={() => applyScene(s.id)}>
                       {tr(s.name, s.nameEn)}
                     </Chip>
                   ))}
-                </div>
+                </Track>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Chip active={trails} onClick={() => setTrails((v) => !v)}>
@@ -537,7 +610,7 @@ export function Observatory() {
                     if (!sim) return;
                     if (sim.selectedId != null) sim.remove(sim.selectedId);
                   }}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-3 text-sm font-medium"
+                  className="inline-flex min-h-11 items-center gap-2 noir-raise rounded-full px-3 text-sm font-medium"
                 >
                   <Trash2 className="size-4" />
                   {tr("Xóa vật", "Delete body")}
@@ -545,7 +618,7 @@ export function Observatory() {
                 <button
                   type="button"
                   onClick={() => simRef.current?.clear()}
-                  className="inline-flex min-h-11 items-center rounded-full border border-line px-3 text-sm font-medium"
+                  className="inline-flex min-h-11 items-center noir-raise rounded-full px-3 text-sm font-medium"
                 >
                   {tr("Xóa hết", "Clear all")}
                 </button>
@@ -557,7 +630,7 @@ export function Observatory() {
                     sim.requestFit = true;
                     setFollow(true);
                   }}
-                  className="inline-flex min-h-11 items-center rounded-full border border-line px-3 text-sm font-medium"
+                  className="inline-flex min-h-11 items-center noir-raise rounded-full px-3 text-sm font-medium"
                 >
                   {tr("Vừa khung", "Fit view")}
                 </button>
@@ -567,31 +640,23 @@ export function Observatory() {
               </p>
               <Crew />
               <ReferenceList />
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("trade");
-                }}
-                className="rounded-card border border-teal bg-paper-2 px-3 py-3 text-left"
+              <NextCard
+                kicker={tr("Cùng một phương trình", "The same equation")}
+                title={tr("Mở mô hình thương mại", "Open the trade model")}
+                onClick={() => setMode("trade")}
               >
-                <p className="font-serif text-lg leading-snug text-ink">
-                  {tr("Cùng một phương trình", "The same equation")}
-                </p>
-                <p className="mt-1 text-sm text-muted">
+                <span className="mt-1 block text-sm text-muted">
                   {tr(
                     "F = G m₁m₂ / r² trở thành Tᵢⱼ = G Yᵢ Yⱼ / Dᵢⱼᵞ. Khối lượng thành quy mô kinh tế, khoảng cách vẫn cản trở, lực thành dòng thương mại.",
                     "F = G m₁m₂ / r² becomes Tᵢⱼ = G Yᵢ Yⱼ / Dᵢⱼᵞ. Mass becomes economic size, distance still resists, and force becomes the trade flow.",
                   )}
-                </p>
-                <p className="mt-2 text-sm font-medium text-ink">
-                  {tr("Mở mô hình thương mại", "Open the trade model")}
-                </p>
-              </button>
+                </span>
+              </NextCard>
             </div>
           ) : mode === "trade" ? (
             <div className="flex flex-col gap-4 p-4 pb-8">
               <div>
-                <p className="font-serif text-xl leading-snug">Tᵢⱼ = G · Yᵢ Yⱼ / Dᵢⱼᵞ</p>
+                <p className="font-serif text-2xl leading-snug">Tᵢⱼ = G · Yᵢ Yⱼ / Dᵢⱼᵞ</p>
                 <p className="mt-1 text-sm text-muted">
                   {tr(
                     "Tinbergen (1962). Y là GDP, D là khoảng cách, γ được ước lượng. Newton (1687/1999) khóa γ ở 2.",
@@ -599,8 +664,9 @@ export function Observatory() {
                   )}
                 </p>
               </div>
-              <div className="flex gap-2 overflow-x-auto">
+              <Track label={tr("Cách xem", "View")}>
                 <Chip
+                  flat
                   active={tradeView === "map"}
                   onClick={() => {
                     setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })));
@@ -609,10 +675,11 @@ export function Observatory() {
                 >
                   {tr("Bản đồ", "Map")}
                 </Chip>
-                <Chip active={tradeView === "plane"} onClick={() => setTradeView("plane")}>
+                <Chip flat active={tradeView === "plane"} onClick={() => setTradeView("plane")}>
                   {tr("Mặt phẳng", "Plane")}
                 </Chip>
                 <Chip
+                  flat
                   active={tradeView === "globe"}
                   onClick={() => {
                     setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })));
@@ -621,7 +688,7 @@ export function Observatory() {
                 >
                   {tr("Địa cầu", "Globe")}
                 </Chip>
-              </div>
+              </Track>
               {tradeView === "map" ? (
                 <p className="text-sm text-muted">
                   {tr(
@@ -650,16 +717,16 @@ export function Observatory() {
                     onClick={() =>
                       setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })))
                     }
-                    className="min-h-11 shrink-0 rounded-full border border-line px-3 text-sm font-medium"
+                    className="noir-raise min-h-10 shrink-0 rounded-full px-3 text-sm font-medium"
                   >
                     {tr("Đặt lại chỗ", "Reset positions")}
                   </button>
                 ) : null}
               </div>
-              <label className="block">
+              <label className="noir-track block rounded-[22px] px-4 py-3.5">
                 <span className="mb-1 flex items-baseline justify-between text-sm">
                   <span>{tr("Số mũ khoảng cách γ", "Distance exponent γ")}</span>
-                  <span className="tabular-nums font-medium">{comma(gamma, 2)}</span>
+                  <span className="font-serif text-base tabular-nums text-teal">{comma(gamma, 2)}</span>
                 </span>
                 <input
                   type="range"
@@ -678,7 +745,7 @@ export function Observatory() {
                 </span>
               </label>
               {focus && chosen ? (
-                <div className="rounded-card bg-paper-2 px-3 py-3">
+                <div className="noir-card rounded-[22px] px-4 py-3">
                   <p className="text-sm font-medium">
                     {tr(focus.name, focus.nameEn)} × {tr(chosen.econ.name, chosen.econ.nameEn)}
                   </p>
@@ -750,15 +817,15 @@ export function Observatory() {
                           {tr(row.econ.short, row.econ.shortEn)}
                         </span>
                         <span className="flex min-w-0 flex-1 flex-col gap-1">
-                          <span className="block h-1.5 overflow-hidden rounded-full bg-paper">
+                          <span className="noir-track block h-2.5 overflow-hidden rounded-full">
                             <span
-                              className="block h-full rounded-full bg-teal"
+                              className="block h-full rounded-full bg-[linear-gradient(180deg,#9ff5e6,#14a394)] shadow-[inset_0_-2px_0_rgba(0,0,0,0.25)]"
                               style={{ width: `${Math.min(100, row.share)}%` }}
                             />
                           </span>
-                          <span className="block h-1.5 overflow-hidden rounded-full bg-paper">
+                          <span className="noir-track block h-1.5 overflow-hidden rounded-full">
                             <span
-                              className="block h-full rounded-full bg-amber"
+                              className="block h-full rounded-full bg-[linear-gradient(180deg,#ffe0a6,#d68a2c)]"
                               style={{ width: `${Math.min(100, row.newtonShare)}%` }}
                             />
                           </span>
@@ -771,7 +838,7 @@ export function Observatory() {
                   ))}
                 </ul>
               </div>
-              <details className="rounded-card border border-line px-3 py-2">
+              <details className="noir-card rounded-[22px] px-4 py-2">
                 <summary className="min-h-11 text-sm font-medium">
                   {tr("Vì sao không phải r²?", "Why not r²?")}
                 </summary>
@@ -787,30 +854,22 @@ export function Observatory() {
                 onClick={() => {
                   setMode("orbit");
                 }}
-                className="min-h-11 self-start rounded-full border border-line px-3 text-sm font-medium"
+                className="noir-raise min-h-11 self-start rounded-full px-4 text-sm font-medium"
               >
                 {tr("Xem lại quỹ đạo", "Back to orbits")}
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("lab");
-                }}
-                className="rounded-card border border-teal bg-paper-2 px-3 py-3 text-left"
+              <NextCard
+                kicker={tr("Cùng phương trình, với FDI", "The same equation, for FDI")}
+                title={tr("Mở phòng FDI", "Open the FDI lab")}
+                onClick={() => setMode("lab")}
               >
-                <p className="font-serif text-lg leading-snug">
-                  {tr("Cùng phương trình, với FDI", "The same equation, for FDI")}
-                </p>
-                <p className="mt-1 text-sm text-muted">
+                <span className="mt-1 block text-sm text-muted">
                   {tr(
                     "Phan và Do (2019) ước lượng khoảng cách địa lý, thể chế, văn hóa và kinh tế của dòng vốn vào Việt Nam. Mũ không còn là 2.",
                     "Phan and Do (2019) estimate the geographic, institutional, cultural and economic distances of capital flowing into Vietnam. The exponent is no longer 2.",
                   )}
-                </p>
-                <p className="mt-2 text-sm font-medium">
-                  {tr("Mở Gravity Lab", "Open Gravity Lab")}
-                </p>
-              </button>
+                </span>
+              </NextCard>
               <ReferenceList />
             </div>
           ) : (

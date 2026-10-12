@@ -433,6 +433,13 @@ export function planetTone(days: number): { hz: number; octaves: number; orbitHz
   return { hz, octaves, orbitHz };
 }
 
+/** One planet's tone, as a key on the sound panel. */
+export function playPlanet(index: number) {
+  const p = PLANETS[index];
+  if (!p || !wake()) return;
+  bell(planetTone(p.days).hz * 2, 0.16, 3.2, undefined, (index / (PLANETS.length - 1)) * 1.4 - 0.7);
+}
+
 let chordTimer = 0;
 
 /** Play the planets one by one, inner to outer, then hold them together. */
