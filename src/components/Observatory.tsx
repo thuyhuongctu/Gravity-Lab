@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LocateFixed, Move, Pause, Play, Trash2 } from "lucide-react";
 import { OrbitCanvas, type OrbitSnap } from "@/components/OrbitCanvas";
 import { TradeCanvas } from "@/components/TradeCanvas";
+import { GlobeCanvas } from "@/components/GlobeCanvas";
 import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiLab";
 import { CastStage, HolderBar, shownPeople } from "@/components/CastStage";
 import { ReferenceList } from "@/components/ReferenceList";
@@ -64,6 +65,7 @@ export function Observatory() {
   const [snap, setSnap] = useState<OrbitSnap>({ count: 0, banner: null, selected: null });
 
   const [tradeScene, setTradeScene] = useState<TradeSceneId>("lecture");
+  const [tradeView, setTradeView] = useState<"plane" | "globe">("plane");
   const [ecos, setEcos] = useState<Economy[]>(() => makeEconomies("lecture"));
   const [focusId, setFocusId] = useState("vn");
   const [pairId, setPairId] = useState<string | null>(null);
@@ -234,7 +236,20 @@ export function Observatory() {
             onSpawn={() => setHint(false)}
           />
         ) : null}
-        {mode === "trade" ? (
+        {mode === "trade" && tradeView === "globe" ? (
+          <GlobeCanvas
+            economies={ecos}
+            focusId={focusId}
+            pairId={pairId}
+            gamma={gamma}
+            boosts={boosts}
+            onTap={(id) => {
+              setFocusId(id);
+              setPairId(null);
+            }}
+          />
+        ) : null}
+        {mode === "trade" && tradeView === "plane" ? (
           <TradeCanvas
             economies={ecos}
             focusId={focusId}
@@ -291,7 +306,9 @@ export function Observatory() {
         ) : mode === "trade" ? (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
             <p className="max-w-sm rounded-card bg-void-2 px-3 py-2 text-sm text-paper">
-              Kéo một nền kinh tế để đổi khoảng cách. Chạm để lấy đó làm gốc dòng chảy.
+              {tradeView === "globe"
+                ? "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy."
+                : "Kéo một nền kinh tế để đổi khoảng cách. Chạm để lấy đó làm gốc dòng chảy."}
             </p>
           </div>
         ) : null}
@@ -430,18 +447,40 @@ export function Observatory() {
               </p>
             </div>
             <div className="flex gap-2 overflow-x-auto">
+              <Chip active={tradeView === "plane"} onClick={() => setTradeView("plane")}>
+                Mặt phẳng
+              </Chip>
+              <Chip
+                active={tradeView === "globe"}
+                onClick={() => {
+                  setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })));
+                  setTradeView("globe");
+                }}
+              >
+                Địa cầu
+              </Chip>
+            </div>
+            {tradeView === "globe" ? (
+              <p className="text-sm text-muted">
+                Trên địa cầu, D là khoảng cách đường tròn lớn giữa các trung tâm kinh tế, vẽ bằng cung nối. Độ dày cung
+                là phần dòng chảy theo γ hiện tại.
+              </p>
+            ) : null}
+            <div className="flex gap-2 overflow-x-auto">
               {TRADE_SCENES.map((s) => (
                 <Chip key={s.id} active={tradeScene === s.id} onClick={() => applyTrade(s.id)}>
                   {s.name}
                 </Chip>
               ))}
-              <button
-                type="button"
-                onClick={() => setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })))}
-                className="min-h-11 shrink-0 rounded-full border border-line px-3 text-sm font-medium"
-              >
-                Đặt lại chỗ
-              </button>
+              {tradeView === "plane" ? (
+                <button
+                  type="button"
+                  onClick={() => setEcos((prev) => prev.map((e) => ({ ...e, x: e.homeX, y: e.homeY })))}
+                  className="min-h-11 shrink-0 rounded-full border border-line px-3 text-sm font-medium"
+                >
+                  Đặt lại chỗ
+                </button>
+              ) : null}
             </div>
             <label className="block">
               <span className="mb-1 flex items-baseline justify-between text-sm">
