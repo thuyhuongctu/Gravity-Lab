@@ -59,6 +59,7 @@ Two WTO and UNCTAD guides frame the estimation practice taught in the applicatio
 - **Light and dark themes.** The default follows the device setting, and the choice is remembered on the device.
 - **Theme song and sonification.** A theme song in Vietnamese and English, with lyrics, can be played from the sound panel. The orbit simulator can be heard: each body is assigned a pitch proportional to its angular speed, so inner orbits sound higher, as Kepler's third law implies. A separate panel transposes the sidereal orbital periods of the planets by whole octaves into the audible range (Kepler, 1619/1997; Williams, n.d.). The ambience and tones are synthesised in the browser, the song is streamed only on request, and all sound is off until the user enables it.
 - **Installable progressive web application** with its own icon. There is no sign-in, no database and no call to an external service.
+- **Offline teaching assistant.** A question box in the header answers from a curated, bilingual knowledge base built from the application's own content and its cited sources (Newton, Tinbergen, Anderson and van Wincoop, Santos Silva and Tenreyro, Bacchetta et al., Yotov et al., Phan and Do, and others). Retrieval uses BM25 with Vietnamese diacritics folded, every answer lists its sources and can open the relevant room, and questions without a source are declined rather than guessed. No generative model is used and nothing leaves the device (`src/sim/tutor.ts`, `src/sim/tutor-kb.ts`).
 - **Citation support.** The concept DOI is shown in the header, and an APA 7 reference list is available in every room.
 
 ## Data and visual sources
@@ -83,7 +84,7 @@ npm run dev        # development server at http://localhost:8080
 npm run build      # static build in dist/
 npm run typecheck  # TypeScript
 npm run lint       # ESLint
-npm test           # unit tests: globe and world-map geometry, FDI model, sound mappings
+npm test           # unit tests: globe and world-map geometry, FDI model, sound mappings, assistant retrieval
 ```
 
 The build uses relative paths and can be served from any static host. The repository deploys automatically to GitHub Pages on each change to `main` (`.github/workflows/pages.yml`).
