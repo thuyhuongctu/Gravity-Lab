@@ -5,6 +5,7 @@ import { TradeCanvas } from "@/components/TradeCanvas";
 import { GlobeCanvas } from "@/components/GlobeCanvas";
 import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiLab";
 import { CastStage, HolderBar, shownPeople } from "@/components/CastStage";
+import { StoryStage } from "@/components/StoryStage";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { fmt, setLang, setTheme, tr } from "@/lib/prefs";
@@ -56,7 +57,7 @@ export function Observatory() {
   const { lang, theme } = usePrefs();
   const simRef = useRef<Simulation | null>(null);
   const [ready, setReady] = useState(false);
-  const [mode, setMode] = useState<"orbit" | "trade" | "lab" | "cast">("cast");
+  const [mode, setMode] = useState<"story" | "orbit" | "trade" | "lab" | "cast">("story");
   const [massId, setMassId] = useState<MassId>("planet");
   const [timeScale, setTimeScale] = useState(1);
   const [paused, setPaused] = useState(false);
@@ -156,7 +157,9 @@ export function Observatory() {
         <div className="min-w-0">
           <h1 className="font-serif text-2xl leading-none text-paper">{tr("Trọng lực", "Gravity Lab")}</h1>
           <p className="mt-1 text-xs text-mist">
-            {mode === "cast"
+            {mode === "story"
+              ? tr("Từ Newton đến dòng vốn", "From Newton to capital flows")
+              : mode === "cast"
               ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe")
               : tr("Vũ trụ, thương mại, rồi FDI", "The universe, trade, then FDI")}
           </p>
@@ -202,6 +205,21 @@ export function Observatory() {
           role="tablist"
           aria-label={tr("Chế độ", "Mode")}
         >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "story"}
+            className={
+              "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
+              (mode === "story" ? "bg-paper text-ink" : "text-mist")
+            }
+            onClick={() => {
+              setWho(null);
+              setMode("story");
+            }}
+          >
+            {tr("Câu chuyện", "Story")}
+          </button>
           <button
             type="button"
             role="tab"
@@ -314,6 +332,15 @@ export function Observatory() {
           />
         ) : null}
         {mode === "cast" ? <CastStage onOpen={enterFromClass} /> : null}
+        {mode === "story" ? (
+          <StoryStage
+            onOpen={(room, panel) => {
+              if (panel) lab.setPanel(panel);
+              setWho(null);
+              setMode(room);
+            }}
+          />
+        ) : null}
 
         {mode === "orbit" || mode === "trade" ? (
           <div className="absolute inset-x-0 top-0 z-20 p-3">
@@ -366,7 +393,7 @@ export function Observatory() {
       </main>
       </div>
 
-      {mode === "cast" ? null : (
+      {mode === "cast" || mode === "story" ? null : (
       <aside className="surface dock-scroll w-full shrink-0 overflow-y-auto border-t border-line bg-paper text-ink lg:w-96 lg:border-t-0 lg:border-l">
         {mode === "orbit" ? (
           <div className="flex flex-col gap-4 p-4 pb-8">
