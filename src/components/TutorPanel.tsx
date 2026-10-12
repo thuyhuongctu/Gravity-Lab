@@ -92,14 +92,15 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
           className="surface noir-card fixed inset-x-3 top-16 z-50 flex max-h-[calc(100dvh-5rem)] flex-col rounded-[26px] text-ink sm:absolute sm:inset-x-auto sm:top-12 sm:right-0 sm:w-[26rem]"
         >
           <div className="flex items-start justify-between gap-3 p-4 pb-2">
-            <span
-              aria-hidden="true"
-              className="clay-ball ball-teal inline-flex size-11 shrink-0 items-center justify-center text-[#062a30] shadow-[0_0_24px_rgba(94,234,212,0.35)]"
-            >
-              <GraduationCap className="size-[18px]" />
-            </span>
+            <img
+              src={`${import.meta.env.BASE_URL}cast/v2/huong-face.webp`}
+              alt=""
+              width={44}
+              height={44}
+              className="size-11 shrink-0 rounded-full bg-[#f1e8de] object-cover shadow-[0_0_0_2px_rgba(94,234,212,0.55),0_0_24px_rgba(94,234,212,0.3)]"
+            />
             <div className="min-w-0 flex-1">
-              <p className="font-serif text-lg leading-tight">{tr("Trợ giảng", "Teaching assistant")}</p>
+              <p className="font-serif text-lg leading-tight">{tr("Lumina · Trợ giảng", "Lumina · Teaching assistant")}</p>
               <p className="mt-1 text-xs leading-relaxed text-muted">
                 {tr(
                   "Trả lời từ tài liệu đã có trong app, kèm nguồn. Không dùng AI tạo sinh, không gửi câu hỏi đi đâu.",

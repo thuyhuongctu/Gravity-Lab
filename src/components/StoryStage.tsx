@@ -1,11 +1,11 @@
 import { Fragment } from "react";
-import { ArrowRight } from "lucide-react";
 import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { ReferenceList } from "@/components/ReferenceList";
 import { FormulaBridge } from "@/components/FormulaBridge";
 import { DistancePuzzle } from "@/components/DistancePuzzle";
-import { HeroScene } from "@/components/HeroScene";
+import { SpaceJourney } from "@/components/SpaceJourney";
+import { Perspectives } from "@/components/Perspectives";
 import { NewtonFigure } from "@/components/NewtonFigure";
 import { VnWatermark } from "@/components/VnWatermark";
 import { RoomCover, type CoverRoom } from "@/components/RoomCover";
@@ -237,12 +237,6 @@ const CHAPTERS: Chapter[] = [
   },
 ];
 
-/** The three rooms, as chapter cards at the foot of the hero. */
-const DOORS: Array<{ room: Room; img: string; year: { vi: string; en: string }; title: { vi: string; en: string }; f: { vi: string; en: string } }> = [
-  { room: "orbit", img: "noir/orbit.webp", year: { vi: "1687 · Newton", en: "1687 · Newton" }, title: { vi: "Quỹ đạo", en: "Orbit" }, f: { vi: "F = G m₁m₂ / r²", en: "F = G m₁m₂ / r²" } },
-  { room: "trade", img: "noir/trade.webp", year: { vi: "1962 · Tinbergen", en: "1962 · Tinbergen" }, title: { vi: "Thương mại", en: "Trade" }, f: { vi: "Tᵢⱼ = G YᵢYⱼ / Dᵞ", en: "Tᵢⱼ = G YᵢYⱼ / Dᵞ" } },
-  { room: "lab", img: "noir/fdi.webp", year: { vi: "2019 · Phan và Do", en: "2019 · Phan & Do" }, title: { vi: "FDI vào Việt Nam", en: "FDI into Vietnam" }, f: { vi: "β ≈ −0,38", en: "β ≈ −0.38" } },
-];
 
 export function StoryStage({
   onOpen,
@@ -252,97 +246,10 @@ export function StoryStage({
   onCast: () => void;
 }) {
   return (
-    <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
+    <SpaceJourney onLab={() => onOpen("lab", null)} onCast={onCast}>
+    <div className="surface nebula relative bg-paper text-ink">
       <VnWatermark />
       <div className="relative">
-      <section className="relative isolate overflow-hidden bg-[#07061a] text-[#fbfaff]">
-        <div className="absolute inset-0 -z-10">
-          <HeroScene />
-        </div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(7,6,26,0.85)_0%,rgba(7,6,26,0)_32%,rgba(7,6,26,0)_55%,rgba(7,6,26,0.95)_100%)]"
-        />
-        <div aria-hidden="true" className="noir-vignette pointer-events-none absolute inset-0 -z-10" />
-        <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0 -z-10" />
-        <div className="pointer-events-none mx-auto flex min-h-[min(48rem,96svh)] max-w-5xl flex-col justify-between px-4 pt-5 pb-6 sm:px-6">
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full bg-white/[0.06] py-1 ps-1 pe-3.5 text-xs font-semibold text-[#d9d6f2] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur">
-              <span
-                aria-hidden="true"
-                className="inline-flex size-6 items-center justify-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#ff6a5e,#da251d_60%,#8e1410)] text-xs leading-none text-[#ffde00] shadow-[inset_0_-2px_0_rgba(0,0,0,0.3)]"
-              >
-                ★
-              </span>
-              {tr(
-                "Thiết kế tại Đồng bằng sông Cửu Long · Đại học Cần Thơ",
-                "Made in the Mekong Delta · Can Tho University",
-              )}
-            </p>
-            <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-[1.04] tracking-[-0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.8)] sm:text-6xl">
-              {tr("Từ quả táo của Newton đến ", "From Newton's apple to ")}
-              <span className="bg-[linear-gradient(100deg,#ffc56b_0%,#ff7a9c_45%,#a78bfa_75%,#5eead4_100%)] bg-clip-text text-transparent">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
-            </h2>
-          </div>
-          <div>
-            <p className="font-math text-base text-[#5eead4] [text-shadow:0_0_18px_rgba(94,234,212,0.45)] sm:text-xl">F = G m₁m₂ / r² → T = G YᵢYⱼ / Dᵞ → FDI</p>
-            <p className="mt-2 max-w-xl leading-relaxed text-[#d9d6f2]">
-              {tr(
-                "Ba thế kỷ, một dạng phương trình: quy mô ở tử số, khoảng cách ở mẫu số. Mỗi chương dưới đây mở ra một phần của phòng thí nghiệm.",
-                "Three centuries, one form of equation: size in the numerator, distance in the denominator. Each chapter below opens a part of the lab.",
-              )}
-            </p>
-            <p className="mt-2 text-xs text-[#b9b4e0]">
-              {tr(
-                "Kéo để xoay Trái Đất. Quả táo và Mặt Trăng cùng chịu một lực; các vệt sáng là dòng vốn FDI chảy về Việt Nam.",
-                "Drag to turn the Earth. The apple and the Moon answer to one force; the streaks of light are FDI flowing into Vietnam.",
-              )}
-            </p>
-            <div className="pointer-events-auto mt-5 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => onOpen("orbit", null)}
-                className="cosmic-btn inline-flex min-h-12 items-center gap-2.5 rounded-full px-6 text-[15px] font-semibold"
-              >
-                {tr("Bắt đầu với quả táo", "Begin with the apple")}
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={onCast}
-                className="inline-flex min-h-12 items-center rounded-full bg-[radial-gradient(circle_at_35%_20%,#2f2a6c,#17143d_75%)] px-5 text-[15px] font-medium text-[#eeeafb] shadow-[inset_0_-5px_0_rgba(0,0,0,0.4),inset_0_2px_0_rgba(255,255,255,0.1),inset_-1px_-1px_0_rgba(94,234,212,0.3),0_16px_26px_-14px_rgba(0,0,0,0.9)]"
-              >
-                {tr("Gặp cả lớp", "Meet the class")}
-              </button>
-            </div>
-            <ul className="pointer-events-auto mt-6 grid gap-3 sm:grid-cols-3">
-              {DOORS.map((d) => (
-                <li key={d.room}>
-                  <button
-                    type="button"
-                    onClick={() => onOpen(d.room, null)}
-                    className="flex w-full items-center gap-3.5 rounded-[24px] bg-[linear-gradient(160deg,#221e52,#120f33)] p-3 text-left shadow-[inset_0_-8px_0_rgba(0,0,0,0.3),inset_0_3px_0_rgba(255,255,255,0.07),inset_-1px_-1px_0_rgba(94,234,212,0.28),0_30px_40px_-24px_rgba(0,0,0,0.95)]"
-                  >
-                    <img
-                      src={`${import.meta.env.BASE_URL}${d.img}`}
-                      alt=""
-                      width={96}
-                      height={64}
-                      loading="lazy"
-                      className="h-16 w-24 shrink-0 rounded-[14px] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
-                    />
-                    <span className="min-w-0">
-                      <span className="kicker block text-[11px] text-[#ffc56b]">{tr(d.year.vi, d.year.en)}</span>
-                      <span className="mt-0.5 block font-serif text-base leading-tight">{tr(d.title.vi, d.title.en)}</span>
-                      <span className="mt-0.5 block font-math text-sm text-[#5eead4]">{tr(d.f.vi, d.f.en)}</span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
 
       <div className="mx-auto max-w-2xl px-4">
         <figure className="mt-5">
@@ -354,7 +261,7 @@ export function StoryStage({
             )}
             width={1600}
             height={1000}
-            className="clay-card aspect-[8/5] w-full rounded-card bg-[#0b0a1f] object-cover"
+            className="clay-card aspect-[8/5] w-full rounded-card bg-[#0a0b0d] object-cover"
           />
           <figcaption className="mt-2 text-xs text-muted">
             {tr(
@@ -447,7 +354,7 @@ export function StoryStage({
                     loading="lazy"
                     style={{ aspectRatio: `${c.art.w ?? 1} / ${c.art.h ?? 1}` }}
                     className={
-                      "clay-card mt-3 w-full rounded-card bg-[#0b0a1f] object-cover " +
+                      "clay-card mt-3 w-full rounded-card bg-[#0a0b0d] object-cover " +
                       (c.art.w ? "max-w-xl" : "max-w-sm")
                     }
                   />
@@ -549,7 +456,7 @@ export function StoryStage({
             width={688}
             height={384}
             loading="lazy"
-            className="clay-card mt-3 aspect-[43/24] w-full rounded-card bg-[#0b0a1f] object-cover"
+            className="clay-card mt-3 aspect-[43/24] w-full rounded-card bg-[#0a0b0d] object-cover"
           />
           <p className="mt-3 text-sm leading-relaxed text-muted">
             {tr(
@@ -572,7 +479,10 @@ export function StoryStage({
           </div>
         </li>
       </ol>
+      <Perspectives />
+      <div className="h-10" />
       </div>
     </div>
+    </SpaceJourney>
   );
 }
