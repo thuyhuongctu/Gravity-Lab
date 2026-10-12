@@ -53,10 +53,10 @@ export const KB: Entry[] = [
   {
     id: "tinbergen",
     q: { vi: "Tinbergen đưa mô hình trọng lực vào thương mại như thế nào?", en: "How did Tinbergen bring gravity into trade?" },
-    keys: "tinbergen 1962 thuong mai trade gravity model mo hinh trong luc GDP quy mo kinh te size gamma uoc luong estimated",
+    keys: "tinbergen 1962 thuong mai trade GDP quy mo kinh te size gamma uoc luong estimated nobel 1969 frisch 1903 1994 ha lan dutch",
     a: {
-      vi: "Tinbergen (1962) thay khối lượng bằng quy mô kinh tế (GDP) và để số mũ của khoảng cách được ước lượng thay vì khóa ở 2: T = G·YᵢYⱼ/Dᵞ. Thương mại song phương tăng theo quy mô hai nước và giảm theo khoảng cách.",
-      en: "Tinbergen (1962) replaced mass with economic size (GDP) and let the distance exponent be estimated rather than fixed at 2: T = G·YᵢYⱼ/Dᵞ. Bilateral trade rises with the size of the two economies and falls with distance.",
+      vi: "Tinbergen (1962) thay khối lượng bằng quy mô kinh tế (GDP) và để số mũ của khoảng cách được ước lượng thay vì khóa ở 2: T = G·YᵢYⱼ/Dᵞ. Thương mại song phương tăng theo quy mô hai nước và giảm theo khoảng cách. Tinbergen (1903–1994) là nhà kinh tế học Hà Lan; năm 1969 ông cùng Ragnar Frisch nhận giải Nobel Kinh tế đầu tiên.",
+      en: "Tinbergen (1962) replaced mass with economic size (GDP) and let the distance exponent be estimated rather than fixed at 2: T = G·YᵢYⱼ/Dᵞ. Bilateral trade rises with the size of the two economies and falls with distance. Tinbergen (1903–1994) was a Dutch economist; in 1969 he shared the first Nobel Memorial Prize in Economic Sciences with Ragnar Frisch.",
     },
     cite: ["Tinbergen (1962)"],
     see: { room: "trade", vi: "Mở phòng Thương mại", en: "Open the Trade room" },
@@ -95,7 +95,7 @@ export const KB: Entry[] = [
   {
     id: "phan-do-2019",
     q: { vi: "Bài Phan và Do (2019) tìm ra điều gì?", en: "What did Phan and Do (2019) find?" },
-    keys: "phan do 2019 phan anh tu do thuy huong fdi viet nam vietnam 16 doi tac partners 2006 2015 khoang cach dia ly geographic distance -0.38 mo hinh 8 model random effects hieu ung ngau nhien",
+    keys: "ket qua results findings tim ra phan do 2019 phan anh tu do thuy huong fdi viet nam vietnam 16 doi tac partners 2006 2015 khoang cach dia ly geographic distance -0.38 mo hinh 8 model random effects hieu ung ngau nhien",
     a: {
       vi: "Bài dùng 16 nước đối tác, giai đoạn 2006–2015, tám mô hình hiệu ứng ngẫu nhiên. Khoảng cách địa lý chưa có ý nghĩa ở mô hình 3 (−0,14) nhưng từ mô hình 4 trở đi giữ quanh −0,38 và có ý nghĩa. Ở mô hình 8: vốn FDI năm trước 0,45, FTA 1,01, khoảng cách kinh tế 0,33, đều có ý nghĩa thống kê.",
       en: "The paper uses 16 partner countries over 2006–2015 and eight random-effects models. Geographic distance is not significant in Model 3 (−0.14) but from Model 4 on it holds near −0.38 and is significant. In Model 8: last year's FDI 0.45, FTA 1.01, economic distance 0.33, all statistically significant.",
@@ -272,6 +272,102 @@ export const KB: Entry[] = [
       en: "Story: a timeline from 1665 to today. Cast: each character holds one number of the lesson. Orbit: Newtonian gravity simulator. Trade: Tinbergen's model on a world map, a plane or a globe. FDI: the 2019 coefficients, the impact simulator, why PPML, and estimation on your data. Go in that order: the sky first, then capital.",
     },
     cite: [],
+    see: { room: "story", vi: "Mở Câu chuyện", en: "Open the Story" },
+  },
+  {
+    id: "gravity-overview",
+    q: { vi: "Mô hình trọng lực trong kinh tế là gì?", en: "What is the gravity model in economics?" },
+    keys: "mo hinh trong luc gravity model tong quan overview kinh te economics y tuong idea thuong mai fdi dong von",
+    a: {
+      vi: "Mô hình trọng lực mượn dạng định luật Newton: dòng chảy giữa hai nước (thương mại hoặc FDI) tăng theo quy mô kinh tế của hai nước và giảm theo khoảng cách cùng các chi phí khác. Tinbergen (1962) đưa nó vào thương mại; Anderson và van Wincoop (2003) bổ sung lực cản đa phương; ngày nay thường ước lượng bằng PPML với hiệu ứng cố định (Yotov và cộng sự, 2016). App đi đúng chặng đường đó: Quỹ đạo → Thương mại → FDI.",
+      en: "The gravity model borrows the form of Newton's law: the flow between two countries (trade or FDI) rises with their economic size and falls with distance and other costs. Tinbergen (1962) brought it to trade; Anderson and van Wincoop (2003) added multilateral resistance; today it is usually estimated by PPML with fixed effects (Yotov et al., 2016). The app follows that path: Orbit → Trade → FDI.",
+    },
+    cite: ["Tinbergen (1962)", "Anderson & van Wincoop (2003)", "Yotov et al. (2016)"],
+    see: { room: "story", vi: "Mở Câu chuyện", en: "Open the Story" },
+  },
+  {
+    id: "ols",
+    q: { vi: "OLS là gì và dùng trong mô hình trọng lực thế nào?", en: "What is OLS and how is it used in gravity models?" },
+    keys: "ols binh phuong nho nhat thong thuong ordinary least squares hoi quy tuyen tinh linear regression log",
+    a: {
+      vi: "OLS (bình phương nhỏ nhất thông thường) chọn hệ số sao cho tổng bình phương sai số nhỏ nhất. Với mô hình trọng lực, OLS chạy trên dạng log, nên phải bỏ các quan sát bằng 0 và cho hệ số chệch khi phương sai thay đổi (Santos Silva & Tenreyro, 2006). Trong mục Dữ liệu của bạn, app chạy OLS trên log song song với PPML để bạn so sánh.",
+      en: "OLS (ordinary least squares) picks the coefficients that minimise the sum of squared errors. For gravity it runs on the log form, so it must drop zero observations and gives biased coefficients under heteroskedasticity (Santos Silva & Tenreyro, 2006). Under Your data, the app runs OLS on logs side by side with PPML so you can compare.",
+    },
+    cite: ["Santos Silva & Tenreyro (2006)"],
+    see: { room: "lab", panel: "data", vi: "Mở Dữ liệu của bạn", en: "Open Your data" },
+  },
+  {
+    id: "re-fe",
+    q: { vi: "Hiệu ứng ngẫu nhiên và hiệu ứng cố định khác nhau thế nào? Kiểm định Hausman để làm gì?", en: "How do random and fixed effects differ, and what is the Hausman test for?" },
+    keys: "hieu ung ngau nhien random effects rem hieu ung co dinh fixed effects fem hausman kiem dinh test du lieu bang panel khong doi theo thoi gian",
+    a: {
+      vi: "Hiệu ứng cố định cho mỗi nước (hoặc cặp nước) một hằng số riêng, nên loại được mọi yếu tố không đổi theo thời gian, nhưng vì thế không ước lượng được các biến không đổi như khoảng cách. Hiệu ứng ngẫu nhiên giữ được các biến đó, với giả định phần riêng của mỗi nước không tương quan với các biến giải thích. Kiểm định Hausman so sánh hai cách để xem giả định ấy có đứng được không (Bacchetta và cộng sự, 2012). Phan và Do (2019) dùng hiệu ứng ngẫu nhiên, nhờ vậy ước lượng được hệ số khoảng cách.",
+      en: "Fixed effects give each country (or pair) its own constant, removing everything that does not change over time, which is why time-invariant variables such as distance cannot be estimated. Random effects keep those variables, assuming each country's own component is uncorrelated with the regressors. The Hausman test compares the two to check that assumption (Bacchetta et al., 2012). Phan and Do (2019) use random effects, which is how they estimate a distance coefficient.",
+    },
+    cite: ["Bacchetta et al. (2012)", "Phan & Do (2019)"],
+  },
+  {
+    id: "r2",
+    q: { vi: "R² và pseudo-R² trong bảng kết quả nghĩa là gì?", en: "What do R² and pseudo-R² in the results table mean?" },
+    keys: "rsquared r2 pseudo muc do giai thich goodness of fit tuong quan correlation",
+    a: {
+      vi: "Với OLS, R² là tỷ lệ biến động của log FDI được mô hình giải thích. Với PPML, app báo pseudo-R²: bình phương hệ số tương quan giữa FDI thực tế và FDI dự báo. Hai con số không so sánh trực tiếp được, và R² cao không có nghĩa dạng hàm đúng: Yotov và cộng sự (2016) dùng kiểm định RESET, và chỉ PPML qua được kiểm định này trong dữ liệu của họ.",
+      en: "For OLS, R² is the share of the variation in log FDI that the model explains. For PPML, the app reports a pseudo-R²: the squared correlation between actual and predicted FDI. The two are not directly comparable, and a high R² does not mean the functional form is right: Yotov et al. (2016) use the RESET test, and only PPML passes it in their data.",
+    },
+    cite: ["Santos Silva & Tenreyro (2006)", "Yotov et al. (2016)"],
+  },
+  {
+    id: "pd-variables",
+    q: { vi: "Những biến khác trong mô hình 8 của Phan và Do (2019) có ý nghĩa thống kê không?", en: "Are the other variables in Phan and Do's (2019) Model 8 significant?" },
+    keys: "khoang cach the che institutional van hoa cultural kinh te economic do mo thuong mai openness tham nhung corruption kinh nghiem experience quy mo thi truong market size gdp bien kiem soat controls",
+    a: {
+      vi: "Ở mô hình 8 (Phan & Do, 2019): khoảng cách kinh tế 0,33 và kinh nghiệm quốc tế 0,11 có ý nghĩa ở mức 5%; độ mở thương mại 2,89 cũng có ý nghĩa ở mức 5%. Khoảng cách thể chế (0,12), khoảng cách văn hóa (0,03), quy mô thị trường Việt Nam (−0,87), quy mô thị trường đối tác (−0,25) và tham nhũng (−1,54) không có ý nghĩa thống kê. Xem đầy đủ trong Hệ số 2019.",
+      en: "In Model 8 (Phan & Do, 2019): economic distance 0.33 and international experience 0.11 are significant at 5%; trade openness 2.89 is also significant at 5%. Institutional distance (0.12), cultural distance (0.03), Vietnam's market size (−0.87), the partner's market size (−0.25) and corruption (−1.54) are not statistically significant. See the full table under 2019 coefficients.",
+    },
+    cite: ["Phan & Do (2019)"],
+    see: { room: "lab", panel: "coef", vi: "Mở Hệ số 2019", en: "Open 2019 coefficients" },
+  },
+  {
+    id: "orbit-room",
+    q: { vi: "Dùng phòng Quỹ đạo thế nào?", en: "How do I use the Orbit room?" },
+    keys: "phong quy dao orbit room dung cach su dung phong vat the them hanh tinh add planet keo drag launch toc do time scale vet trails hop nhat merge nay bounce boi canh scene",
+    a: {
+      vi: "Chạm chỗ trống rồi kéo để phóng một thiên thể; kéo một thiên thể có sẵn để đặt vận tốc. Vạch “vòng” ứng với quỹ đạo tròn, vạch “thoát” là rời hệ. Ở bảng bên chọn khối lượng khi phóng, tỷ lệ thời gian, bối cảnh có sẵn (như hệ sao đôi, trợ lực hấp dẫn), bật vệt, theo tâm, và chọn hợp nhất hay nảy khi va chạm.",
+      en: "Touch empty space and drag to launch a body; drag an existing body to set its velocity. The “circular” tick gives a circular orbit, the “escape” tick leaves the system. In the side panel choose the launch mass, the time scale, a ready-made scene (such as a binary star or a gravity assist), trails, follow, and merge or bounce on collision.",
+    },
+    cite: [],
+    see: { room: "orbit", vi: "Mở phòng Quỹ đạo", en: "Open the Orbit room" },
+  },
+  {
+    id: "trade-room",
+    q: { vi: "Dùng phòng Thương mại thế nào?", en: "How do I use the Trade room?" },
+    keys: "phong thuong mai trade room ban do the gioi world map mat phang plane qua cau globe nen kinh te economy goc dong chay origin keo pan thu phong zoom gamma so mu",
+    a: {
+      vi: "Phòng Thương mại có ba cách xem: bản đồ thế giới (mặc định), mặt phẳng và quả cầu. Trên bản đồ, kéo để di chuyển, chụm hoặc cuộn để thu phóng; chạm một nền kinh tế để lấy đó làm gốc dòng chảy. Trên mặt phẳng, kéo một nền kinh tế để đổi khoảng cách. Thanh số mũ khoảng cách γ cho thấy dòng chảy thay đổi thế nào khi γ không còn khóa ở 2.",
+      en: "The Trade room has three views: a world map (the default), a plane and a globe. On the map, drag to pan and pinch or scroll to zoom; tap an economy to make it the origin of the flows. On the plane, drag an economy to change distances. The distance exponent γ slider shows how the flows change once γ is no longer fixed at 2.",
+    },
+    cite: ["Tinbergen (1962)"],
+    see: { room: "trade", vi: "Mở phòng Thương mại", en: "Open the Trade room" },
+  },
+  {
+    id: "song",
+    q: { vi: "App có bài hát không, nghe ở đâu?", en: "Does the app have a song, and where can I hear it?" },
+    keys: "bai hat song nhac music am thanh sound tu mot qua tao roi from an apple to the stars loi lyrics nghe listen",
+    a: {
+      vi: "Có. Bấm nút nốt nhạc trên thanh đầu trang để mở bảng âm thanh. Bài hát có hai bản: “Từ một quả táo rơi” (tiếng Việt) và “Gravity Lab — From an Apple to the Stars” (tiếng Anh), kèm lời. Bảng này còn có nhạc nền không gian, âm thanh quỹ đạo và tần số các hành tinh.",
+      en: "Yes. Press the music-note button in the header to open the sound panel. The song comes in two versions, “Từ một quả táo rơi” (Vietnamese) and “Gravity Lab — From an Apple to the Stars” (English), with lyrics. The panel also has the space ambience, orbit sonification and the planetary frequencies.",
+    },
+    cite: [],
+  },
+  {
+    id: "newton-bio",
+    q: { vi: "Newton sinh và mất năm nào?", en: "When was Newton born and when did he die?" },
+    keys: "newton sinh mat nam nao born died tieu su biography 1642 1643 1727 woolsthorpe london dich hach plague cambridge",
+    a: {
+      vi: "Isaac Newton sinh ngày 25/12/1642 theo lịch cũ (4/1/1643 theo lịch mới) ở Woolsthorpe, Anh, và mất ngày 31/3/1727 ở London. Những năm dịch hạch 1665–1666, khi Cambridge đóng cửa, ông về quê và hình thành ý tưởng lực giảm theo bình phương khoảng cách (Westfall, 1980).",
+      en: "Isaac Newton was born on 25 December 1642 Old Style (4 January 1643 New Style) in Woolsthorpe, England, and died on 31 March 1727 in London. In the plague years 1665–1666, with Cambridge closed, he worked at home and arrived at a force falling with the square of the distance (Westfall, 1980).",
+    },
+    cite: ["Westfall (1980)"],
     see: { room: "story", vi: "Mở Câu chuyện", en: "Open the Story" },
   },
   {

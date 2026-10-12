@@ -12,6 +12,9 @@ export function normalize(text: string): string {
     .replace(/đ/g, "d")
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
+    .replace(/²/g, "2")
+    // "R²", "R^2", "R bình phương" are one term, not the letter r plus "square".
+    .replace(/\br\s*\^?\s*2\b|\br binh phuong\b|\br squared\b/g, " rsquared ")
     .replace(/[^a-z0-9.\-^ ]+/g, " ");
 }
 

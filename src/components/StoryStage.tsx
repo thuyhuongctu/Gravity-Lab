@@ -503,8 +503,8 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           />
           <p className="mt-3 text-sm leading-relaxed text-muted">
             {tr(
-              "Trường Kinh tế, Đại học Cần Thơ. Gravity Lab đưa cả chặng đường lên trình duyệt: quỹ đạo Newton, mô hình thương mại Tinbergen, hệ số FDI năm 2019, phép thử PPML và ước lượng trên dữ liệu của chính người học.",
-              "School of Economics, Can Tho University. Gravity Lab puts the whole journey in the browser: Newton's orbits, Tinbergen's trade model, the 2019 FDI coefficients, the PPML test and estimation on the learner's own data.",
+              "Trường Kinh tế, Đại học Cần Thơ. Gravity Lab đưa cả chặng đường lên trình duyệt: quỹ đạo Newton, mô hình thương mại Tinbergen, hệ số FDI năm 2019, phép thử PPML, ước lượng trên dữ liệu của chính người học, và một trợ giảng tra cứu có trích nguồn.",
+              "School of Economics, Can Tho University. Gravity Lab puts the whole journey in the browser: Newton's orbits, Tinbergen's trade model, the 2019 FDI coefficients, the PPML test, estimation on the learner's own data, and a teaching assistant that answers with citations.",
             )}
           </p>
           <p className="mt-2 text-sm">

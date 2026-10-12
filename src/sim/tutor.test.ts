@@ -14,13 +14,27 @@ test("diacritics and đ are folded", () => {
 
 test("Vietnamese questions, with or without diacritics, find the right entry", () => {
   expect("PPML là gì", "ppml");
-  expect("vi sao khong dung OLS khi co so 0", "ppml");
+  expect("vi sao khong dung OLS khi co so 0", "zeros");
   expect("hệ số -0.38 nghĩa là gì", "elasticity");
   expect("FTA dài hạn", "fta-long-run");
   expect("luc can da phuong", "mrt");
   expect("huy chuong vang", "medals");
   expect("cách tải dữ liệu lên", "upload");
   expect("Phan Do 2019 kết quả", "phan-do-2019");
+});
+
+test("common student questions reach the right entry", () => {
+  expect("mô hình trọng lực là gì", "gravity-overview");
+  expect("OLS là gì", "ols");
+  expect("Hausman test", "re-fe");
+  expect("R bình phương là gì", "r2");
+  expect("what does R² mean", "r2");
+  expect("khoảng cách văn hóa", "pd-variables");
+  expect("làm sao thêm hành tinh", "orbit-room");
+  expect("phòng thương mại dùng thế nào", "trade-room");
+  expect("bài hát của app", "song");
+  expect("Newton sinh năm nào", "newton-bio");
+  expect("Tinbergen nhận Nobel năm nào", "tinbergen");
 });
 
 test("English questions find the right entry", () => {
