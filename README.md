@@ -14,7 +14,12 @@ Phòng thí nghiệm mô hình lực hấp dẫn, chạy trên trình duyệt, g
 npm install
 npm run dev      # http://localhost:8080
 npm run build    # bản dựng triển khai (Nitro, preset Vercel) / deployable build
+npm test         # kiểm tra phần toán: địa cầu, mô hình FDI / unit tests for the globe and FDI maths
 ```
+
+Ứng dụng chạy độc lập: không đăng nhập, không cơ sở dữ liệu, không gọi dịch vụ bên ngoài ngoài Google Fonts.
+
+*The app is self-contained: no sign-in, no database, and no external calls other than Google Fonts.*
 
 Bản dựng dùng preset Vercel (có kết xuất phía máy chủ), nên cần triển khai lên Vercel hoặc một nền tảng tương thích, không phải GitHub Pages. Phiên bản HTML tĩnh trước đây vẫn được duy trì tại **https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html** và được lưu trong lịch sử git của repo này (commit `1857067`).
 

@@ -1,6 +1,6 @@
 /** Orthographic globe math: lon/lat to unit vectors, camera rotation, great-circle arcs. */
 
-import { LAND_RINGS, LAND_SCALE } from "@/data/land";
+import { LAND_RINGS, LAND_SCALE } from "../data/land.ts";
 
 export type Vec3 = [number, number, number];
 export type View = { lon: number; lat: number };
