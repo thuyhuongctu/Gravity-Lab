@@ -771,8 +771,8 @@ export function Observatory() {
                 </p>
                 <p className="mt-1 text-sm text-muted">
                   {tr(
-                    "Phan và Đỗ (2019) ước lượng khoảng cách địa lý, thể chế, văn hóa và kinh tế của dòng vốn vào Việt Nam. Mũ không còn là 2.",
-                    "Phan and Đỗ (2019) estimate the geographic, institutional, cultural and economic distances of capital flowing into Vietnam. The exponent is no longer 2.",
+                    "Phan và Do (2019) ước lượng khoảng cách địa lý, thể chế, văn hóa và kinh tế của dòng vốn vào Việt Nam. Mũ không còn là 2.",
+                    "Phan and Do (2019) estimate the geographic, institutional, cultural and economic distances of capital flowing into Vietnam. The exponent is no longer 2.",
                   )}
                 </p>
                 <p className="mt-2 text-sm font-medium">

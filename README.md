@@ -4,7 +4,7 @@
 
 **Gravity Lab: a browser-based gravity-model laboratory for foreign direct investment into Vietnam**
 
-Phan Anh Tú ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137)) and Đỗ Thùy Hương ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487))
+Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137)) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487))
 School of Economics, Can Tho University, Vietnam
 
 Live application: **https://thuyhuongctu.github.io/Gravity-Lab/**
@@ -15,7 +15,7 @@ Gravity Lab is an interactive teaching instrument for the gravity model in inter
 
 1. **Universal gravitation.** An N-body orbit simulator presents Newton's law, in which the attraction between two bodies is proportional to the product of their masses and inversely proportional to the square of their distance (Newton, 1687/1999).
 2. **The gravity model of trade.** Mass is replaced by economic size and the distance exponent becomes a parameter to be estimated (Tinbergen, 1962). Learners explore bilateral trade between Vietnam and its partner economies on a plane or on a globe.
-3. **FDI into Vietnam.** The laboratory reproduces published coefficients for FDI into Vietnam (Phan & Đỗ, 2019; Xuan & Xing, 2008). It simulates the effects of distance and market size, explains why Poisson pseudo-maximum likelihood (PPML) is preferred when flows contain zeros (Santos Silva & Tenreyro, 2006), and estimates OLS and PPML models on data uploaded by the learner.
+3. **FDI into Vietnam.** The laboratory reproduces published coefficients for FDI into Vietnam (Phan & Do, 2019; Xuan & Xing, 2008). It simulates the effects of distance and market size, explains why Poisson pseudo-maximum likelihood (PPML) is preferred when flows contain zeros (Santos Silva & Tenreyro, 2006), and estimates OLS and PPML models on data uploaded by the learner.
 
 A narrative page traces the development of the model from 1665 to the present. A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
 
@@ -47,11 +47,11 @@ The exponential form estimated by PPML, which retains zero flows and remains con
 
 $$T_{ij} = \exp\left(\beta_0 + \beta_1 \ln Y_i + \beta_2 \ln Y_j - \gamma \ln D_{ij}\right)\eta_{ij}$$
 
-The FDI specification for Vietnam, with institutional, cultural and economic distance in $X_{it}$ and a source-country random effect $u_i$ (Phan & Đỗ, 2019):
+The FDI specification for Vietnam, with institutional, cultural and economic distance in $X_{it}$ and a source-country random effect $u_i$ (Phan & Do, 2019):
 
 $$\ln \mathit{FDI}_{it} = \beta_0 + \beta_1 \ln Y_{it} + \beta_2 \ln Y_{VN,t} - \gamma \ln D_{i,VN} + \delta' X_{it} + u_i + \varepsilon_{it}$$
 
-The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Đỗ (2019), the coefficient on geographic distance for FDI into Vietnam is approximately −0.38 from Model 4 onwards.
+The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Do (2019), the coefficient on geographic distance for FDI into Vietnam is approximately −0.38 from Model 4 onwards.
 
 ## Features
 
@@ -92,7 +92,7 @@ This repository is a standalone edition of Gravity Lab, separated from the [BizO
 
 Please cite the version you used. The concept DOI covers all versions and always resolves to the latest release: **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**.
 
-> Phan, A. T., & Đỗ, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307832
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307832
 
 | Version | DOI |
 | --- | --- |
@@ -115,7 +115,7 @@ Mohr, P. J., Newell, D. B., Taylor, B. N., & Tiesinga, E. (2025). CODATA recomme
 
 Newton, I. (1999). *The Principia: Mathematical principles of natural philosophy* (I. B. Cohen & A. Whitman, Trans.). University of California Press. (Original work published 1687)
 
-Phan, A. T., & Đỗ, T. H. (2019). Tác động của khoảng cách, quy mô thị trường và dòng vốn FDI vào Việt Nam giai đoạn 2006–2015: Ứng dụng mô hình lực hấp dẫn [The impact of distance and market size on FDI into Vietnam, 2006–2015: Applying the gravity model]. *Tạp chí Kinh tế Đối ngoại*, (114), 14–26.
+Phan, A. T., & Do, T. H. (2019). Tác động của khoảng cách, quy mô thị trường và dòng vốn FDI vào Việt Nam giai đoạn 2006–2015: Ứng dụng mô hình lực hấp dẫn [The impact of distance and market size on FDI into Vietnam, 2006–2015: Applying the gravity model]. *Tạp chí Kinh tế Đối ngoại*, (114), 14–26.
 
 Santos Silva, J. M. C., & Tenreyro, S. (2006). The log of gravity. *The Review of Economics and Statistics, 88*(4), 641–658. https://doi.org/10.1162/rest.88.4.641
 
@@ -131,4 +131,4 @@ This is proprietary software, published openly for academic transparency and cit
 
 ---
 
-© 2026 Assoc. Prof. Dr. Phan Anh Tú and Đỗ Thùy Hương (PhD candidate), School of Economics, Can Tho University.
+© 2026 Assoc. Prof. Dr. Phan Anh Tu and Do Thuy Huong (PhD candidate), School of Economics, Can Tho University.

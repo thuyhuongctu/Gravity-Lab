@@ -43,14 +43,14 @@ export const HOLDERS: Holder[] = [
     id: "tu",
     name: "Tú Phan",
     symbol: "−0,14 → −0,38",
-    line: "Bài Phan và Đỗ (2019). Địa lý vào mô hình 3 chưa có ý nghĩa. Từ mô hình 4, β giữ −0,38.",
+    line: "Bài Phan và Do (2019). Địa lý vào mô hình 3 chưa có ý nghĩa. Từ mô hình 4, β giữ −0,38.",
     src: `${import.meta.env.BASE_URL}cast/face/tu.webp`,
     body: `${import.meta.env.BASE_URL}cast/tu-vest.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/tu.webp`,
     alt: "Tú Phan",
     en: {
       symbol: "−0.14 → −0.38",
-      line: "Phan and Đỗ (2019). Geography is not yet significant in Model 3. From Model 4 on, β holds at −0.38.",
+      line: "Phan and Do (2019). Geography is not yet significant in Model 3. From Model 4 on, β holds at −0.38.",
       alt: "Tú Phan",
     },
     room: "lab",
@@ -266,8 +266,8 @@ export function CastStage({
       </div>
       <p className="mx-auto max-w-lg px-4 py-8 text-sm leading-relaxed text-muted">
         {tr(
-          "Tạo hình đất sét thư viện BizOn. Lumina giữ câu hỏi và không chọn hộ. Hệ số FDI lấy từ Phan và Đỗ (2019), mô hình 8, trừ chỗ nói mô hình 3 và 4.",
-          "Clay characters from the BizOn library. Lumina holds the question and does not choose for you. FDI coefficients are from Phan and Đỗ (2019), Model 8, except where Models 3 and 4 are named.",
+          "Tạo hình đất sét thư viện BizOn. Lumina giữ câu hỏi và không chọn hộ. Hệ số FDI lấy từ Phan và Do (2019), mô hình 8, trừ chỗ nói mô hình 3 và 4.",
+          "Clay characters from the BizOn library. Lumina holds the question and does not choose for you. FDI coefficients are from Phan and Do (2019), Model 8, except where Models 3 and 4 are named.",
         )}
       </p>
       </div>

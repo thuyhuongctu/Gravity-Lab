@@ -87,7 +87,7 @@ const REFS: Ref[] = [
     id: "phan-2019",
     parts: [
       {
-        text: "Phan, A. T., & Đỗ, T. H. (2019). Tác động của khoảng cách, quy mô thị trường và dòng vốn FDI vào Việt Nam giai đoạn 2006–2015: Ứng dụng mô hình lực hấp dẫn [The impact of distance and market size on FDI into Vietnam, 2006–2015: Applying the gravity model]. ",
+        text: "Phan, A. T., & Do, T. H. (2019). Tác động của khoảng cách, quy mô thị trường và dòng vốn FDI vào Việt Nam giai đoạn 2006–2015: Ứng dụng mô hình lực hấp dẫn [The impact of distance and market size on FDI into Vietnam, 2006–2015: Applying the gravity model]. ",
       },
       { text: "Tạp chí Kinh tế Đối ngoại", em: true },
       { text: ", (114), 14–26." },
