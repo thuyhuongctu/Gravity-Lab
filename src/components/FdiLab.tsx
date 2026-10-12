@@ -323,45 +323,81 @@ function SimStage({ lab }: { lab: LabState }) {
 function CoefStage({ lab }: { lab: LabState }) {
   const rows = lab.rows.filter((r) => r.id !== "cons");
   const shown = rows.length ? rows : lab.rows;
-  const lo = Math.min(...shown.map((r) => r.b - 1.96 * r.se));
-  const hi = Math.max(...shown.map((r) => r.b + 1.96 * r.se));
-  const span = hi - lo || 1;
-  const x = (v: number) => ((v - lo) / span) * 100;
+  // Bars grow from a centred zero line; the scale fits the widest 95% interval.
+  const reach = Math.max(...shown.map((r) => Math.abs(r.b) + 1.96 * r.se), 0.5);
+  const x = (v: number) => 50 + (v / reach) * 50;
   const meta = MODELS[lab.model]!;
   const cons = lab.rows.find((r) => r.id === "cons");
+  const geo = lab.rows.find((r) => r.id === "geo");
   const notes = reading(lab.model);
+  const stars = (r: (typeof shown)[number]) => (lab.check ? r.recomputed : r.published);
   return (
     <div className="flex max-w-xl flex-col gap-3">
-      <p className="text-xs text-mist">
-        {tr("Mô hình", "Model")} {lab.model + 1} · n = {meta.n} · R² = {num(meta.r2, 4)} ·{" "}
-        {tr("REM, sai số chuẩn vững", "REM, robust standard errors")}
-        {cons ? ` · ${tr("hằng số", "constant")} ${num(cons.b)} (${num(cons.se)})` : ""}
-      </p>
-      <ul className="flex flex-col gap-2">
-        {shown.map((r) => (
-          <li key={r.id}>
-            <div className="mb-1 flex items-baseline justify-between gap-2 text-sm text-paper">
-              <span>{r.label}</span>
-              <span className="tabular-nums">
-                {num(r.b)}
-                <span className="text-mist">{r.published ? ` ${r.published}` : ""}</span>
-              </span>
-            </div>
-            <div className="noir-track relative h-2.5 rounded-full">
-              <span className="absolute inset-y-0 w-px bg-mist/70" style={{ left: `${x(0)}%` }} />
-              <span
-                className="absolute inset-y-0 rounded-full bg-amber-2"
-                style={{ left: `${x(r.b - 1.96 * r.se)}%`, width: `${x(r.b + 1.96 * r.se) - x(r.b - 1.96 * r.se)}%` }}
-              />
-              <span className="absolute top-1/2 size-2 -translate-y-1/2 rounded-full bg-paper" style={{ left: `calc(${x(r.b)}% - 4px)` }} />
-            </div>
-          </li>
-        ))}
-      </ul>
+      {geo ? (
+        <div className="noir-card flex flex-wrap items-center gap-x-5 gap-y-3 rounded-[26px] px-5 py-4">
+          <div>
+            <p className="kicker text-amber-2">
+              {tr("Hệ số khoảng cách", "Distance coefficient")} <span className="normal-case">β</span>
+            </p>
+            <p className={"mt-1 font-serif text-5xl tabular-nums " + (geo.b < 0 ? "glow-clay text-clay" : "glow-teal text-teal-2")}>
+              {num(geo.b)}
+            </p>
+          </div>
+          <div className="min-w-0 flex-1 basis-48">
+            <p className="text-sm text-paper">
+              {tr(
+                `Xa thêm 1%, FDI ${geo.b < 0 ? "giảm" : "tăng"} khoảng ${num(Math.abs(geo.b))}%`,
+                `1% farther, FDI ${geo.b < 0 ? "falls" : "rises"} by about ${num(Math.abs(geo.b))}%`,
+              )}{" "}
+              ({geo.p < 0.05 ? tr("p < 0,05", "p < 0.05") : `p = ${num(geo.p, 3)}`}).
+            </p>
+            <button type="button" onClick={() => lab.setPanel("ppml")} className="cosmic-btn mt-3 min-h-11 rounded-full px-4 text-sm font-semibold">
+              {tr("Ước lượng lại bằng PPML →", "Re-estimate with PPML →")}
+            </button>
+          </div>
+        </div>
+      ) : null}
+      <div className="noir-card rounded-[26px] px-4 py-4 sm:px-5">
+        <p className="kicker text-teal-2">
+          {tr("Mô hình", "Model")} {lab.model + 1} · {tr("Bảng 6", "Table 6")}
+        </p>
+        <p className="mt-1 text-xs text-mist">
+          {tr("REM, sai số chuẩn vững", "REM, robust standard errors")} · n = {meta.n} · R² = {num(meta.r2, 4)}
+          {cons ? ` · ${tr("hằng số", "constant")} ${num(cons.b)} (${num(cons.se)})` : ""} · Phan &amp; Do (2019)
+        </p>
+        <ul className="mt-3 flex flex-col gap-2.5">
+          {shown.map((r) => {
+            const sig = stars(r) !== "";
+            const tone = !sig ? "bg-mist/45" : r.b >= 0 ? "bg-teal-2" : "bg-amber-2";
+            const lo = Math.min(x(0), x(r.b));
+            return (
+              <li key={r.id} className="grid grid-cols-[minmax(0,9rem)_1fr_auto] items-center gap-3 max-sm:grid-cols-[1fr_auto]">
+                <span className="text-sm text-paper max-sm:col-span-2">{r.label}</span>
+                <div className="noir-track relative h-4 rounded-full max-sm:order-1">
+                  <span className="absolute inset-y-0 w-px bg-mist/70" style={{ left: "50%" }} />
+                  <span
+                    className="absolute top-1/2 h-px -translate-y-1/2 bg-mist/70"
+                    style={{ left: `${x(r.b - 1.96 * r.se)}%`, width: `${x(r.b + 1.96 * r.se) - x(r.b - 1.96 * r.se)}%` }}
+                  />
+                  <span
+                    className={"absolute inset-y-[3px] rounded-full " + tone}
+                    style={{ left: `${lo}%`, width: `${Math.max(Math.abs(x(r.b) - x(0)), 0.8)}%` }}
+                  />
+                </div>
+                <span className={"w-20 text-right text-sm tabular-nums max-sm:order-2 " + (sig ? "text-paper" : "text-mist")}>
+                  {r.b > 0 ? "+" : ""}
+                  {num(r.b)}
+                  <span className="text-amber-2">{stars(r)}</span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <p className="text-xs text-mist">
         {tr(
-          "Chấm là hệ số. Thanh là khoảng tin cậy 95%. Cắt qua vạch 0 là chưa đủ bằng chứng ở mức 5%. Hằng số không vẽ trên trục này.",
-          "Dots are coefficients; bars are 95% confidence intervals. A bar crossing 0 is not enough evidence at 5%. The constant is not drawn on this axis.",
+          "Thanh màu là hệ số, tính từ vạch 0 ở giữa. Đường mảnh là khoảng tin cậy 95%. Thanh xám là chưa có ý nghĩa ở mức 5%. Sao lấy từ bài; bật ô so sánh để tô theo mức ý nghĩa tính lại. Hằng số không vẽ trên trục này.",
+          "Coloured bars are coefficients, drawn from the zero line in the middle. Thin lines are 95% confidence intervals. Grey bars are not significant at 5%. Stars are the paper's; tick the comparison box to colour by recomputed significance. The constant is not drawn on this axis.",
         )}
       </p>
       {notes.length ? (
