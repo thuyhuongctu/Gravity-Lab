@@ -1,0 +1,19 @@
+{
+  "name": "Gravity Lab — Trọng lực",
+  "short_name": "Gravity Lab",
+  "description": "Newton's gravity, the Tinbergen trade model and FDI into Vietnam, in one browser lab. / Lực hấp dẫn Newton, mô hình thương mại Tinbergen và FDI vào Việt Nam trong một phòng thí nghiệm trên trình duyệt.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#101614",
+  "theme_color": "#101614",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
