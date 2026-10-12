@@ -4,7 +4,7 @@
 
 **Gravity Lab: a browser-based gravity-model laboratory for foreign direct investment into Vietnam**
 
-Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137)) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487))
+Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137); patu@ctu.edu.vn) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487); thuyhuongctu@gmail.com)
 School of Economics, Can Tho University, Vietnam
 
 Live application: **https://thuyhuongctu.github.io/Gravity-Lab/**
@@ -92,11 +92,11 @@ This repository is a standalone edition of Gravity Lab, separated from the [BizO
 
 Please cite the version you used. The concept DOI covers all versions and always resolves to the latest release: **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**.
 
-> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307832
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23308587
 
 | Version | DOI |
 | --- | --- |
-| v2.2 | Concept DOI above until the version DOI is added |
+| v2.2 | [10.5281/zenodo.23308587](https://doi.org/10.5281/zenodo.23308587) |
 | v2.1 | [10.5281/zenodo.23308307](https://doi.org/10.5281/zenodo.23308307) |
 | v2.0 | [10.5281/zenodo.23308130](https://doi.org/10.5281/zenodo.23308130) |
 | v1.0 | [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833) |
