@@ -1,6 +1,7 @@
 import type { LabPanel } from "@/components/FdiLab";
 import { ReferenceList } from "@/components/ReferenceList";
 import { VnWatermark } from "@/components/VnWatermark";
+import { useState } from "react";
 import { tr } from "@/lib/prefs";
 
 type Room = "orbit" | "trade" | "lab";
@@ -15,6 +16,8 @@ export type Holder = {
   body: string;
   /** Astronaut portrait, worn while exploring gravity in the orbit room. */
   astro: string;
+  /** Full-length figure in the spacesuit. */
+  suit: string;
   alt: string;
   en: { symbol: string; line: string; alt: string };
   room: Room;
@@ -30,6 +33,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/huong.webp`,
     body: `${import.meta.env.BASE_URL}cast/huong.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/huong.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/huong.webp`,
     alt: "Lumina",
     en: {
       symbol: "The question",
@@ -47,6 +51,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/tu.webp`,
     body: `${import.meta.env.BASE_URL}cast/tu-vest.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/tu.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/tu.webp`,
     alt: "Tú Phan",
     en: {
       symbol: "−0.14 → −0.38",
@@ -64,6 +69,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/minh-long.webp`,
     body: `${import.meta.env.BASE_URL}cast/minh-long.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/minh-long.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/minh-long.webp`,
     alt: "Minh Long, jacket xanh, khăn rằn đỏ",
     en: {
       symbol: "exponent = 2",
@@ -81,6 +87,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/lan-chi.webp`,
     body: `${import.meta.env.BASE_URL}cast/lan-chi.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/lan-chi.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/lan-chi.webp`,
     alt: "Lan Chi, jacket vàng, khăn rằn, loa",
     en: {
       symbol: "γ",
@@ -98,6 +105,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/bao-ngoc.webp`,
     body: `${import.meta.env.BASE_URL}cast/bao-ngoc.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/bao-ngoc.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/bao-ngoc.webp`,
     alt: "Bảo Ngọc, jacket ô-liu, khoanh tay",
     en: {
       symbol: "β = −0.38",
@@ -115,6 +123,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/thu-ha.webp`,
     body: `${import.meta.env.BASE_URL}cast/thu-ha.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/thu-ha.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/thu-ha.webp`,
     alt: "Thu Hà, jacket đất nung, sổ cái",
     en: {
       symbol: "0.45 · FTA",
@@ -132,6 +141,7 @@ export const HOLDERS: Holder[] = [
     src: `${import.meta.env.BASE_URL}cast/face/gia-han.webp`,
     body: `${import.meta.env.BASE_URL}cast/gia-han.webp`,
     astro: `${import.meta.env.BASE_URL}cast/astro/gia-han.webp`,
+    suit: `${import.meta.env.BASE_URL}cast/suit/gia-han.webp`,
     alt: "Gia Hân, jacket tím, kẹp hồ sơ",
     en: {
       symbol: "FDI = 0",
@@ -215,6 +225,8 @@ export function CastStage({
 }) {
   const lumina = byId("lumina");
   const tu = byId("tu");
+  const [suited, setSuited] = useState(false);
+  const look = (p: Holder) => (suited ? p.suit : p.body);
   return (
     <div className="surface nebula absolute inset-0 overflow-y-auto bg-paper text-ink">
       <VnWatermark />
@@ -230,9 +242,29 @@ export function CastStage({
           )}
         </p>
       </div>
+      <div className="mx-auto max-w-lg px-4 pt-3">
+        <div role="group" aria-label={tr("Trang phục", "Outfit")} className="clay-tray inline-flex rounded-full bg-paper-2 p-1">
+          {[
+            { on: false, vi: "Trang phục thường", en: "Everyday" },
+            { on: true, vi: "Trang phục vũ trụ", en: "Spacesuits" },
+          ].map((o) => (
+            <button
+              key={o.vi}
+              type="button"
+              aria-pressed={suited === o.on}
+              onClick={() => setSuited(o.on)}
+              className={
+                "min-h-11 rounded-full px-4 text-sm font-medium " + (suited === o.on ? "cosmic-btn" : "text-muted")
+              }
+            >
+              {tr(o.vi, o.en)}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 px-4 pt-4">
-        <Advisor person={lumina} onOpen={onOpen} />
-        <Advisor person={tu} onOpen={onOpen} />
+        <Advisor person={lumina} src={look(lumina)} onOpen={onOpen} />
+        <Advisor person={tu} src={look(tu)} onOpen={onOpen} />
       </div>
       <ol className="mx-auto max-w-lg pt-4">
         {STEPS.map((id, index) => {
@@ -245,10 +277,13 @@ export function CastStage({
                 onClick={() => onOpen(person.room, person.panel, person.id)}
               >
                 <img
-                  src={person.body}
-                  alt={say(person).alt}
+                  src={look(person)}
+                  alt={suited ? tr(`${person.name}, trang phục phi hành gia`, `${person.name} in a spacesuit`) : say(person).alt}
                   loading="lazy"
-                  className="h-44 w-24 shrink-0 rounded-card bg-[#f4ede1] object-contain object-bottom"
+                  className={
+                    "h-44 w-24 shrink-0 rounded-card bg-[#f4ede1] object-bottom " +
+                    (suited ? "object-cover" : "object-contain")
+                  }
                 />
                 <span className="min-w-0">
                   <span className="text-xs font-medium text-teal">{index + 1}</span>
@@ -277,14 +312,20 @@ export function CastStage({
 
 function Advisor({
   person,
+  src,
   onOpen,
 }: {
   person: Holder;
+  src: string;
   onOpen: (room: Room, panel: LabPanel | null, id: string) => void;
 }) {
   return (
     <button type="button" className="text-left" onClick={() => onOpen(person.room, person.panel, person.id)}>
-      <img src={person.body} alt={say(person).alt} className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom" />
+      <img src={src} alt={src === person.suit ? tr(`${person.name}, trang phục phi hành gia`, `${person.name} in a spacesuit`) : say(person).alt} className={
+          "h-72 w-full rounded-card bg-[#f4ede1] object-bottom " +
+          (src === person.suit ? "object-cover" : "object-contain")
+        }
+      />
       <span className="mt-2 block font-serif text-xl leading-tight">{say(person).symbol}</span>
       <span className="block text-sm font-medium">{person.name}</span>
       <span className="mt-1 block text-sm leading-relaxed text-muted">{say(person).line}</span>

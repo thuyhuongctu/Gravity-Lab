@@ -25,8 +25,8 @@ type Chapter = {
     vi: { alt: string; note: string };
     en: { alt: string; note: string };
   };
-  /** A wide illustration under the chapter text. */
-  art?: { src: string; vi: string; en: string };
+  /** An illustration under the chapter text (square unless a size is given). */
+  art?: { src: string; vi: string; en: string; w?: number; h?: number };
   open?: { room: Room; panel: LabPanel | null; vi: string; en: string };
 };
 
@@ -65,6 +65,13 @@ const CHAPTERS: Chapter[] = [
     formula: "F = G m₁m₂ / r²",
     cover: "orbit",
     open: { room: "orbit", panel: null, vi: "Mở Quỹ đạo", en: "Open Orbit" },
+    art: {
+      src: "scene/minh-long-dome.webp",
+      w: 688,
+      h: 384,
+      vi: "Minh Long trong bộ đồ phi hành gia đứng dưới mái vòm đài thiên văn, tay nâng quả táo phát sáng có quỹ đạo bao quanh; bảng đen phía sau ghi định luật hấp dẫn",
+      en: "Minh Long in a spacesuit under an observatory dome, holding a glowing apple ringed by an orbit; the blackboard behind shows the law of gravitation",
+    },
   },
   {
     year: "1798",
@@ -104,6 +111,13 @@ const CHAPTERS: Chapter[] = [
         alt: "Jan Tinbergen holding chalk and a globe, a stylised clay figure",
         note: "Dutch economist. In 1969 he shared the first Nobel Memorial Prize in Economic Sciences with Ragnar Frisch. A stylised clay figure, not based on any single photograph.",
       },
+    },
+    art: {
+      src: "scene/lan-chi-board.webp",
+      w: 688,
+      h: 384,
+      vi: "Hai học viên mặc đồ phi hành gia bên bảng đen: một bạn viết F = G m₁m₂/r² và T = G YᵢYⱼ/Dᵞ → FDI, Lan Chi cầm màn hình hologram quỹ đạo",
+      en: "Two learners in spacesuits at a blackboard: one writes F = G m₁m₂/r² and T = G YᵢYⱼ/Dᵞ → FDI, Lan Chi holds an orbit hologram",
     },
   },
   {
@@ -156,6 +170,13 @@ const CHAPTERS: Chapter[] = [
     },
     cover: "lab",
     open: { room: "lab", panel: "coef", vi: "Mở Hệ số 2019", en: "Open 2019 coefficients" },
+    art: {
+      src: "scene/bao-ngoc-board.webp",
+      w: 688,
+      h: 384,
+      vi: "Bảo Ngọc mặc đồ phi hành gia giảng bên bảng đen ghi β = −0,38 và đồ thị FDI giảm theo số km tới nhà máy",
+      en: "Bảo Ngọc in a spacesuit at a blackboard showing β = −0.38 and a curve of FDI falling with the kilometres to the factory",
+    },
   },
 ];
 
@@ -230,6 +251,21 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
         </figure>
       </div>
 
+      <ul aria-hidden="true" className="mx-auto mt-4 grid max-w-2xl grid-cols-3 gap-2 px-4">
+        {["apple-compass", "globe-telescope", "telescope-orbits"].map((f) => (
+          <li key={f}>
+            <img
+              src={`${import.meta.env.BASE_URL}scene/${f}.webp`}
+              alt=""
+              width={600}
+              height={448}
+              loading="lazy"
+              className="clay-card aspect-[4/3] w-full rounded-card bg-[#f1e8de] object-cover"
+            />
+          </li>
+        ))}
+      </ul>
+
       <figure className="mx-auto mt-4 grid max-w-2xl grid-cols-[minmax(0,10rem)_1fr] items-center gap-4 px-4">
         <img
           src={art("newton.webp")}
@@ -300,10 +336,14 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
                   <img
                     src={`${import.meta.env.BASE_URL}${c.art.src}`}
                     alt={tr(c.art.vi, c.art.en)}
-                    width={1024}
-                    height={1024}
+                    width={c.art.w ?? 1024}
+                    height={c.art.h ?? 1024}
                     loading="lazy"
-                    className="clay-card mt-3 aspect-square w-full max-w-sm rounded-card bg-[#0b0a1f] object-cover"
+                    style={{ aspectRatio: `${c.art.w ?? 1} / ${c.art.h ?? 1}` }}
+                    className={
+                      "clay-card mt-3 w-full rounded-card bg-[#0b0a1f] object-cover " +
+                      (c.art.w ? "max-w-xl" : "max-w-sm")
+                    }
                   />
                 ) : null}
                 {c.cover ? <RoomCover room={c.cover} className="mt-3" /> : null}
@@ -394,6 +434,17 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
               </figcaption>
             </figure>
           </div>
+          <img
+            src={`${import.meta.env.BASE_URL}scene/lumina-minh-long.webp`}
+            alt={tr(
+              "Lumina và Minh Long trong bộ đồ phi hành gia cùng xem màn hình so sánh định luật hấp dẫn với mô hình thương mại",
+              "Lumina and Minh Long in spacesuits reading a screen that sets the law of gravitation beside the trade model",
+            )}
+            width={688}
+            height={384}
+            loading="lazy"
+            className="clay-card mt-3 aspect-[43/24] w-full rounded-card bg-[#0b0a1f] object-cover"
+          />
           <p className="mt-3 text-sm leading-relaxed text-muted">
             {tr(
               "Trường Kinh tế, Đại học Cần Thơ. Gravity Lab đưa cả chặng đường lên trình duyệt: quỹ đạo Newton, mô hình thương mại Tinbergen, hệ số FDI năm 2019, phép thử PPML và ước lượng trên dữ liệu của chính người học.",
