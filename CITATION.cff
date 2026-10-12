@@ -3,15 +3,14 @@ message: "Nếu sử dụng phần mềm này trong giảng dạy hoặc nghiên
 title: "Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam"
 type: software
 version: "2.7"
-date-released: 2026-10-12
-# DOI khái niệm 23307832 đại diện mọi phiên bản và luôn trỏ tới bản mới nhất; DOI riêng
-# của v2.7 do Zenodo cấp khi phát hành. / The concept DOI covers all versions; the v2.7
-# version DOI is minted by Zenodo on release.
-doi: "10.5281/zenodo.23307832"
+date-released: 2026-10-13
+# DOI của bản v2.7. DOI khái niệm 23307832 đại diện mọi phiên bản và luôn trỏ tới
+# bản mới nhất. / DOI of v2.7; the concept DOI 23307832 covers all versions.
+doi: "10.5281/zenodo.23327722"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.23316154"
-    description: "Version DOI, v2.6"
+    value: "10.5281/zenodo.23327722"
+    description: "Version DOI, v2.7 (cite this)"
   - type: doi
     value: "10.5281/zenodo.23307832"
     description: "Concept DOI (all versions)"
