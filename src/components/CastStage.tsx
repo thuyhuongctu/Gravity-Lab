@@ -27,9 +27,9 @@ export const HOLDERS: Holder[] = [
     name: "Lumina",
     symbol: "Câu hỏi",
     line: "Không chọn nước. Hỏi khoảng cách nào còn đứng khi vốn vào Việt Nam.",
-    src: `${import.meta.env.BASE_URL}cast/face/lumina.webp`,
-    body: `${import.meta.env.BASE_URL}cast/lumina-vest.webp`,
-    astro: `${import.meta.env.BASE_URL}cast/astro/lumina.webp`,
+    src: `${import.meta.env.BASE_URL}cast/face/huong.webp`,
+    body: `${import.meta.env.BASE_URL}cast/huong.webp`,
+    astro: `${import.meta.env.BASE_URL}cast/astro/huong.webp`,
     alt: "Lumina",
     en: {
       symbol: "The question",
@@ -294,7 +294,7 @@ function Advisor({
 
 /** The whole class, suited up for the orbit room. */
 const CREW: Array<{ id: string; name: string; src: string }> = [
-  ...HOLDERS.map((h) => ({ id: h.id, name: h.name, src: h.astro })),
+  ...HOLDERS.filter((h) => h.id !== "lumina").map((h) => ({ id: h.id, name: h.name, src: h.astro })),
   { id: "huong", name: "Thùy Hương", src: `${import.meta.env.BASE_URL}cast/astro/huong.webp` },
 ];
 
