@@ -7,6 +7,7 @@ import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiL
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
 import { SoundPanel } from "@/components/SoundPanel";
+import { RoomCover } from "@/components/RoomCover";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { fmt, setLang, setTheme, tr } from "@/lib/prefs";
@@ -157,7 +158,7 @@ export function Observatory() {
         <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-paper/15 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <img
-              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=2`}
+              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=3`}
               alt=""
               width={44}
               height={44}
@@ -434,6 +435,9 @@ export function Observatory() {
 
       {mode === "cast" || mode === "story" ? null : (
         <aside className="surface dock-scroll w-full shrink-0 overflow-y-auto border-t border-line bg-paper text-ink lg:w-96 lg:border-t-0 lg:border-l">
+          <div className="hidden px-4 pt-4 lg:block">
+            <RoomCover room={mode} />
+          </div>
           {mode === "orbit" ? (
             <div className="flex flex-col gap-4 p-4 pb-8">
               <p className="font-serif text-xl leading-none">F = G m₁m₂ / r²</p>
