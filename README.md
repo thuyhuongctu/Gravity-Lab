@@ -20,6 +20,12 @@ Bản dựng dùng preset Vercel (có kết xuất phía máy chủ), nên cần
 
 *The build targets the Vercel preset (server-side rendering), so it must be deployed to Vercel or a compatible platform rather than GitHub Pages. The earlier static HTML version remains online at the URL above and is preserved in this repository's git history (commit `1857067`).*
 
+## Dữ liệu bản đồ / Map data
+
+Chế độ Thương mại có thêm chế độ xem địa cầu: các nền kinh tế đặt theo tọa độ thật, dòng chảy vẽ bằng cung đường tròn lớn. Đường biên quốc gia lấy từ Natural Earth (`ne_10m_admin_0_countries`, phạm vi công cộng), rút gọn bằng `scripts/build-land.py` thành `src/data/land.ts`.
+
+*The trade mode adds a globe view: economies sit at their real coordinates and flows are drawn as great-circle arcs. Country outlines come from Natural Earth (`ne_10m_admin_0_countries`, public domain), simplified by `scripts/build-land.py` into `src/data/land.ts`.*
+
 ## Nguồn gốc / Provenance
 
 Repo này là bản sao độc lập (standalone snapshot) của Gravity Lab, tách ra từ hệ sinh thái **[BizOn](https://github.com/thuyhuongctu/BizOn)** — nơi lab này vẫn đang được duy trì và phát triển. Repo riêng này tồn tại để lưu trữ học thuật và xin DOI qua Zenodo cho mục đích trích dẫn độc lập.
