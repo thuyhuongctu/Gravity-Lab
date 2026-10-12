@@ -5,6 +5,7 @@ import { ReferenceList } from "@/components/ReferenceList";
 import { FormulaBridge } from "@/components/FormulaBridge";
 import { DistancePuzzle } from "@/components/DistancePuzzle";
 import { HeroScene } from "@/components/HeroScene";
+import { NewtonFigure } from "@/components/NewtonFigure";
 import { VnWatermark } from "@/components/VnWatermark";
 import { RoomCover, type CoverRoom } from "@/components/RoomCover";
 import { tr } from "@/lib/prefs";
@@ -322,16 +323,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
       </ul>
 
       <figure className="mx-auto mt-4 grid max-w-2xl grid-cols-[minmax(0,10rem)_1fr] items-center gap-4 px-4">
-        <img
-          src={art("newton.webp")}
-          alt={tr(
-            "Isaac Newton cầm quả táo, tạo hình đất sét theo chân dung của Godfrey Kneller (1689)",
-            "Isaac Newton holding an apple, a clay figure after Godfrey Kneller's 1689 portrait",
-          )}
-          width={448}
-          height={600}
-          className="clay-card aspect-[3/4] w-full rounded-card bg-[#f1e8de] object-contain"
-        />
+        <NewtonFigure src={art("newton.webp")} />
         <figcaption>
           <p className="font-serif text-xl leading-tight">Isaac Newton</p>
           <p className="text-sm text-muted">1643–1727</p>
@@ -344,8 +336,8 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           <p className="mt-2 font-math text-lg">F = G m₁m₂ / r²</p>
           <p className="mt-2 text-xs text-muted">
             {tr(
-              "Tạo hình đất sét theo chân dung của Godfrey Kneller (1689).",
-              "Clay figure after Godfrey Kneller's 1689 portrait.",
+              "Tạo hình đất sét theo chân dung của Godfrey Kneller (1689). Bản 3D dựng bằng code three.js từ các khối cơ bản, theo cách của img2threejs.",
+              "Clay figure after Godfrey Kneller's 1689 portrait. The 3D version is built in three.js code from primitives, following the img2threejs approach.",
             )}
           </p>
         </figcaption>
