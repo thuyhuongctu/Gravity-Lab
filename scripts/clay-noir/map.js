@@ -53,7 +53,8 @@ for (let i = 0; i < 10; i++) {
   const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
   const r = i % 2 ? 0.17 : 0.42;
   const v = [Math.cos(a) * r, Math.sin(a) * r];
-  i ? star.lineTo(...v) : star.moveTo(...v);
+  if (i) star.lineTo(...v);
+  else star.moveTo(...v);
 }
 const starMesh = new THREE.Mesh(
   new THREE.ExtrudeGeometry(star, { depth: 0.1, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.04, bevelSegments: 4 }),
