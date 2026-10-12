@@ -14,7 +14,7 @@
       "orcid": "0000-0002-7711-2487"
     }
   ],
-  "description": "Gravity Lab là phòng thí nghiệm mô hình lực hấp dẫn (gravity model) cho dòng vốn FDI vào Việt Nam, chạy hoàn toàn trên trình duyệt: đọc lại kết quả công bố, mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS/PPML ngay trên trang. Tách từ hệ sinh thái BizOn để lưu trữ học thuật và cấp DOI qua Zenodo. / Gravity Lab is a browser-based gravity-model laboratory for FDI into Vietnam: replicate published results, simulate the effect of distance and market size, and run OLS/PPML estimation directly on the page. Split out of the BizOn ecosystem for academic archiving and a Zenodo DOI.",
+  "description": "Gravity Lab là phòng thí nghiệm mô hình lực hấp dẫn chạy trên trình duyệt, gồm ba chặng: định luật hấp dẫn Newton qua mô phỏng quỹ đạo, mô hình hấp dẫn thương mại Tinbergen, và phòng thí nghiệm FDI vào Việt Nam — đọc lại hệ số công bố, mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS và PPML trên dữ liệu tải lên. Tách từ hệ sinh thái BizOn để lưu trữ học thuật và cấp DOI qua Zenodo. / Gravity Lab is a browser-based gravity-model laboratory in three stages: Newtonian gravitation through an orbit simulator, the Tinbergen gravity model of trade, and an FDI-into-Vietnam lab that replicates published coefficients, simulates distance and market-size effects, and runs OLS and PPML estimation on uploaded data. Split out of the BizOn ecosystem for academic archiving and a Zenodo DOI.",
   "access_right": "open",
   "keywords": [
     "gravity model",
@@ -22,6 +22,7 @@
     "FDI",
     "Vietnam",
     "econometrics",
+    "Tinbergen trade model",
     "OLS",
     "PPML",
     "teaching tool"
