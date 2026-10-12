@@ -7,6 +7,7 @@ import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiL
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
 import { SoundPanel } from "@/components/SoundPanel";
+import { TutorPanel } from "@/components/TutorPanel";
 import { RoomCover } from "@/components/RoomCover";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
@@ -211,6 +212,13 @@ export function Observatory() {
                 </button>
               ))}
             </div>
+            <TutorPanel
+              onOpen={(room, panel) => {
+                if (panel) lab.setPanel(panel);
+                setWho(null);
+                setMode(room);
+              }}
+            />
             <SoundPanel />
             <button
               type="button"
