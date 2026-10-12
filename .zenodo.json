@@ -15,8 +15,7 @@
     }
   ],
   "description": "Gravity Lab là phòng thí nghiệm mô hình lực hấp dẫn chạy trên trình duyệt, gồm ba chặng: định luật hấp dẫn Newton qua mô phỏng quỹ đạo, mô hình hấp dẫn thương mại Tinbergen, và phòng thí nghiệm FDI vào Việt Nam — đọc lại hệ số công bố, mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS và PPML trên dữ liệu tải lên. Tách từ hệ sinh thái BizOn để lưu trữ học thuật và cấp DOI qua Zenodo. / Gravity Lab is a browser-based gravity-model laboratory in three stages: Newtonian gravitation through an orbit simulator, the Tinbergen gravity model of trade, and an FDI-into-Vietnam lab that replicates published coefficients, simulates distance and market-size effects, and runs OLS and PPML estimation on uploaded data. Split out of the BizOn ecosystem for academic archiving and a Zenodo DOI.",
-  "access_right": "restricted",
-  "access_conditions": "Files are available on request for reading, consultation and citation. Please write to thuyhuongctu@gmail.com stating your name, affiliation and intended use. The work is not released under an open licence; see LICENSE.",
+  "access_right": "open",
   "license": "other-closed",
   "keywords": [
     "gravity model",
