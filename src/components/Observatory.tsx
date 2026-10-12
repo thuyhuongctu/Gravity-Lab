@@ -6,6 +6,7 @@ import { GlobeCanvas } from "@/components/GlobeCanvas";
 import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiLab";
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
+import { SoundPanel } from "@/components/SoundPanel";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { fmt, setLang, setTheme, tr } from "@/lib/prefs";
@@ -209,6 +210,7 @@ export function Observatory() {
                 </button>
               ))}
             </div>
+            <SoundPanel />
             <button
               type="button"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
