@@ -1,3 +1,5 @@
+import { fmt, tr } from "../lib/prefs.ts";
+
 /** Tinbergen gravity model of trade, read as Newton's law with a free distance elasticity. */
 
 export type EconId = string;
@@ -5,7 +7,9 @@ export type EconId = string;
 export type Economy = {
   id: EconId;
   name: string;
+  nameEn: string;
   short: string;
+  shortEn: string;
   gdp: number;
   lat: number;
   lon: number;
@@ -18,9 +22,9 @@ export type Economy = {
 
 export type TradeSceneId = "lecture" | "partners";
 
-export const TRADE_SCENES: Array<{ id: TradeSceneId; name: string }> = [
-  { id: "lecture", name: "Bài giảng" },
-  { id: "partners", name: "Đối tác" },
+export const TRADE_SCENES: Array<{ id: TradeSceneId; name: string; nameEn: string }> = [
+  { id: "lecture", name: "Bài giảng", nameEn: "Lecture" },
+  { id: "partners", name: "Đối tác", nameEn: "Partners" },
 ];
 
 type Seed = Omit<Economy, "x" | "y" | "homeX" | "homeY"> & { x: number; y: number };
@@ -32,15 +36,15 @@ const CLAY = "#e0a090";
 
 /** GDP: nominal USD trillions, rounded, circa 2024. Coordinates: rough economic centers. */
 const ALL: Seed[] = [
-  { id: "vn", name: "Việt Nam", short: "VN", gdp: 0.46, lat: 16.0, lon: 107.6, x: 0, y: 24, color: TEAL },
-  { id: "th", name: "Thái Lan", short: "TH", gdp: 0.53, lat: 13.8, lon: 100.5, x: -118, y: 8, color: INK },
-  { id: "sg", name: "Singapore", short: "SG", gdp: 0.53, lat: 1.3, lon: 103.8, x: -62, y: 128, color: INK },
-  { id: "id", name: "Indonesia", short: "ID", gdp: 1.4, lat: -6.2, lon: 106.8, x: 18, y: 188, color: CLAY },
-  { id: "cn", name: "Trung Quốc", short: "TQ", gdp: 18.5, lat: 31.2, lon: 121.5, x: 36, y: -150, color: AMBER },
-  { id: "kr", name: "Hàn Quốc", short: "HQ", gdp: 1.7, lat: 37.5, lon: 127.0, x: 132, y: -168, color: INK },
-  { id: "jp", name: "Nhật Bản", short: "NB", gdp: 4.1, lat: 35.7, lon: 139.7, x: 210, y: -118, color: CLAY },
-  { id: "us", name: "Hoa Kỳ", short: "HK", gdp: 29.0, lat: 39.0, lon: -98.0, x: 250, y: 36, color: AMBER },
-  { id: "eu", name: "Liên minh châu Âu", short: "EU", gdp: 19.0, lat: 50.1, lon: 10.0, x: -230, y: -150, color: TEAL },
+  { id: "vn", name: "Việt Nam", nameEn: "Vietnam", short: "VN", shortEn: "VN", gdp: 0.46, lat: 16.0, lon: 107.6, x: 0, y: 24, color: TEAL },
+  { id: "th", name: "Thái Lan", nameEn: "Thailand", short: "TH", shortEn: "TH", gdp: 0.53, lat: 13.8, lon: 100.5, x: -118, y: 8, color: INK },
+  { id: "sg", name: "Singapore", nameEn: "Singapore", short: "SG", shortEn: "SG", gdp: 0.53, lat: 1.3, lon: 103.8, x: -62, y: 128, color: INK },
+  { id: "id", name: "Indonesia", nameEn: "Indonesia", short: "ID", shortEn: "ID", gdp: 1.4, lat: -6.2, lon: 106.8, x: 18, y: 188, color: CLAY },
+  { id: "cn", name: "Trung Quốc", nameEn: "China", short: "TQ", shortEn: "CN", gdp: 18.5, lat: 31.2, lon: 121.5, x: 36, y: -150, color: AMBER },
+  { id: "kr", name: "Hàn Quốc", nameEn: "South Korea", short: "HQ", shortEn: "KR", gdp: 1.7, lat: 37.5, lon: 127.0, x: 132, y: -168, color: INK },
+  { id: "jp", name: "Nhật Bản", nameEn: "Japan", short: "NB", shortEn: "JP", gdp: 4.1, lat: 35.7, lon: 139.7, x: 210, y: -118, color: CLAY },
+  { id: "us", name: "Hoa Kỳ", nameEn: "United States", short: "HK", shortEn: "US", gdp: 29.0, lat: 39.0, lon: -98.0, x: 250, y: 36, color: AMBER },
+  { id: "eu", name: "Liên minh châu Âu", nameEn: "European Union", short: "EU", shortEn: "EU", gdp: 19.0, lat: 50.1, lon: 10.0, x: -230, y: -150, color: TEAL },
 ];
 
 const LECTURE_IDS = ["vn", "th", "cn", "jp", "us", "eu"];
@@ -85,18 +89,18 @@ export function formatKm(km: number): string {
   if (km >= 1000) {
     const v = km / 1000;
     const digits = v >= 10 ? 0 : 1;
-    return `${v.toFixed(digits).replace(".", ",")} nghìn km`;
+    return tr(`${fmt(v, digits)} nghìn km`, `${fmt(v, digits)} thousand km`);
   }
   return `${Math.round(km)} km`;
 }
 
 export function formatGdp(gdp: number): string {
   if (gdp >= 10) {
-    const s = gdp.toFixed(1).replace(".", ",");
-    return s.endsWith(",0") ? s.slice(0, -2) : s;
+    const s = fmt(gdp, 1);
+    return s.endsWith("0") ? s.slice(0, -2) : s;
   }
-  if (gdp >= 1) return gdp.toFixed(1).replace(".", ",");
-  return gdp.toFixed(2).replace(".", ",");
+  if (gdp >= 1) return fmt(gdp, 1);
+  return fmt(gdp, 2);
 }
 
 export function pairKey(a: string, b: string): string {
