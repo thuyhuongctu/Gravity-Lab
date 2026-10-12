@@ -30,7 +30,7 @@ export function RoomCover({ room, className = "" }: { room: CoverRoom; className
       width={1200}
       height={675}
       loading="lazy"
-      className={"clay-card aspect-video w-full rounded-card bg-[#0b0a1f] object-cover " + className}
+      className={"clay-card aspect-video w-full rounded-card bg-[#0a0b0d] object-cover " + className}
     />
   );
 }

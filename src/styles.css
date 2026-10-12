@@ -132,24 +132,25 @@
   --font-math: "Cambria Math", Cambria, "Times New Roman", Georgia, serif;
 
   /*
-   * Cosmic palette: midnight indigo sky, nebula violet, aurora cyan, a solar
-   * amber, and one breakthrough accent, flare pink. Paper surfaces are pearl.
+   * Clay noir (graphite): a near-black sky, graphite clay, a warm amber key light,
+   * a teal rim light, flare pink for Vietnam, bone for clay highlights. No purple.
+   * Paper surfaces are warm bone.
    */
-  --color-void: #07061a;
-  --color-void-2: #17143d;
-  --color-ink: #1a1640;
-  --color-paper: #fbfaff;
-  --color-paper-2: #eee9ff;
-  --color-muted: #4b4577;
-  --color-mist: #a9a3d6;
-  --color-line: #ddd6f6;
+  --color-void: #0a0b0d;
+  --color-void-2: #1c1e22;
+  --color-ink: #1d1e22;
+  --color-paper: #fbf8f1;
+  --color-paper-2: #efe8da;
+  --color-muted: #55504a;
+  --color-mist: #a8a297;
+  --color-line: #ddd3c2;
   --color-amber: #9a4a0c;
   --color-amber-2: #ffc56b;
-  --color-teal: #0b7285;
+  --color-teal: #0a6577;
   --color-teal-2: #5eead4;
   --color-clay: #ff5e8a;
-  --color-violet: #6d28d9;
-  --color-violet-2: #a78bfa;
+  --color-violet: #0a6577;
+  --color-violet-2: #e8d9b8;
 
   --radius-card: 1.375rem;
 }
@@ -197,48 +198,48 @@
  * Utilities read these variables, so overriding them per scope re-colours everything.
  */
 :root[data-theme="dark"] .surface {
-  --color-paper: #0d0b26;
-  --color-paper-2: #1c1850;
-  --color-ink: #eeeafb;
-  --color-muted: #c9c4ea;
-  --color-line: #2e2a66;
+  --color-paper: #0e0f11;
+  --color-paper-2: #1f2125;
+  --color-ink: #f1ece2;
+  --color-muted: #c9c2b4;
+  --color-line: #2a2c31;
   --color-teal: #5eead4;
   --color-amber: #ffc56b;
   --color-clay: #ff7a9c;
-  --color-violet: #a78bfa;
+  --color-violet: #e8d9b8;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  background: #f4f1ff;
+  background: #f3eee4;
   color-scheme: light;
 }
 
 :root[data-theme="light"] .stage {
-  --color-void: #f4f1ff;
-  --color-void-2: #e6e0ff;
-  --color-paper: #1a1640;
-  --color-paper-2: #2b2660;
-  --color-ink: #fbfaff;
-  --color-mist: #4b4577;
+  --color-void: #f3eee4;
+  --color-void-2: #e6dfd1;
+  --color-paper: #1d1e22;
+  --color-paper-2: #303237;
+  --color-ink: #fbf8f1;
+  --color-mist: #55504a;
   --color-teal-2: #0a6577;
   --color-amber-2: #9a4a0c;
   --color-clay: #c2185b;
-  --color-violet-2: #6d28d9;
+  --color-violet-2: #0a6577;
 }
 
 /* Paper surfaces inside the light stage keep the original paper palette. */
 :root[data-theme="light"] .stage .surface {
-  --color-void: #07061a;
-  --color-void-2: #1a1745;
-  --color-paper: #fbfaff;
-  --color-paper-2: #eee9ff;
-  --color-ink: #1a1640;
-  --color-mist: #a9a3d6;
+  --color-void: #0a0b0d;
+  --color-void-2: #1c1e22;
+  --color-paper: #fbf8f1;
+  --color-paper-2: #efe8da;
+  --color-ink: #1d1e22;
+  --color-mist: #a8a297;
   --color-teal-2: #5eead4;
   --color-amber-2: #ffc56b;
   --color-clay: #ff5e8a;
-  --color-violet-2: #a78bfa;
+  --color-violet-2: #e8d9b8;
 }
 
 @utility dock-scroll {
@@ -260,13 +261,13 @@
 /* Clay surfaces (BizOn): a raised card, a pressed tray, a pressed-in button. */
 .clay-card {
   box-shadow:
-    inset 0 -9px 0 rgb(40 30 110 / 0.08),
+    inset 0 -9px 0 rgb(40 34 26 / 0.08),
     inset 0 5px 0 rgb(255 255 255 / 0.9),
-    0 26px 36px -24px rgb(40 30 110 / 0.45);
+    0 26px 36px -24px rgb(40 34 26 / 0.45);
 }
 
 .clay-tray {
-  box-shadow: inset 0 3px 6px rgb(40 30 110 / 0.16);
+  box-shadow: inset 0 3px 6px rgb(40 34 26 / 0.16);
 }
 
 .clay-btn {
@@ -291,43 +292,43 @@
  * the hero headline, and a faint nebula over the dark pages.
  */
 .cosmic-btn {
-  /* Every stop keeps white text at 4.5:1 or better (WCAG AA). */
-  background: linear-gradient(120deg, #0e7490 0%, #7c3aed 55%, #db2777 100%);
-  color: #fff;
+  /* Teal clay: the active control. Dark teal text keeps 5:1 or better on every stop. */
+  background: radial-gradient(circle at 36% 25%, #d6fff8, #5eead4 45%, #14a394);
+  color: #062a30;
   box-shadow:
-    inset 0 -4px 0 rgb(0 0 0 / 0.18),
-    inset 0 3px 0 rgb(255 255 255 / 0.28),
-    0 8px 22px -10px rgb(139 92 246 / 0.8);
+    inset 0 -4px 0 rgb(0 0 0 / 0.22),
+    inset 0 3px 0 rgb(255 255 255 / 0.35),
+    0 10px 22px -10px rgb(94 234 212 / 0.55);
 }
 
 .cosmic-text {
-  background: linear-gradient(100deg, #0b7285 0%, #6d28d9 55%, #c2185b 100%);
+  background: linear-gradient(100deg, #0b7285 0%, #9a4a0c 55%, #c2185b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .hero-gradient {
-  background: linear-gradient(100deg, #5eead4 0%, #a78bfa 50%, #ff7a9c 100%);
+  background: linear-gradient(100deg, #ffc56b 0%, #ff7a9c 50%, #5eead4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 :root[data-theme="dark"] .cosmic-text {
-  background-image: linear-gradient(100deg, #5eead4 0%, #a78bfa 50%, #ff7a9c 100%);
+  background-image: linear-gradient(100deg, #ffc56b 0%, #ff7a9c 50%, #5eead4 100%);
 }
 
 :root[data-theme="dark"] .surface.nebula,
 :root[data-theme="dark"] .nebula-head {
   background-image:
-    radial-gradient(60rem 28rem at 85% -10%, rgb(139 92 246 / 0.22), transparent 70%),
-    radial-gradient(40rem 22rem at 5% 0%, rgb(34 211 238 / 0.12), transparent 70%);
+    radial-gradient(60rem 28rem at 85% -10%, rgb(255 197 107 / 0.1), transparent 70%),
+    radial-gradient(40rem 22rem at 5% 0%, rgb(94 234 212 / 0.08), transparent 70%);
 }
 
 :root[data-theme="light"] .surface.nebula {
   background-image:
-    radial-gradient(60rem 28rem at 85% -10%, rgb(139 92 246 / 0.12), transparent 70%),
+    radial-gradient(60rem 28rem at 85% -10%, rgb(255 197 107 / 0.12), transparent 70%),
     radial-gradient(40rem 22rem at 5% 0%, rgb(34 211 238 / 0.1), transparent 70%);
 }
 
@@ -400,9 +401,9 @@ input[type="range"]::-webkit-slider-thumb {
   height: 1.625rem;
   margin-top: -0.6rem;
   border-radius: 999px;
-  background: radial-gradient(circle at 36% 28%, #ffffff, #e6e0ff 55%, #a9a3d6);
+  background: radial-gradient(circle at 36% 28%, #fffdf6, #e8d9b8 55%, #a8a297);
   box-shadow:
-    inset 0 -3px 0 rgb(40 30 110 / 0.25),
+    inset 0 -3px 0 rgb(40 34 26 / 0.25),
     0 8px 14px -6px rgb(0 0 0 / 0.9);
 }
 
@@ -423,9 +424,9 @@ input[type="range"]::-moz-range-thumb {
   height: 1.625rem;
   border: 0;
   border-radius: 999px;
-  background: radial-gradient(circle at 36% 28%, #ffffff, #e6e0ff 55%, #a9a3d6);
+  background: radial-gradient(circle at 36% 28%, #fffdf6, #e8d9b8 55%, #a8a297);
   box-shadow:
-    inset 0 -3px 0 rgb(40 30 110 / 0.25),
+    inset 0 -3px 0 rgb(40 34 26 / 0.25),
     0 8px 14px -6px rgb(0 0 0 / 0.9);
 }
 
@@ -440,46 +441,46 @@ input[type="range"]:focus-visible::-moz-range-thumb {
  * theme can swap it; the dark theme is the design as drawn.
  */
 :root {
-  --noir-card: linear-gradient(160deg, #ffffff, #f1edff);
+  --noir-card: linear-gradient(160deg, #fffdf8, #f2ecdf);
   --noir-card-shadow:
-    inset 0 -8px 0 rgb(40 30 110 / 0.08),
+    inset 0 -8px 0 rgb(40 34 26 / 0.08),
     inset 0 4px 0 rgb(255 255 255 / 0.9),
     inset -1px -1px 0 rgb(11 114 133 / 0.25),
-    0 26px 34px -22px rgb(40 30 110 / 0.45);
+    0 26px 34px -22px rgb(40 34 26 / 0.45);
   --noir-amber-rim: inset -1px -1px 0 rgb(154 74 12 / 0.35);
-  --noir-track: #ebe6ff;
-  --noir-track-shadow: inset 0 3px 7px rgb(40 30 110 / 0.18), inset 0 -1px 0 rgb(11 114 133 / 0.18);
-  --noir-raise: linear-gradient(160deg, #ffffff, #efeaff);
+  --noir-track: #ebe4d6;
+  --noir-track-shadow: inset 0 3px 7px rgb(40 34 26 / 0.18), inset 0 -1px 0 rgb(11 114 133 / 0.18);
+  --noir-raise: linear-gradient(160deg, #fffdf8, #efe8da);
   --noir-raise-shadow:
-    inset 0 -4px 0 rgb(40 30 110 / 0.12),
+    inset 0 -4px 0 rgb(40 34 26 / 0.12),
     inset 0 2px 0 rgb(255 255 255 / 0.9),
-    0 10px 18px -12px rgb(40 30 110 / 0.5);
-  --noir-panel: linear-gradient(180deg, #fbfaff, #f3f0ff);
+    0 10px 18px -12px rgb(40 34 26 / 0.5);
+  --noir-panel: linear-gradient(180deg, #fbf8f1, #f4efe5);
   --noir-hint: rgb(255 255 255 / 0.9);
-  --noir-hint-ink: #1a1640;
-  --noir-range: #ddd6f6;
+  --noir-hint-ink: #1d1e22;
+  --noir-range: #ddd3c2;
 }
 
 :root[data-theme="dark"] {
-  --noir-card: linear-gradient(160deg, #221e52, #120f33);
+  --noir-card: linear-gradient(160deg, #26282d, #141519);
   --noir-card-shadow:
     inset 0 -8px 0 rgb(0 0 0 / 0.3),
     inset 0 3px 0 rgb(255 255 255 / 0.07),
     inset -1px -1px 0 rgb(94 234 212 / 0.28),
     0 26px 34px -22px rgb(0 0 0 / 0.95);
   --noir-amber-rim: inset -1px -1px 0 rgb(255 197 107 / 0.35);
-  --noir-track: #0b0a22;
+  --noir-track: #0c0d10;
   --noir-track-shadow: inset 0 4px 10px rgb(0 0 0 / 0.75), inset 0 -1px 0 rgb(94 234 212 / 0.15);
-  --noir-raise: radial-gradient(circle at 35% 20%, #2f2a6c, #17143d 75%);
+  --noir-raise: radial-gradient(circle at 35% 20%, #34363c, #17181c 75%);
   --noir-raise-shadow:
     inset 0 -5px 0 rgb(0 0 0 / 0.4),
     inset 0 2px 0 rgb(255 255 255 / 0.1),
     inset -1px -1px 0 rgb(94 234 212 / 0.3),
     0 16px 26px -14px rgb(0 0 0 / 0.9);
-  --noir-panel: linear-gradient(180deg, #16133d, #0e0c28);
-  --noir-hint: rgb(16 14 44 / 0.88);
-  --noir-hint-ink: #d9d6f2;
-  --noir-range: #1f1b52;
+  --noir-panel: linear-gradient(180deg, #17181b, #0e0f11);
+  --noir-hint: rgb(20 21 25 / 0.9);
+  --noir-hint-ink: #ddd6c8;
+  --noir-range: #23252a;
 }
 
 /* A raised clay card with a teal rim (amber rim for calls to action). */
@@ -506,10 +507,10 @@ input[type="range"]:focus-visible::-moz-range-thumb {
 
 /* The active chip inside a track: a white clay pill. */
 .pill-on {
-  color: #1a1640;
-  background: radial-gradient(circle at 40% 25%, #ffffff, #e6e0ff 70%);
+  color: #1d1e22;
+  background: radial-gradient(circle at 40% 25%, #fffdf6, #e8d9b8 75%);
   box-shadow:
-    inset 0 -4px 0 rgb(40 30 110 / 0.2),
+    inset 0 -4px 0 rgb(40 34 26 / 0.2),
     0 8px 14px -8px rgb(0 0 0 / 0.6);
 }
 
@@ -579,14 +580,14 @@ input[type="range"]:focus-visible::-moz-range-thumb {
   --ball-d: #7d1a3a;
 }
 .ball-violet {
-  --ball-l: #efe6ff;
-  --ball-m: #a78bfa;
-  --ball-d: #3b1a85;
+  --ball-l: #fffaf0;
+  --ball-m: #e8d9b8;
+  --ball-d: #6d5a3a;
 }
 .ball-moon {
-  --ball-l: #f0eef8;
-  --ball-m: #a9a3d6;
-  --ball-d: #3a3670;
+  --ball-l: #f2efe9;
+  --ball-m: #a8a297;
+  --ball-d: #3a3833;
 }
 .ball-jupiter {
   --ball-l: #fff1cf;

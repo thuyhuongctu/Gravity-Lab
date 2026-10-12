@@ -18,6 +18,14 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "ashby-2003",
+    parts: [
+      { text: "Ashby, N. (2003). Relativity in the Global Positioning System. " },
+      { text: "Living Reviews in Relativity, 6", em: true },
+      { text: ", Article 1. https://doi.org/10.12942/lrr-2003-1" },
+    ],
+  },
+  {
     id: "bacchetta-2012",
     parts: [
       {
@@ -45,6 +53,16 @@ const REFS: Ref[] = [
       },
       { text: "The Review of Economics and Statistics, 90", em: true },
       { text: "(1), 37–48. https://doi.org/10.1162/rest.90.1.37" },
+    ],
+  },
+  {
+    id: "dyson-1920",
+    parts: [
+      {
+        text: "Dyson, F. W., Eddington, A. S., & Davidson, C. (1920). A determination of the deflection of light by the Sun's gravitational field, from observations made at the total eclipse of May 29, 1919. ",
+      },
+      { text: "Philosophical Transactions of the Royal Society of London. Series A, 220", em: true },
+      { text: ", 291–333. https://doi.org/10.1098/rsta.1920.0009" },
     ],
   },
   {
@@ -129,6 +147,16 @@ const REFS: Ref[] = [
       { text: "PwC Vietnam. (2025). " },
       { text: "Vietnam economic update 9M 2025", em: true },
       { text: ". PwC (Vietnam) Company Limited. https://www.pwc.com/vn" },
+    ],
+  },
+  {
+    id: "rubin-1970",
+    parts: [
+      {
+        text: "Rubin, V. C., & Ford, W. K., Jr. (1970). Rotation of the Andromeda Nebula from a spectroscopic survey of emission regions. ",
+      },
+      { text: "The Astrophysical Journal, 159", em: true },
+      { text: ", 379–403. https://doi.org/10.1086/150317" },
     ],
   },
   {
