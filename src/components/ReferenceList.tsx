@@ -160,7 +160,7 @@ export function ReferenceList() {
         {REFS.map((ref) => (
           <li
             key={ref.id}
-            className="ps-6 text-sm leading-relaxed text-muted [text-indent:-1.5rem]"
+            className="ps-6 text-sm leading-relaxed text-muted [overflow-wrap:anywhere] [text-indent:-1.5rem]"
           >
             {ref.parts.map((part, index) =>
               part.em ? <em key={index}>{part.text}</em> : <span key={index}>{part.text}</span>,

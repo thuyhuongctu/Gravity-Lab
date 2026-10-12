@@ -72,7 +72,7 @@ export function SoundPanel() {
         aria-expanded={open}
         aria-label={tr("Âm thanh và âm nhạc", "Sound and music")}
         className={
-          "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full " +
+          "inline-flex min-h-10 min-w-10 items-center justify-center rounded-full sm:min-h-11 sm:min-w-11 " +
           (playing ? "bg-teal-2 text-void" : "bg-void-2 text-paper")
         }
       >

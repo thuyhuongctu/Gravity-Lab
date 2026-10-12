@@ -13,7 +13,7 @@ export function CiteApp() {
   return (
     <div className="pb-2">
       <p className="text-sm font-medium">{tr("Trích dẫn ứng dụng này", "Cite this app")}</p>
-      <p className="mt-1 ps-6 text-sm leading-relaxed text-muted [text-indent:-1.5rem]">
+      <p className="mt-1 ps-6 text-sm leading-relaxed text-muted [overflow-wrap:anywhere] [text-indent:-1.5rem]">
         Phan, A. T., & Do, T. H. (2026).{" "}
         <em>Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam</em> (Version{" "}
         {APP_VERSION}) [Computer software]. Zenodo.{" "}
