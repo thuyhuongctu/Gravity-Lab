@@ -2,36 +2,48 @@ import { circularSpeed, softenedAccel, type Simulation } from "@/sim/engine";
 
 export type SceneId = "solar" | "binary" | "sling" | "flower" | "cloud" | "empty";
 
-export const SCENES: Array<{ id: SceneId; name: string; blurb: string }> = [
+export const SCENES: Array<{ id: SceneId; name: string; nameEn: string; blurb: string; blurbEn: string }> = [
   {
     id: "solar",
     name: "Hệ sao",
+    nameEn: "Star system",
     blurb: "Ba hành tinh trên quỹ đạo gần tròn. Kéo một vật để phá quỹ đạo.",
+    blurbEn: "Three planets on near-circular orbits. Drag a body to break its orbit.",
   },
   {
     id: "flower",
     name: "Hoa",
+    nameEn: "Rosette",
     blurb: "Ba elip lệch tâm. Vệt khép thành những vành hoa.",
+    blurbEn: "Three eccentric ellipses. The trails close into rosettes.",
   },
   {
     id: "binary",
     name: "Sao đôi",
+    nameEn: "Binary star",
     blurb: "Hai sao quay quanh khối tâm, một hành tinh ở ngoài.",
+    blurbEn: "Two stars orbit their centre of mass, with a planet outside.",
   },
   {
     id: "sling",
     name: "Ná hấp dẫn",
+    nameEn: "Gravity assist",
     blurb: "Tàu nhẹ lướt sau một hành tinh đang chuyển động và được ném nhanh hơn.",
+    blurbEn: "A light probe passes behind a moving planet and is flung out faster.",
   },
   {
     id: "cloud",
     name: "Đám mây",
+    nameEn: "Cloud",
     blurb: "Đám bụi có ít mô-men quay, dần cụm lại và hợp nhất.",
+    blurbEn: "A dust cloud with little angular momentum clumps and merges.",
   },
   {
     id: "empty",
     name: "Trống",
+    nameEn: "Empty",
     blurb: "Chạm khoảng trống, kéo rồi thả. Hướng kéo là hướng vận tốc.",
+    blurbEn: "Touch empty space, drag and release. The drag sets the velocity.",
   },
 ];
 

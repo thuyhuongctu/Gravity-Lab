@@ -57,6 +57,54 @@
   }
 }
 
+/*
+ * Themes. The palette above is the original design: a dark sky stage (.stage) beside
+ * paper surfaces (.surface: the side panel, the cast page, the character bar).
+ * Dark theme turns the paper surfaces dark; light theme turns the stage to paper.
+ * Utilities read these variables, so overriding them per scope re-colours everything.
+ */
+:root[data-theme="dark"] .surface {
+  --color-paper: #1a221e;
+  --color-paper-2: #24302a;
+  --color-ink: #f3ece1;
+  --color-muted: #b9b0a4;
+  --color-line: #3a4741;
+  --color-teal: #8fd4c0;
+  --color-amber: #e7c27a;
+  --color-clay: #e0a090;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  background: #ebe4d6;
+  color-scheme: light;
+}
+
+:root[data-theme="light"] .stage {
+  --color-void: #ebe4d6;
+  --color-void-2: #ddd5c5;
+  --color-paper: #1c1915;
+  --color-paper-2: #2b2721;
+  --color-ink: #f3ece1;
+  --color-mist: #5c554c;
+  --color-teal-2: #2f7a68;
+  --color-amber-2: #a2701c;
+  --color-clay: #a84e30;
+}
+
+/* Paper surfaces inside the light stage keep the original paper palette. */
+:root[data-theme="light"] .stage .surface {
+  --color-void: #101614;
+  --color-void-2: #1a221e;
+  --color-paper: #f3ece1;
+  --color-paper-2: #e7dfd0;
+  --color-ink: #1c1915;
+  --color-mist: #c4bbb0;
+  --color-teal-2: #8fd4c0;
+  --color-amber-2: #e7c27a;
+  --color-clay: #c46a4a;
+}
+
 @utility dock-scroll {
   max-height: 20rem;
 }

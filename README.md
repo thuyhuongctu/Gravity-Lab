@@ -12,6 +12,10 @@ Bản trực tuyến: **https://thuyhuongctu.github.io/Gravity-Lab/** (GitHub Pa
 
 *Live version at the URL above (GitHub Pages, deployed automatically from `main`).*
 
+Giao diện song ngữ Việt–Anh (nút VI/EN, hoặc mở với `?lang=en`) và có chế độ sáng/tối (mặc định theo cài đặt của thiết bị); lựa chọn được ghi nhớ trên máy. Đầu trang và mục tài liệu tham khảo hiển thị DOI để trích dẫn.
+
+*The interface is bilingual, Vietnamese and English (VI/EN switch, or open with `?lang=en`), with light and dark themes (following the device setting by default); the choice is remembered on the device. The header and the reference list show the DOI to cite.*
+
 Ứng dụng là một trang tĩnh viết bằng React, Vite và Tailwind. Cần Node.js 22 trở lên.
 
 *The app is a static single page built with React, Vite and Tailwind. Node.js 22 or later is required.*
@@ -41,9 +45,13 @@ Repo này là bản sao độc lập (standalone snapshot) của Gravity Lab, t�
 
 ## Trích dẫn / Citation
 
-DOI: [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833). Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff). / *Full metadata in [`CITATION.cff`](CITATION.cff).*
+DOI: **[10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833)**. DOI khái niệm, đại diện mọi phiên bản: [10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832). Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff).
 
-> Phan, A. T., & Đỗ, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
+*DOI: 10.5281/zenodo.23307833. Concept DOI, covering all versions: 10.5281/zenodo.23307832. Full metadata in [`CITATION.cff`](CITATION.cff).*
+
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietnam* (Version v1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
+
+Tệp trên Zenodo đang ở chế độ giới hạn: có thể xin truy cập để đọc, tham khảo và trích dẫn. / *Files on Zenodo are restricted and available on request for reading, consultation and citation.*
 
 ## Giấy phép / License
 
