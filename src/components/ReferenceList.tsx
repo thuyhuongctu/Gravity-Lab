@@ -18,6 +18,18 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "bacchetta-2012",
+    parts: [
+      {
+        text: "Bacchetta, M., Beverelli, C., Cadot, O., Fugazza, M., Grether, J.-M., Helble, M., Nicita, A., & Piermartini, R. (2012). ",
+      },
+      { text: "A practical guide to trade policy analysis", em: true },
+      {
+        text: ". World Trade Organization; United Nations Conference on Trade and Development. https://www.wto.org/english/res_e/publications_e/wto_unctad12_e.htm",
+      },
+    ],
+  },
+  {
     id: "cavendish-1798",
     parts: [
       { text: "Cavendish, H. (1798). Experiments to determine the density of the earth. " },
@@ -94,6 +106,14 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "pathak-2026",
+    parts: [
+      { text: "Pathak, A. (2026, June 30). " },
+      { text: "Is FDI enough? The quality versus quantity debate", em: true },
+      { text: ". Hinrich Foundation. https://www.hinrichfoundation.com/research/fdi" },
+    ],
+  },
+  {
     id: "phan-2019",
     parts: [
       {
@@ -101,6 +121,14 @@ const REFS: Ref[] = [
       },
       { text: "Tạp chí Kinh tế Đối ngoại", em: true },
       { text: ", (114), 14–26." },
+    ],
+  },
+  {
+    id: "pwc-2025",
+    parts: [
+      { text: "PwC Vietnam. (2025). " },
+      { text: "Vietnam economic update 9M 2025", em: true },
+      { text: ". PwC (Vietnam) Company Limited. https://www.pwc.com/vn" },
     ],
   },
   {
@@ -156,6 +184,16 @@ const REFS: Ref[] = [
       },
       { text: "Economics of Transition, 16", em: true },
       { text: "(2), 183–197. https://doi.org/10.1111/j.1468-0351.2008.00321.x" },
+    ],
+  },
+  {
+    id: "yotov-2016",
+    parts: [
+      { text: "Yotov, Y. V., Piermartini, R., Monteiro, J.-A., & Larch, M. (2016). " },
+      { text: "An advanced guide to trade policy analysis: The structural gravity model", em: true },
+      {
+        text: ". World Trade Organization; United Nations Conference on Trade and Development. https://www.wto.org/english/res_e/booksp_e/advancedwtounctad2016_e.pdf",
+      },
     ],
   },
 ];
