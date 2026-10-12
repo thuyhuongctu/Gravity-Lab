@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Music, Play, X } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Music, Pause, Play, X } from "lucide-react";
 import {
   PLANETS,
   planetTone,
@@ -9,6 +9,7 @@ import {
   setVolume,
 } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
+import { LYRICS_VI, SONG, clock, getSong, seekSong, subscribeSong, toggleSong } from "@/lib/song";
 import { fmt, fmtInt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 
@@ -46,7 +47,8 @@ export function SoundPanel() {
   const [open, setOpen] = useState(false);
   const [note, setNote] = useState<number | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
-  const playing = sound.ambient || sound.orbit || sound.chord;
+  const song = useSyncExternalStore(subscribeSong, getSong, getSong);
+  const playing = sound.ambient || sound.orbit || sound.chord || song.playing;
 
   useEffect(() => {
     if (!open) return;
@@ -94,6 +96,61 @@ export function SoundPanel() {
             >
               <X className="size-4" />
             </button>
+          </div>
+
+          <div className="mt-1 rounded-card border border-line p-3">
+            <p className="text-xs font-medium text-teal">
+              {tr("Bài hát Gravity Lab", "The Gravity Lab song")}
+            </p>
+            <div className="mt-1 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={toggleSong}
+                aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
+                className="cosmic-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full"
+              >
+                {song.playing ? <Pause className="size-5" /> : <Play className="size-5" />}
+              </button>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-serif text-base leading-tight">{SONG.title}</p>
+                <p className="text-xs text-muted">
+                  {tr("Bản tiếng Việt", "Vietnamese version")} · {clock(song.time)}
+                  {song.duration ? ` / ${clock(song.duration)}` : ""}
+                </p>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={song.duration || 1}
+              step={1}
+              value={song.time}
+              disabled={!song.duration}
+              onChange={(e) => seekSong(Number(e.target.value))}
+              aria-label={tr("Vị trí trong bài hát", "Position in the song")}
+              className="mt-2 w-full"
+            />
+            <details className="mt-1">
+              <summary className="min-h-11 cursor-pointer py-2 text-sm font-medium">
+                {tr("Lời bài hát", "Lyrics (Vietnamese)")}
+              </summary>
+              <div className="max-h-64 overflow-y-auto pr-1 text-sm leading-relaxed">
+                {LYRICS_VI.map((st, i) => (
+                  <div key={i} className="mb-3">
+                    <p className="text-xs font-medium text-muted">{tr(st.vi, st.en)}</p>
+                    {st.lines.map((line, j) =>
+                      line ? <p key={j}>{line}</p> : <div key={j} className="h-2" />,
+                    )}
+                  </div>
+                ))}
+              </div>
+            </details>
+            <p className="text-xs leading-relaxed text-muted">
+              {tr(
+                "Lời: nhóm tác giả Gravity Lab. Nhạc tạo bằng công cụ AI từ lời và mô tả phong cách của tác giả. Bật bài hát sẽ tắt nhạc nền không gian.",
+                "Lyrics by the Gravity Lab authors. Music generated with an AI tool from the authors' lyrics and style description. Playing the song turns off the space ambience.",
+              )}
+            </p>
           </div>
 
           <Toggle
