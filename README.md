@@ -17,7 +17,7 @@ Gravity Lab is an interactive teaching instrument for the gravity model in inter
 2. **The gravity model of trade.** Mass is replaced by economic size and the distance exponent becomes a parameter to be estimated (Tinbergen, 1962). Learners explore bilateral trade between Vietnam and its partner economies on a world map, a plane or a globe.
 3. **FDI into Vietnam.** The laboratory reproduces published coefficients for FDI into Vietnam (Phan & Do, 2019; Xuan & Xing, 2008). It simulates the effects of distance and market size, explains why Poisson pseudo-maximum likelihood (PPML) is preferred when flows contain zeros (Santos Silva & Tenreyro, 2006), and estimates OLS and PPML models on data uploaded by the learner.
 
-A narrative page opens on a live 3D scene (a clay Earth with Vietnam lit, the Moon and Newton's apple on their orbits, and FDI flows arriving from the main source economies) and traces the development of the model from 1665 to the present. A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
+A narrative page opens on a live 3D scene (a clay Earth with Vietnam lit, the Moon and Newton's apple on their orbits, and FDI flows arriving from the main source economies), traces the development of the model from 1665 to the present, and closes with the quality of FDI (domestic and foreign value added in exports; Pathak, 2026) and recent registered FDI (PwC Vietnam, 2025). A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
 
 ## Pedagogical rationale
 
@@ -51,7 +51,7 @@ The FDI specification for Vietnam, with institutional, cultural and economic dis
 
 $$\ln \mathit{FDI}_{it} = \beta_0 + \beta_1 \ln Y_{it} + \beta_2 \ln Y_{VN,t} - \gamma \ln D_{i,VN} + \delta' X_{it} + u_i + \varepsilon_{it}$$
 
-Majumdar and Basu (2023) augment the equation with an exchange-rate uncertainty index and the real exchange rate for India's trade with its top five partners and the SAARC countries; the Story page uses the study to show why time-invariant distance cannot be identified under country-pair fixed effects. The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Do (2019), the coefficient on geographic distance for FDI into Vietnam is approximately −0.38 from Model 4 onwards.
+Two WTO and UNCTAD guides frame the estimation practice taught in the application: Bacchetta et al. (2012) on the "gold, silver and bronze medal" mistakes and on fixed effects for multilateral resistance, and Yotov et al. (2016) on structural gravity with panel data, intra-national trade, exporter-time, importer-time and pair fixed effects, and PPML. The Story page reproduces their resolution of the "distance puzzle" (Table 2). Majumdar and Basu (2023) augment the equation with an exchange-rate uncertainty index and the real exchange rate for India's trade with its top five partners and the SAARC countries; the Story page uses the study to show why time-invariant distance cannot be identified under country-pair fixed effects. The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Do (2019), the coefficient on geographic distance for FDI into Vietnam is approximately −0.38 from Model 4 onwards.
 
 ## Features
 
@@ -112,6 +112,8 @@ Complete metadata are provided in [`CITATION.cff`](CITATION.cff). From v2.3 the 
 
 Anderson, J. E., & van Wincoop, E. (2003). Gravity with gravitas: A solution to the border puzzle. *American Economic Review, 93*(1), 170–192. https://doi.org/10.1257/000282803321455214
 
+Bacchetta, M., Beverelli, C., Cadot, O., Fugazza, M., Grether, J.-M., Helble, M., Nicita, A., & Piermartini, R. (2012). *A practical guide to trade policy analysis*. World Trade Organization; United Nations Conference on Trade and Development. https://www.wto.org/english/res_e/publications_e/wto_unctad12_e.htm
+
 Disdier, A.-C., & Head, K. (2008). The puzzling persistence of the distance effect on bilateral trade. *The Review of Economics and Statistics, 90*(1), 37–48. https://doi.org/10.1162/rest.90.1.37
 
 Kepler, J. (1997). *The harmony of the world* (E. J. Aiton, A. M. Duncan, & J. V. Field, Trans.). American Philosophical Society. (Original work published 1619)
@@ -122,7 +124,11 @@ Mohr, P. J., Newell, D. B., Taylor, B. N., & Tiesinga, E. (2025). CODATA recomme
 
 Newton, I. (1999). *The Principia: Mathematical principles of natural philosophy* (I. B. Cohen & A. Whitman, Trans.). University of California Press. (Original work published 1687)
 
+Pathak, A. (2026, June 30). *Is FDI enough? The quality versus quantity debate*. Hinrich Foundation. https://www.hinrichfoundation.com/research/fdi
+
 Phan, A. T., & Do, T. H. (2019). Tác động của khoảng cách, quy mô thị trường và dòng vốn FDI vào Việt Nam giai đoạn 2006–2015: Ứng dụng mô hình lực hấp dẫn [The impact of distance and market size on FDI into Vietnam, 2006–2015: Applying the gravity model]. *Tạp chí Kinh tế Đối ngoại*, (114), 14–26.
+
+PwC Vietnam. (2025). *Vietnam economic update 9M 2025*. PwC (Vietnam) Company Limited. https://www.pwc.com/vn
 
 Santos Silva, J. M. C., & Tenreyro, S. (2006). The log of gravity. *The Review of Economics and Statistics, 88*(4), 641–658. https://doi.org/10.1162/rest.88.4.641
 
@@ -131,6 +137,8 @@ Tinbergen, J. (1962). *Shaping the world economy: Suggestions for an internation
 Williams, D. R. (n.d.). *Planetary fact sheet – Metric*. NASA Goddard Space Flight Center. Retrieved October 12, 2026, from https://nssdc.gsfc.nasa.gov/planetary/factsheet/
 
 Xuan, N. T., & Xing, Y. (2008). Foreign direct investment and exports: The experiences of Vietnam. *Economics of Transition, 16*(2), 183–197. https://doi.org/10.1111/j.1468-0351.2008.00321.x
+
+Yotov, Y. V., Piermartini, R., Monteiro, J.-A., & Larch, M. (2016). *An advanced guide to trade policy analysis: The structural gravity model*. World Trade Organization; United Nations Conference on Trade and Development. https://www.wto.org/english/res_e/booksp_e/advancedwtounctad2016_e.pdf
 
 ## Licence
 

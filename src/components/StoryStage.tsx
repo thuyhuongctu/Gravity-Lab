@@ -3,6 +3,7 @@ import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { ReferenceList } from "@/components/ReferenceList";
 import { FormulaBridge } from "@/components/FormulaBridge";
+import { DistancePuzzle } from "@/components/DistancePuzzle";
 import { HeroScene } from "@/components/HeroScene";
 import { VnWatermark } from "@/components/VnWatermark";
 import { RoomCover, type CoverRoom } from "@/components/RoomCover";
@@ -25,6 +26,8 @@ type Chapter = {
     vi: { alt: string; note: string };
     en: { alt: string; note: string };
   };
+  /** A small chart drawn from a published table. */
+  chart?: "distance-puzzle";
   /** An illustration under the chapter text (square unless a size is given). */
   art?: { src: string; vi: string; en: string; w?: number; h?: number };
   open?: { room: Room; panel: LabPanel | null; vi: string; en: string };
@@ -158,6 +161,33 @@ const CHAPTERS: Chapter[] = [
     },
   },
   {
+    year: "2012",
+    who: "WTO & UNCTAD",
+    vi: {
+      title: "Ba “huy chương” sai lầm khi ước lượng trọng lực",
+      text: "Sách hướng dẫn của WTO và UNCTAD tóm lại ba lỗi thường gặp (Bacchetta và cộng sự, 2012). Huy chương vàng: dùng GDP thay cho quy mô mà bỏ quên lực cản đa phương, vốn tương quan với chi phí thương mại nên hệ số bị chệch. Huy chương bạc: lấy trung bình dòng thương mại hai chiều thay vì để riêng từng chiều. Huy chương đồng: giảm phát dòng thương mại bằng chỉ số giá của Mỹ. Cách sửa đơn giản và phổ biến là đưa hiệu ứng cố định nước xuất khẩu và nước nhập khẩu vào mô hình; khi đã tránh được huy chương vàng thì cũng không mắc huy chương đồng. Sách cũng khuyên luôn dùng sai số chuẩn vững.",
+    },
+    en: {
+      title: "Three “medal” mistakes in estimating gravity",
+      text: "The WTO and UNCTAD practical guide sums up three common errors (Bacchetta et al., 2012). The gold medal mistake: using GDP for size while omitting multilateral resistance, which is correlated with trade costs and so biases the estimates. The silver medal: averaging the two directions of trade instead of keeping each one. The bronze medal: deflating trade by the US price index. The simple and widely used fix is to include exporter and importer fixed effects; once the gold medal mistake is avoided, the bronze one cannot happen. The guide also advises robust standard errors throughout.",
+    },
+    formula: "ln Xᵢⱼ = a₀ + a₁Iᵢ + a₂Iⱼ + a₃ ln tᵢⱼ + εᵢⱼ",
+  },
+  {
+    year: "2016",
+    who: "Yotov, Piermartini, Monteiro & Larch",
+    vi: {
+      title: "Trọng lực cấu trúc và lời giải cho “câu đố khoảng cách”",
+      text: "Sách nâng cao của WTO và UNCTAD đưa sáu khuyến nghị: dùng dữ liệu bảng; lấy khoảng cách vài năm thay vì các năm liên tiếp; đưa cả thương mại nội địa vào mẫu; dùng hiệu ứng cố định nước xuất khẩu–năm và nước nhập khẩu–năm; thêm hiệu ứng cố định theo cặp nước; và ước lượng bằng PPML (Yotov và cộng sự, 2016). Trên 69 nước giai đoạn 1986–2006, OLS chỉ với thương mại quốc tế cho thấy tác động của khoảng cách mạnh lên 7,95%, trái với kỳ vọng toàn cầu hóa: đó là “câu đố khoảng cách”. Khi thêm thương mại nội địa và dùng PPML, tác động ấy giảm 10,97% và câu đố được giải. Cũng trong bộ dữ liệu này, chỉ PPML qua được kiểm định RESET (p = 0,642), và hiệp định thương mại khu vực làm thương mại tăng khoảng 75% khi có hiệu ứng cố định theo cặp. Cái giá phải trả: hiệu ứng cố định theo cặp hấp thụ mọi biến không đổi theo thời gian, kể cả khoảng cách.",
+    },
+    en: {
+      title: "Structural gravity and the solution to the “distance puzzle”",
+      text: "The WTO and UNCTAD advanced guide gives six recommendations: use panel data; use intervals of several years rather than consecutive years; include intra-national trade; use exporter-year and importer-year fixed effects; add country-pair fixed effects; and estimate with PPML (Yotov et al., 2016). For 69 countries over 1986–2006, OLS on international trade alone shows the effect of distance growing by 7.95%, against what globalisation would suggest: the “distance puzzle”. With intra-national trade and PPML, the effect falls by 10.97% and the puzzle is solved. In the same data only PPML passes the RESET test (p = 0.642), and regional trade agreements raise trade by about 75% once pair fixed effects are included. The price: pair fixed effects absorb every time-invariant variable, distance included.",
+    },
+    formula: "Xᵢⱼ,ₜ = exp(πᵢ,ₜ + χⱼ,ₜ + μᵢⱼ + β·RTAᵢⱼ,ₜ) · εᵢⱼ,ₜ",
+    chart: "distance-puzzle",
+  },
+  {
     year: "2019",
     who: "Phan Anh Tu & Do Thuy Huong",
     vi: {
@@ -183,13 +213,25 @@ const CHAPTERS: Chapter[] = [
     who: "Majumdar & Basu",
     vi: {
       title: "Tỷ giá bất định trong phương trình trọng lực",
-      text: "Thương mại song phương của Ấn Độ với năm đối tác lớn nhất và các nước SAARC, 2000–2018, chia theo năm nhóm ngành. Phương trình trọng lực được mở rộng thêm chỉ số bất định tỷ giá (độ lệch chuẩn của thay đổi log tỷ giá thực) và tỷ giá thực, ước lượng hiệu ứng cố định. Bất định tỷ giá làm giảm thương mại nguyên liệu nông nghiệp với SAARC nhưng đi kèm thương mại lớn hơn với năm đối tác lớn, nơi thị trường phòng ngừa rủi ro phát triển hơn (Majumdar & Basu, 2023). Một điểm đáng bàn cho lớp học: hiệu ứng cố định xóa mất khoảng cách vì khoảng cách không đổi theo thời gian, nên bài ước lượng khoảng cách trong một hồi quy OLS riêng chỉ có một biến; hệ số dương với năm đối tác lớn vì thế nên đọc thận trọng. Đây là lý do mô hình trọng lực cấu trúc dùng hiệu ứng cố định theo cặp nước hoặc PPML.",
+      text: "Thương mại song phương của Ấn Độ với năm đối tác lớn nhất và các nước SAARC, 2000–2018, chia theo năm nhóm ngành. Phương trình trọng lực được mở rộng thêm chỉ số bất định tỷ giá (độ lệch chuẩn của thay đổi log tỷ giá thực) và tỷ giá thực, ước lượng hiệu ứng cố định. Bất định tỷ giá làm giảm thương mại nguyên liệu nông nghiệp với SAARC nhưng đi kèm thương mại lớn hơn với năm đối tác lớn, nơi thị trường phòng ngừa rủi ro phát triển hơn (Majumdar & Basu, 2023). Một điểm đáng bàn cho lớp học: hiệu ứng cố định xóa mất khoảng cách vì khoảng cách không đổi theo thời gian, nên bài ước lượng khoảng cách trong một hồi quy OLS riêng chỉ có một biến; hệ số dương với năm đối tác lớn vì thế nên đọc thận trọng. Đây là lý do mô hình trọng lực cấu trúc dùng hiệu ứng cố định theo cặp nước và PPML, rồi nếu cần hệ số khoảng cách thì hồi quy các hiệu ứng cố định theo cặp lên khoảng cách ở bước thứ hai (Yotov và cộng sự, 2016).",
     },
     en: {
       title: "Exchange-rate uncertainty in the gravity equation",
-      text: "India's bilateral trade with its top five partners and the SAARC countries, 2000–2018, in five industry groups. The gravity equation is augmented with an exchange-rate uncertainty index (the standard deviation of changes in the log real exchange rate) and the real exchange rate, and estimated with fixed effects. Uncertainty reduces trade in agricultural raw materials with SAARC partners but goes with more trade with the top five partners, where hedging markets are deeper (Majumdar & Basu, 2023). A point for discussion in class: fixed effects wipe out distance because it does not change over time, so the paper estimates distance in a separate OLS regression with distance alone; the positive coefficient for the top five partners should therefore be read with care. This is why structural gravity uses pair fixed effects or PPML.",
+      text: "India's bilateral trade with its top five partners and the SAARC countries, 2000–2018, in five industry groups. The gravity equation is augmented with an exchange-rate uncertainty index (the standard deviation of changes in the log real exchange rate) and the real exchange rate, and estimated with fixed effects. Uncertainty reduces trade in agricultural raw materials with SAARC partners but goes with more trade with the top five partners, where hedging markets are deeper (Majumdar & Basu, 2023). A point for discussion in class: fixed effects wipe out distance because it does not change over time, so the paper estimates distance in a separate OLS regression with distance alone; the positive coefficient for the top five partners should therefore be read with care. This is why structural gravity uses pair fixed effects and PPML, and, when a distance coefficient is needed, regresses the estimated pair fixed effects on distance in a second step (Yotov et al., 2016).",
     },
     formula: "ln Tᵢⱼₜ = α + β₁ ln(YᵢYⱼ)ₜ + β₂ ln(PopᵢPopⱼ)ₜ + β₃ ln Eᵢⱼₜ + β₄ ln RERᵢⱼₜ + β₅ ln Dᵢⱼ + u",
+  },
+  {
+    year: "2025–2026",
+    who: "Pathak · PwC Việt Nam",
+    vi: {
+      title: "Ngoài lực hút: số lượng và chất lượng FDI",
+      text: "Mô hình trọng lực giải thích dòng vốn đến bao nhiêu, nhưng không cho biết Việt Nam giữ lại được bao nhiêu giá trị. Theo số liệu OECD TiVA do Pathak (2026) tổng hợp, giai đoạn 2017–2022 giá trị gia tăng nội địa trong xuất khẩu của Việt Nam tăng 50,6% (77.630 lên 116.930 triệu USD), nhưng giá trị gia tăng nước ngoài tăng nhanh hơn, 86,3% (98.289 lên 183.138 triệu USD), nên tỷ lệ nội địa trên nước ngoài giảm từ 0,79 xuống 0,64. Chín tháng đầu năm 2025, vốn FDI đăng ký mới đạt khoảng 12,4 tỷ USD, giảm khoảng 8,6%; Singapore chiếm khoảng 28%, Trung Quốc 23%, Hồng Kông 9% (PwC Việt Nam, 2025). Đây là vốn đăng ký, chưa phải vốn thực hiện. Khu vực FDI xuất khẩu 263,3 trong tổng số 348,7 tỷ USD, tức khoảng 75% (tính từ số liệu của PwC). Một câu hỏi cho lớp: Hoa Kỳ ở rất xa nhưng vẫn là thị trường xuất khẩu lớn nhất, khoảng 32%; mô hình trọng lực giải thích điều đó bằng quy mô thị trường, và bằng những chi phí thương mại khác ngoài khoảng cách.",
+    },
+    en: {
+      title: "Beyond attraction: the quantity and quality of FDI",
+      text: "The gravity model explains how much capital arrives, not how much value Vietnam keeps. In OECD TiVA data compiled by Pathak (2026), the domestic value added in Vietnam's exports rose by 50.6% between 2017 and 2022 (from USD 77,630 to 116,930 million), but foreign value added rose faster, by 86.3% (from USD 98,289 to 183,138 million), so the ratio of domestic to foreign value added fell from 0.79 to 0.64. In the first nine months of 2025, newly registered FDI reached about USD 12.4 billion, down about 8.6%; Singapore accounted for about 28%, China 23% and Hong Kong 9% (PwC Vietnam, 2025). These are registered, not disbursed, figures. The FDI sector exported USD 263.3 billion of a total of 348.7 billion, about 75% (computed from PwC's figures). A question for class: the United States is far away yet remains the largest export market, at about 32%; the gravity model explains this with market size, and with trade costs other than distance.",
+    },
   },
 ];
 
@@ -326,6 +368,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
                 <h3 className="mt-1 font-serif text-xl leading-snug">{t}</h3>
                 {c.formula ? <p className="mt-1 font-math text-lg">{c.formula}</p> : null}
                 <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
+                {c.chart === "distance-puzzle" ? <DistancePuzzle /> : null}
                 {c.figure ? (
                   <figure className="mt-3 grid grid-cols-[minmax(0,8rem)_1fr] items-center gap-4">
                     <img
