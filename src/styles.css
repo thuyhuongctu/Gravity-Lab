@@ -143,7 +143,7 @@
   --color-muted: #4b4577;
   --color-mist: #a9a3d6;
   --color-line: #ddd6f6;
-  --color-amber: #b4530a;
+  --color-amber: #9a4a0c;
   --color-amber-2: #ffc56b;
   --color-teal: #0b7285;
   --color-teal-2: #5eead4;
@@ -221,8 +221,8 @@
   --color-paper-2: #2b2660;
   --color-ink: #fbfaff;
   --color-mist: #4b4577;
-  --color-teal-2: #0b7285;
-  --color-amber-2: #b4530a;
+  --color-teal-2: #0a6577;
+  --color-amber-2: #9a4a0c;
   --color-clay: #c2185b;
   --color-violet-2: #6d28d9;
 }
@@ -291,7 +291,8 @@
  * the hero headline, and a faint nebula over the dark pages.
  */
 .cosmic-btn {
-  background: linear-gradient(120deg, #22d3ee 0%, #8b5cf6 55%, #ff5e8a 100%);
+  /* Every stop keeps white text at 4.5:1 or better (WCAG AA). */
+  background: linear-gradient(120deg, #0e7490 0%, #7c3aed 55%, #db2777 100%);
   color: #fff;
   box-shadow:
     inset 0 -4px 0 rgb(0 0 0 / 0.18),
