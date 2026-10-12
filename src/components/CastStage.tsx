@@ -1,5 +1,6 @@
 import type { LabPanel } from "@/components/FdiLab";
 import { ReferenceList } from "@/components/ReferenceList";
+import { VnWatermark } from "@/components/VnWatermark";
 import { tr } from "@/lib/prefs";
 
 type Room = "orbit" | "trade" | "lab";
@@ -216,10 +217,12 @@ export function CastStage({
   const tu = byId("tu");
   return (
     <div className="surface absolute inset-0 overflow-y-auto bg-paper text-ink">
+      <VnWatermark />
+      <div className="relative">
       <div className="mx-auto max-w-lg px-4 pt-4">
         <p className="text-xs font-medium text-teal">{tr("Cả lớp khám phá vũ trụ", "The class explores the universe")}</p>
         <h2 className="mt-1 font-serif text-3xl leading-tight">{tr("Từ lực hấp dẫn đến dòng vốn", "From gravity to capital flows")}</h2>
-        <p className="mt-1 font-serif text-lg leading-snug">F = G m₁m₂ / r² → T = G YᵢYⱼ / Dᵞ → FDI</p>
+        <p className="mt-1 font-math text-lg leading-snug">F = G m₁m₂ / r² → T = G YᵢYⱼ / Dᵞ → FDI</p>
         <p className="mt-1 text-sm text-muted">
           {tr(
             "Bước 1 là bầu trời. Cùng một dạng phương trình, rồi mới hỏi vốn. Bấm một người: mặt họ đi theo số họ giữ.",
@@ -267,6 +270,7 @@ export function CastStage({
           "Clay characters from the BizOn library. Lumina holds the question and does not choose for you. FDI coefficients are from Phan and Đỗ (2019), Model 8, except where Models 3 and 4 are named.",
         )}
       </p>
+      </div>
     </div>
   );
 }

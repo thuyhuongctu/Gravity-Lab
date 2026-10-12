@@ -1,24 +1,151 @@
 @import "tailwindcss";
 
+/*
+ * Type and palette follow BizOn (https://thuyhuongctu.github.io/BizOn/): Plus Jakarta
+ * Sans for headings, Be Vietnam Pro for text, a cream page, deep teal ink and clay
+ * shadows. Fonts are self-hosted (SIL Open Font License 1.1, see src/fonts/OFL.txt).
+ */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("./fonts/PlusJakartaSans-var-vietnamese.woff2") format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("./fonts/PlusJakartaSans-var-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("./fonts/PlusJakartaSans-var-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-400-vietnamese.woff2") format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-500-vietnamese.woff2") format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-500-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-500-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-600-vietnamese.woff2") format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-700-vietnamese.woff2") format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-700-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./fonts/BeVietnamPro-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @theme {
   --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-serif: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-math: "Cambria Math", Cambria, "Times New Roman", Georgia, serif;
 
-  --color-void: #101614;
-  --color-void-2: #1a221e;
-  --color-ink: #1c1915;
-  --color-paper: #f3ece1;
-  --color-paper-2: #e7dfd0;
-  --color-muted: #5c554c;
-  --color-mist: #c4bbb0;
-  --color-line: #d4cbbd;
-  --color-amber: #c0862a;
-  --color-amber-2: #e7c27a;
-  --color-teal: #3f8a78;
-  --color-teal-2: #8fd4c0;
-  --color-clay: #c46a4a;
+  --color-void: #04191b;
+  --color-void-2: #0d2e31;
+  --color-ink: #033337;
+  --color-paper: #fffbf4;
+  --color-paper-2: #f3e6cf;
+  --color-muted: #3e5a5c;
+  --color-mist: #9cc9c9;
+  --color-line: #eadbc0;
+  --color-amber: #c2581b;
+  --color-amber-2: #ffd58a;
+  --color-teal: #006687;
+  --color-teal-2: #7fd3dc;
+  --color-clay: #e8762d;
 
-  --radius-card: 1rem;
+  --radius-card: 1.375rem;
 }
 
 @layer base {
@@ -64,45 +191,45 @@
  * Utilities read these variables, so overriding them per scope re-colours everything.
  */
 :root[data-theme="dark"] .surface {
-  --color-paper: #1a221e;
-  --color-paper-2: #24302a;
+  --color-paper: #0d2e31;
+  --color-paper-2: #143b3e;
   --color-ink: #f3ece1;
-  --color-muted: #b9b0a4;
-  --color-line: #3a4741;
-  --color-teal: #8fd4c0;
-  --color-amber: #e7c27a;
-  --color-clay: #e0a090;
+  --color-muted: #a9cccc;
+  --color-line: #24494c;
+  --color-teal: #7fd3dc;
+  --color-amber: #ffd58a;
+  --color-clay: #f4a06a;
   color-scheme: dark;
 }
 
 :root[data-theme="light"] {
-  background: #ebe4d6;
+  background: #fbf4e8;
   color-scheme: light;
 }
 
 :root[data-theme="light"] .stage {
-  --color-void: #ebe4d6;
-  --color-void-2: #ddd5c5;
-  --color-paper: #1c1915;
-  --color-paper-2: #2b2721;
-  --color-ink: #f3ece1;
-  --color-mist: #5c554c;
-  --color-teal-2: #2f7a68;
-  --color-amber-2: #a2701c;
-  --color-clay: #a84e30;
+  --color-void: #fbf4e8;
+  --color-void-2: #f3e6cf;
+  --color-paper: #033337;
+  --color-paper-2: #24403f;
+  --color-ink: #fffbf4;
+  --color-mist: #3e5a5c;
+  --color-teal-2: #006687;
+  --color-amber-2: #c2581b;
+  --color-clay: #c2581b;
 }
 
 /* Paper surfaces inside the light stage keep the original paper palette. */
 :root[data-theme="light"] .stage .surface {
-  --color-void: #101614;
-  --color-void-2: #1a221e;
-  --color-paper: #f3ece1;
-  --color-paper-2: #e7dfd0;
-  --color-ink: #1c1915;
-  --color-mist: #c4bbb0;
-  --color-teal-2: #8fd4c0;
-  --color-amber-2: #e7c27a;
-  --color-clay: #c46a4a;
+  --color-void: #04191b;
+  --color-void-2: #0d2e31;
+  --color-paper: #fffbf4;
+  --color-paper-2: #f3e6cf;
+  --color-ink: #033337;
+  --color-mist: #9cc9c9;
+  --color-teal-2: #7fd3dc;
+  --color-amber-2: #ffd58a;
+  --color-clay: #e8762d;
 }
 
 @utility dock-scroll {
@@ -113,6 +240,47 @@
   .dock-scroll {
     max-height: none;
   }
+}
+
+/* Headings: Plus Jakarta Sans, heavy and tight, as on BizOn. */
+.font-serif {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Clay surfaces (BizOn): a raised card, a pressed tray, a pressed-in button. */
+.clay-card {
+  box-shadow:
+    inset 0 -9px 0 rgb(110 70 30 / 0.08),
+    inset 0 5px 0 rgb(255 255 255 / 0.9),
+    0 26px 36px -24px rgb(110 70 30 / 0.5);
+}
+
+.clay-tray {
+  box-shadow: inset 0 3px 6px rgb(110 70 30 / 0.18);
+}
+
+.clay-btn {
+  box-shadow:
+    inset 0 -4px 0 rgb(0 0 0 / 0.16),
+    inset 0 3px 0 rgb(255 255 255 / 0.3);
+}
+
+:root[data-theme="dark"] .clay-card {
+  box-shadow:
+    inset 0 -9px 0 rgb(0 0 0 / 0.18),
+    inset 0 4px 0 rgb(255 255 255 / 0.06),
+    0 26px 36px -24px rgb(0 0 0 / 0.7);
+}
+
+:root[data-theme="dark"] .clay-tray {
+  box-shadow: inset 0 3px 6px rgb(0 0 0 / 0.35);
+}
+
+/* BizOn's scalloped edge: a row of half circles in the colour below. */
+.clay-wave {
+  height: 30px;
+  background: radial-gradient(circle at 30px 30px, var(--color-paper) 29px, transparent 30px) 0 0 / 60px 30px repeat-x;
 }
 
 @keyframes morph-in {

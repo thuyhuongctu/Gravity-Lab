@@ -1,0 +1,15 @@
+Hai bộ phông trong thư mục này lấy từ Google Fonts và phát hành theo
+SIL Open Font License, Version 1.1 – giấy phép cho phép dùng, nhúng,
+sửa và phân phối lại, kể cả cho mục đích thương mại.
+
+  Manrope            © Mikhail Sharanda
+                     https://fonts.google.com/specimen/Manrope
+  Plus Jakarta Sans  © Tokotype
+                     https://fonts.google.com/specimen/Plus+Jakarta+Sans
+
+Toàn văn giấy phép: https://openfontlicense.org/open-font-license-official-text/
+
+Tệp .woff2 ở đây là bản BIẾN THIÊN do Google Fonts dựng, cắt theo ba tập ký tự
+(vietnamese, latin, latin-ext). Không sửa đổi hình chữ.
+
+Đây là thành phần của bên thứ ba, không thuộc bản quyền BizOn Bật Nghiệp.

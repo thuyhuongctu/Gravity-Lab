@@ -6,24 +6,31 @@
 import { getTheme } from "@/lib/prefs";
 
 const LIGHT: Record<string, string> = {
-  "#101614": "#ebe4d6", // sky / stage
-  "#22302a": "#f4efe6", // sea, lit side
-  "#141c18": "#dcd4c4", // sea, limb
-  "#f3ece1": "#1c1915", // ink on the sky
-  "#c4bbb0": "#5c554c", // mist
-  "#8fd4c0": "#2f7a68", // teal
-  "#7ec8b8": "#3f8a78",
-  "#9ec4b6": "#4f7f72",
-  "#e7c27a": "#a2701c", // amber
-  "#d4a04a": "#8f6418",
-  "#e0a090": "#b0583a", // clay
+  "#101614": "#fbf4e8", // sky / stage: BizOn cream
+  "#22302a": "#fffbf4", // sea, lit side
+  "#141c18": "#f3e6cf", // sea, limb
+  "#f3ece1": "#033337", // ink on the sky: BizOn deep teal
+  "#c4bbb0": "#3e5a5c", // mist
+  "#8fd4c0": "#006687", // teal
+  "#7ec8b8": "#1e7e8c",
+  "#9ec4b6": "#3e7f86",
+  "#e7c27a": "#c2581b", // amber → BizOn burnt orange
+  "#d4a04a": "#a8541c",
+  "#e0a090": "#c2581b", // clay
   "#c46a4a": "#a84e30",
   "#f0dcc0": "#6b5a40",
 };
 
 /** The colour to draw for a dark-theme colour, under the current theme. */
+/** Dark theme: the night sky takes BizOn's deep teal. */
+const DARK: Record<string, string> = {
+  "#101614": "#04191b",
+  "#22302a": "#0f3336",
+  "#141c18": "#08221f",
+};
+
 export function paint(hex: string): string {
-  if (getTheme() !== "light") return hex;
+  if (getTheme() !== "light") return DARK[hex.toLowerCase()] ?? hex;
   return LIGHT[hex.toLowerCase()] ?? hex;
 }
 

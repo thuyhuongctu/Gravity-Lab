@@ -223,7 +223,7 @@ function Formula({ step, prev }: { step: Step; prev: Step | null }) {
   const before = new Map(prev?.tokens.map((t) => [t.k, `${t.t}|${t.sub ?? ""}`]) ?? []);
   return (
     <p
-      className="flex min-h-16 flex-wrap items-baseline justify-center gap-x-1.5 gap-y-1 font-serif text-2xl leading-tight sm:text-3xl"
+      className="flex min-h-16 flex-wrap items-baseline justify-center gap-x-1.5 gap-y-1 font-math text-2xl leading-tight sm:text-3xl"
       aria-live="polite"
     >
       {step.tokens.map((tok) => {
@@ -492,7 +492,7 @@ export function FormulaBridge({
 
   return (
     <section
-      className="rounded-card border border-line bg-paper-2/40 p-4"
+      className="clay-card rounded-card bg-paper p-4"
       aria-roledescription={tr("trình chiếu", "carousel")}
     >
       <p className="text-xs font-medium text-teal">
@@ -592,7 +592,7 @@ export function FormulaBridge({
             if (!playing && i === STEPS.length - 1) go(0);
             setPlaying((p) => !p);
           }}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-4 text-sm font-medium text-paper"
+          className="clay-btn inline-flex min-h-11 items-center gap-2 rounded-full bg-teal px-4 text-sm font-semibold text-paper"
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
           {playing ? tr("Dừng", "Pause") : tr("Tự chạy", "Play")}

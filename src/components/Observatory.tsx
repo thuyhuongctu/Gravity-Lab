@@ -190,7 +190,7 @@ export function Observatory() {
               DOI {APP_DOI}
             </a>
             <div
-              className="flex rounded-full bg-void-2 p-1"
+              className="clay-tray flex rounded-full bg-void-2 p-1"
               role="group"
               aria-label={tr("Ngôn ngữ", "Language")}
             >
@@ -203,7 +203,7 @@ export function Observatory() {
                   onClick={() => setLang(l)}
                   className={
                     "min-h-9 min-w-10 rounded-full px-2 text-xs font-semibold uppercase " +
-                    (lang === l ? "bg-paper text-ink" : "text-mist")
+                    (lang === l ? "clay-btn bg-teal-2 text-void" : "text-mist")
                   }
                 >
                   {l === "vi" ? "VI" : "EN"}
@@ -225,7 +225,7 @@ export function Observatory() {
             </button>
           </div>
           <div
-            className="flex w-full overflow-x-auto rounded-full bg-void-2 p-1"
+            className="clay-tray flex w-full overflow-x-auto rounded-full bg-void-2 p-1"
             role="tablist"
             aria-label={tr("Chế độ", "Mode")}
           >
@@ -235,7 +235,7 @@ export function Observatory() {
               aria-selected={mode === "story"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "story" ? "bg-paper text-ink" : "text-mist")
+                (mode === "story" ? "clay-btn bg-teal-2 text-void" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -250,7 +250,7 @@ export function Observatory() {
               aria-selected={mode === "cast"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "cast" ? "bg-paper text-ink" : "text-mist")
+                (mode === "cast" ? "clay-btn bg-teal-2 text-void" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -265,7 +265,7 @@ export function Observatory() {
               aria-selected={mode === "orbit"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "orbit" ? "bg-paper text-ink" : "text-mist")
+                (mode === "orbit" ? "clay-btn bg-teal-2 text-void" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -280,7 +280,7 @@ export function Observatory() {
               aria-selected={mode === "trade"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "trade" ? "bg-paper text-ink" : "text-mist")
+                (mode === "trade" ? "clay-btn bg-teal-2 text-void" : "text-mist")
               }
               onClick={() => {
                 setWho(null);
@@ -295,7 +295,7 @@ export function Observatory() {
               aria-selected={mode === "lab"}
               className={
                 "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "lab" ? "bg-paper text-ink" : "text-mist")
+                (mode === "lab" ? "clay-btn bg-teal-2 text-void" : "text-mist")
               }
               onClick={() => {
                 setWho(null);

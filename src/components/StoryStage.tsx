@@ -3,6 +3,7 @@ import type { LabPanel } from "@/components/FdiLab";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
 import { ReferenceList } from "@/components/ReferenceList";
 import { FormulaBridge } from "@/components/FormulaBridge";
+import { VnWatermark } from "@/components/VnWatermark";
 import { tr } from "@/lib/prefs";
 
 type Room = "orbit" | "trade" | "lab";
@@ -127,17 +128,26 @@ const CHAPTERS: Chapter[] = [
 export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | null) => void }) {
   return (
     <div className="surface absolute inset-0 overflow-y-auto bg-paper text-ink">
-      <div className="mx-auto max-w-2xl px-4 pt-4">
-        <p className="text-xs font-medium text-teal">
-          {tr("Câu chuyện lực hấp dẫn", "The story of gravity")}
-        </p>
-        <h2 className="mt-1 font-serif text-3xl leading-tight">
+      <VnWatermark />
+      <div className="relative">
+      <div className="mx-auto max-w-2xl px-4 pt-5">
+        <p className="clay-tray inline-flex items-center gap-2 rounded-full bg-paper-2 py-1 ps-1 pe-3 text-xs font-semibold">
+          <span
+            aria-hidden="true"
+            className="inline-flex size-6 items-center justify-center rounded-full bg-[#da251d] text-xs leading-none text-[#ffde00]"
+          >
+            ★
+          </span>
           {tr(
-            "Từ quả táo của Newton đến dòng vốn vào Việt Nam",
-            "From Newton's apple to capital flowing into Vietnam",
+            "Thiết kế tại Đồng bằng sông Cửu Long · Đại học Cần Thơ",
+            "Made in the Mekong Delta · Can Tho University",
           )}
+        </p>
+        <h2 className="mt-3 font-serif text-4xl leading-[1.06] sm:text-5xl">
+          {tr("Từ quả táo của Newton đến ", "From Newton's apple to ")}
+          <span className="text-teal">{tr("dòng vốn vào Việt Nam.", "capital flowing into Vietnam.")}</span>
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
+        <p className="mt-3 max-w-xl leading-relaxed text-muted">
           {tr(
             "Ba thế kỷ, một dạng phương trình: quy mô ở tử số, khoảng cách ở mẫu số. Mỗi chương dưới đây mở ra một phần của phòng thí nghiệm.",
             "Three centuries, one form of equation: size in the numerator, distance in the denominator. Each chapter below opens a part of the lab.",
@@ -149,7 +159,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
         <img
           src={art("newton.webp")}
           alt={tr("Isaac Newton, phong cách đất sét", "Isaac Newton, clay style")}
-          className="aspect-square w-full rounded-card bg-[#2f5a4f] object-cover"
+          className="clay-card aspect-square w-full rounded-card bg-[#2f5a4f] object-cover"
         />
         <figcaption>
           <p className="font-serif text-xl leading-tight">Isaac Newton</p>
@@ -160,7 +170,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
               "Born 25 December 1642 Old Style (4 January 1643 New Style), Woolsthorpe, England; died 31 March 1727, London.",
             )}
           </p>
-          <p className="mt-2 font-serif text-lg">F = G m₁m₂ / r²</p>
+          <p className="mt-2 font-math text-lg">F = G m₁m₂ / r²</p>
         </figcaption>
       </figure>
 
@@ -179,7 +189,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
                   {c.year} · {c.who}
                 </p>
                 <h3 className="mt-1 font-serif text-xl leading-snug">{t}</h3>
-                {c.formula ? <p className="mt-1 font-serif text-lg">{c.formula}</p> : null}
+                {c.formula ? <p className="mt-1 font-math text-lg">{c.formula}</p> : null}
                 <p className="mt-1 text-sm leading-relaxed text-muted">{body}</p>
                 {c.open ? (
                   <button
@@ -270,6 +280,7 @@ export function StoryStage({ onOpen }: { onOpen: (room: Room, panel: LabPanel | 
           </div>
         </li>
       </ol>
+      </div>
     </div>
   );
 }
