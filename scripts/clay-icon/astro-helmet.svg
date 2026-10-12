@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" width="640" height="800">
+  <defs>
+    <radialGradient id="glass" cx="34%" cy="26%" r="80%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.32"/>
+      <stop offset="0.5" stop-color="#d7eef5" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#8fbccb" stop-opacity="0.28"/>
+    </radialGradient>
+    <linearGradient id="suit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fdfcf9"/>
+      <stop offset="1" stop-color="#d6d0c4"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2f4f5"/>
+      <stop offset="1" stop-color="#8f99a2"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+  <!-- suit: shoulders and chest, with seams like a pressure suit -->
+  <path d="M -20 800 L -20 700 Q 40 610 175 585 L 465 585 Q 600 610 660 700 L 660 800 Z" fill="url(#suit)"/>
+  <path d="M 150 800 Q 160 700 205 610" fill="none" stroke="#cfc8bb" stroke-width="5"/>
+  <path d="M 490 800 Q 480 700 435 610" fill="none" stroke="#cfc8bb" stroke-width="5"/>
+  <path d="M 40 800 L 62 712" stroke="#c46a4a" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 600 800 L 578 712" stroke="#3f8a78" stroke-width="18" stroke-linecap="round"/>
+  <!-- mission patch: the app's apple-in-orbit -->
+  <circle cx="455" cy="690" r="40" fill="#2f5a4f" stroke="#e7c27a" stroke-width="6"/>
+  <ellipse cx="455" cy="690" rx="30" ry="11" fill="none" stroke="#8fd4c0" stroke-width="5" transform="rotate(-18 455 690)"/>
+  <circle cx="455" cy="688" r="13" fill="#d04a3c"/>
+  <path d="M 455 675 q 6 -10 14 -8" fill="none" stroke="#5fa66a" stroke-width="4" stroke-linecap="round"/>
+  <!-- neck ring under the bubble -->
+  <ellipse cx="320" cy="585" rx="205" ry="42" fill="url(#ring)" stroke="#7b848c" stroke-width="3"/>
+  <ellipse cx="320" cy="575" rx="178" ry="24" fill="none" stroke="#ffffff" stroke-opacity="0.75" stroke-width="5"/>
+  <!-- glass bubble -->
+  <ellipse cx="320" cy="300" rx="262" ry="272" fill="url(#glass)" stroke="#ffffff" stroke-opacity="0.9" stroke-width="10"/>
+  <ellipse cx="320" cy="300" rx="262" ry="272" fill="none" stroke="#9aa6ae" stroke-opacity="0.35" stroke-width="3"/>
+  <path d="M 118 210 Q 150 80 270 42" fill="none" stroke="#ffffff" stroke-opacity="0.85" stroke-width="18" stroke-linecap="round"/>
+  <path d="M 100 280 Q 100 255 106 236" fill="none" stroke="#ffffff" stroke-opacity="0.7" stroke-width="12" stroke-linecap="round"/>
+</svg>
