@@ -10,6 +10,8 @@ export type Holder = {
   symbol: string;
   line: string;
   src: string;
+  /** Full-length figure, shown on the cast page. */
+  body: string;
   alt: string;
   en: { symbol: string; line: string; alt: string };
   room: Room;
@@ -23,6 +25,7 @@ export const HOLDERS: Holder[] = [
     symbol: "Câu hỏi",
     line: "Không chọn nước. Hỏi khoảng cách nào còn đứng khi vốn vào Việt Nam.",
     src: `${import.meta.env.BASE_URL}cast/face/lumina.webp`,
+    body: `${import.meta.env.BASE_URL}cast/lumina-vest.webp`,
     alt: "Lumina",
     en: {
       symbol: "The question",
@@ -38,6 +41,7 @@ export const HOLDERS: Holder[] = [
     symbol: "−0,14 → −0,38",
     line: "Bài Phan và Đỗ (2019). Địa lý vào mô hình 3 chưa có ý nghĩa. Từ mô hình 4, β giữ −0,38.",
     src: `${import.meta.env.BASE_URL}cast/face/tu.webp`,
+    body: `${import.meta.env.BASE_URL}cast/tu-vest.webp`,
     alt: "Tú Phan",
     en: {
       symbol: "−0.14 → −0.38",
@@ -53,6 +57,7 @@ export const HOLDERS: Holder[] = [
     symbol: "mũ = 2",
     line: "Vũ trụ đi trước. Mũ khoảng cách đang khóa ở 2 (Newton, 1687/1999).",
     src: `${import.meta.env.BASE_URL}cast/face/minh-long.webp`,
+    body: `${import.meta.env.BASE_URL}cast/minh-long.webp`,
     alt: "Minh Long, jacket xanh, khăn rằn đỏ",
     en: {
       symbol: "exponent = 2",
@@ -68,6 +73,7 @@ export const HOLDERS: Holder[] = [
     symbol: "γ",
     line: "γ không còn khóa ở 2. Tinbergen (1962) để γ được ước lượng.",
     src: `${import.meta.env.BASE_URL}cast/face/lan-chi.webp`,
+    body: `${import.meta.env.BASE_URL}cast/lan-chi.webp`,
     alt: "Lan Chi, jacket vàng, khăn rằn, loa",
     en: {
       symbol: "γ",
@@ -83,6 +89,7 @@ export const HOLDERS: Holder[] = [
     symbol: "β = −0,38",
     line: "Km tới nhà máy. Xa hơn 10% đi kèm FDI thấp hơn khoảng 3,6%.",
     src: `${import.meta.env.BASE_URL}cast/face/bao-ngoc.webp`,
+    body: `${import.meta.env.BASE_URL}cast/bao-ngoc.webp`,
     alt: "Bảo Ngọc, jacket ô-liu, khoanh tay",
     en: {
       symbol: "β = −0.38",
@@ -98,6 +105,7 @@ export const HOLDERS: Holder[] = [
     symbol: "0,45 · FTA",
     line: "Vốn năm trước. Có FTA: ngắn hạn khoảng +174,6%, dài hạn khoảng +527,4%.",
     src: `${import.meta.env.BASE_URL}cast/face/thu-ha.webp`,
+    body: `${import.meta.env.BASE_URL}cast/thu-ha.webp`,
     alt: "Thu Hà, jacket đất nung, sổ cái",
     en: {
       symbol: "0.45 · FTA",
@@ -113,6 +121,7 @@ export const HOLDERS: Holder[] = [
     symbol: "FDI = 0",
     line: "OLS bỏ năm vốn bằng không. PPML giữ cả mẫu (Santos Silva & Tenreyro, 2006).",
     src: `${import.meta.env.BASE_URL}cast/face/gia-han.webp`,
+    body: `${import.meta.env.BASE_URL}cast/gia-han.webp`,
     alt: "Gia Hân, jacket tím, kẹp hồ sơ",
     en: {
       symbol: "FDI = 0",
@@ -159,7 +168,7 @@ export function HolderBar({ people, onBack }: { people: Holder[]; onBack: () => 
       <div className="flex min-w-0 flex-1 gap-3 overflow-x-auto">
         {people.map((person) => (
           <div key={person.id} className="flex min-w-0 flex-1 items-center gap-2">
-            <img src={person.src} alt={say(person).alt} className="aspect-[4/5] h-16 w-auto shrink-0 object-cover object-center" />
+            <img src={person.src} alt={say(person).alt} className="aspect-[4/5] h-16 w-auto shrink-0 rounded-lg object-cover object-center" />
             <div className="min-w-0">
               <p className="font-serif text-lg leading-tight">{say(person).symbol}</p>
               <p className="line-clamp-2 text-sm leading-snug text-muted">{person.name}. {say(person).line}</p>
@@ -210,7 +219,12 @@ export function CastStage({
                 className="flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left"
                 onClick={() => onOpen(person.room, person.panel, person.id)}
               >
-                <img src={person.src} alt={say(person).alt} className="aspect-[4/5] w-24 shrink-0 object-cover object-center" />
+                <img
+                  src={person.body}
+                  alt={say(person).alt}
+                  loading="lazy"
+                  className="h-44 w-24 shrink-0 rounded-card bg-[#f4ede1] object-contain object-bottom"
+                />
                 <span className="min-w-0">
                   <span className="text-xs font-medium text-teal">{index + 1}</span>
                   <span className="block font-serif text-2xl leading-none">{say(person).symbol}</span>
@@ -244,7 +258,7 @@ function Advisor({
 }) {
   return (
     <button type="button" className="text-left" onClick={() => onOpen(person.room, person.panel, person.id)}>
-      <img src={person.src} alt={say(person).alt} className="aspect-[4/5] w-full object-cover object-center" />
+      <img src={person.body} alt={say(person).alt} className="h-72 w-full rounded-card bg-[#f4ede1] object-contain object-bottom" />
       <span className="mt-2 block font-serif text-xl leading-tight">{say(person).symbol}</span>
       <span className="block text-sm font-medium">{person.name}</span>
       <span className="mt-1 block text-sm leading-relaxed text-muted">{say(person).line}</span>
