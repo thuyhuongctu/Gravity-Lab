@@ -4,16 +4,16 @@ title: "Gravity Lab: a browser-based gravity-model laboratory for FDI into Vietn
 type: software
 version: "2.0"
 date-released: 2026-10-11
-# DOI khái niệm: đại diện mọi phiên bản, luôn dẫn tới bản mới nhất. Đây là DOI để
-# trích dẫn và không phải đổi khi có bản phát hành mới. / Concept DOI: cite this one.
-doi: "10.5281/zenodo.23307832"
+# DOI để trích dẫn (bản ghi Zenodo của Gravity Lab). DOI khái niệm 23307832 đại
+# diện mọi phiên bản. / DOI to cite; the concept DOI 23307832 covers all versions.
+doi: "10.5281/zenodo.23307833"
 identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23307833"
+    description: "Zenodo DOI (cite this)"
   - type: doi
     value: "10.5281/zenodo.23307832"
     description: "Concept DOI (all versions)"
-  - type: doi
-    value: "10.5281/zenodo.23307833"
-    description: "Version DOI of v1.0, the earlier static HTML lab"
 authors:
   - family-names: "Phan"
     given-names: "Anh Tu"

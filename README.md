@@ -1,6 +1,6 @@
 # Gravity Lab — Trọng lực
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23307832.svg)](https://doi.org/10.5281/zenodo.23307832)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23307833.svg)](https://doi.org/10.5281/zenodo.23307833)
 
 Phòng thí nghiệm mô hình lực hấp dẫn, chạy trên trình duyệt, gồm ba chặng: (1) định luật vạn vật hấp dẫn của Newton qua mô phỏng quỹ đạo; (2) mô hình hấp dẫn thương mại Tinbergen với các nền kinh tế đối tác của Việt Nam; (3) phòng thí nghiệm FDI vào Việt Nam — đọc lại hệ số công bố (Phan & Đỗ, 2019; Xuan & Xing, 2008), mô phỏng tác động của khoảng cách/quy mô thị trường, và ước lượng OLS và PPML trên dữ liệu CSV tải lên.
 
@@ -41,11 +41,11 @@ Repo này là bản sao độc lập (standalone snapshot) của Gravity Lab, t�
 
 ## Trích dẫn / Citation
 
-DOI khái niệm (mọi phiên bản, luôn dẫn tới bản mới nhất): **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**. Bản v1.0 (HTML tĩnh) có DOI riêng [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833). Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff).
+DOI: **[10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833)**. DOI khái niệm, đại diện mọi phiên bản: [10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832). Thông tin đầy đủ trong [`CITATION.cff`](CITATION.cff).
 
-*Concept DOI (all versions, always resolves to the latest): 10.5281/zenodo.23307832. Release v1.0 alone has the DOI 10.5281/zenodo.23307833. Full metadata in [`CITATION.cff`](CITATION.cff).*
+*DOI: 10.5281/zenodo.23307833. Concept DOI, covering all versions: 10.5281/zenodo.23307832. Full metadata in [`CITATION.cff`](CITATION.cff).*
 
-> Phan, A. T., & Đỗ, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307832
+> Phan, A. T., & Đỗ, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23307833
 
 Tệp trên Zenodo đang ở chế độ giới hạn: có thể xin truy cập để đọc, tham khảo và trích dẫn. / *Files on Zenodo are restricted and available on request for reading, consultation and citation.*
 
