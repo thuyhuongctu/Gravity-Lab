@@ -59,7 +59,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
           key={e.id}
           type="button"
           onClick={() => pick(e)}
-          className="min-h-9 rounded-full border border-line px-3 py-1 text-left text-xs font-medium"
+          className="noir-raise min-h-9 rounded-full px-3 py-1 text-left text-xs font-medium"
         >
           {tr(e.q.vi, e.q.en)}
         </button>
@@ -80,7 +80,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
         aria-label={tr("Trợ giảng", "Teaching assistant")}
         className={
           "inline-flex min-h-10 min-w-10 items-center justify-center rounded-full sm:min-h-11 sm:min-w-11 " +
-          (open ? "bg-teal-2 text-void" : "bg-void-2 text-paper")
+          (open ? "bg-teal-2 text-void" : "noir-raise text-paper")
         }
       >
         <GraduationCap className="size-4" />
@@ -89,10 +89,16 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
         <div
           role="dialog"
           aria-label={tr("Trợ giảng", "Teaching assistant")}
-          className="surface fixed inset-x-3 top-16 z-50 flex max-h-[calc(100dvh-5rem)] flex-col rounded-card border border-line bg-paper text-ink shadow-2xl sm:absolute sm:inset-x-auto sm:top-12 sm:right-0 sm:w-[26rem]"
+          className="surface noir-card fixed inset-x-3 top-16 z-50 flex max-h-[calc(100dvh-5rem)] flex-col rounded-[26px] text-ink sm:absolute sm:inset-x-auto sm:top-12 sm:right-0 sm:w-[26rem]"
         >
-          <div className="flex items-start justify-between gap-2 p-4 pb-2">
-            <div>
+          <div className="flex items-start justify-between gap-3 p-4 pb-2">
+            <span
+              aria-hidden="true"
+              className="clay-ball ball-teal inline-flex size-11 shrink-0 items-center justify-center text-[#062a30] shadow-[0_0_24px_rgba(94,234,212,0.35)]"
+            >
+              <GraduationCap className="size-[18px]" />
+            </span>
+            <div className="min-w-0 flex-1">
               <p className="font-serif text-lg leading-tight">{tr("Trợ giảng", "Teaching assistant")}</p>
               <p className="mt-1 text-xs leading-relaxed text-muted">
                 {tr(
@@ -120,9 +126,9 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
             ) : null}
             {turns.map((t) => (
               <div key={t.id} className="mb-4">
-                <p className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-paper-2 px-3 py-2 text-sm">{t.q}</p>
+                <p className="cosmic-btn ml-auto w-fit max-w-[85%] rounded-[20px] rounded-br-md px-3.5 py-2.5 text-sm">{t.q}</p>
                 {t.reply.kind === "answer" ? (
-                  <div className="mt-2 max-w-[95%] rounded-2xl rounded-bl-sm border border-line px-3 py-2">
+                  <div className="noir-track mt-2 max-w-[95%] rounded-[20px] rounded-bl-md px-3.5 py-3">
                     <p className="text-xs font-medium text-teal">{tr(t.reply.entry.q.vi, t.reply.entry.q.en)}</p>
                     <p className="mt-1 text-sm leading-relaxed">{tr(t.reply.entry.a.vi, t.reply.entry.a.en)}</p>
                     {t.reply.entry.cite.length ? (
@@ -140,7 +146,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
                           onOpen(see.room, see.panel);
                           setOpen(false);
                         }}
-                        className="mt-2 inline-flex min-h-9 items-center gap-1 rounded-full border border-line px-3 text-xs font-medium"
+                        className="amber-btn mt-2.5 inline-flex min-h-9 items-center gap-1 rounded-full px-3.5 text-xs font-semibold"
                       >
                         {tr(t.reply.entry.see.vi, t.reply.entry.see.en)}
                         <ArrowRight className="size-3.5" />
@@ -154,7 +160,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
                     ) : null}
                   </div>
                 ) : (
-                  <div className="mt-2 max-w-[95%] rounded-2xl rounded-bl-sm border border-line px-3 py-2">
+                  <div className="noir-track mt-2 max-w-[95%] rounded-[20px] rounded-bl-md px-3.5 py-3">
                     <p className="text-sm leading-relaxed">
                       {tr(
                         "Mình chưa có tài liệu cho câu này trong app, nên không trả lời để tránh đoán sai. Thử hỏi về mô hình trọng lực, FDI vào Việt Nam, OLS và PPML, hoặc cách dùng các phòng.",
@@ -169,7 +175,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
           </div>
 
           <form
-            className="flex items-center gap-2 border-t border-line p-3"
+            className="flex items-center gap-2 p-3"
             onSubmit={(e) => {
               e.preventDefault();
               submit(text);
@@ -186,12 +192,12 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
               maxLength={300}
               autoComplete="off"
               placeholder={tr("Hỏi về trọng lực, FDI, PPML…", "Ask about gravity, FDI, PPML…")}
-              className="min-h-11 min-w-0 flex-1 rounded-full border border-line bg-paper-2 px-4 text-sm text-ink placeholder:text-muted"
+              className="noir-track min-h-12 min-w-0 flex-1 rounded-full px-4 text-sm text-ink placeholder:text-muted"
             />
             <button
               type="submit"
               aria-label={tr("Gửi câu hỏi", "Send question")}
-              className="cosmic-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full"
+              className="cosmic-btn inline-flex size-12 shrink-0 items-center justify-center rounded-full"
             >
               <Send className="size-4" />
             </button>

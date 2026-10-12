@@ -39,14 +39,17 @@ function pct(n: number): string {
   return `${sign}${num(n, 1)}%`;
 }
 
+/** A chip: a white clay pill when on; flat inside a track, raised on its own. */
 function Chip({
   active,
   onClick,
   children,
+  flat = false,
 }: {
   active?: boolean;
   onClick: () => void;
   children: ReactNode;
+  flat?: boolean;
 }) {
   return (
     <button
@@ -54,8 +57,8 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={
-        "min-h-11 shrink-0 rounded-full border px-3 text-sm font-medium " +
-        (active ? "border-ink bg-ink text-paper" : "border-line bg-paper text-ink")
+        "min-h-10 shrink-0 rounded-full px-3.5 text-sm font-medium " +
+        (active ? "pill-on" : flat ? "text-muted" : "noir-raise text-ink")
       }
     >
       {children}
@@ -263,22 +266,22 @@ function SimStage({ lab }: { lab: LabState }) {
       </p>
       <FdiGlobe lab={lab} />
       {idle ? (
-        <div className="max-w-xl rounded-card bg-void-2 px-3 py-3">
+        <div className="max-w-xl noir-card rounded-[22px] px-4 py-3.5">
           <p className="text-xs text-mist">{tr("Xa hơn 10%, mô hình 8", "10% farther, Model 8")}</p>
-          <p className="mt-1 font-serif text-3xl text-clay">{pct(geoTen)}</p>
+          <p className="glow-clay mt-1 font-serif text-3xl text-clay">{pct(geoTen)}</p>
           <p className="mt-1 text-sm text-mist">{tr("Độ co của khoảng cách. Chưa phải kết quả của một cặp nước.", "The distance elasticity. Not yet a result for a pair of countries.")}</p>
         </div>
       ) : (
         <div className="grid max-w-xl grid-cols-2 gap-3">
-          <div className="rounded-card bg-void-2 px-3 py-3">
+          <div className="noir-card rounded-[22px] px-4 py-3.5">
             <p className="text-xs text-mist">{tr("Ngắn hạn, năm đầu", "Short run, first year")}</p>
-            <p className={"mt-1 font-serif text-3xl " + (impact.shortRun >= 0 ? "text-teal-2" : "text-clay")}>
+            <p className={"mt-1 font-serif text-3xl " + (impact.shortRun >= 0 ? "glow-teal text-teal-2" : "glow-clay text-clay")}>
               {pct(impact.shortRun)}
             </p>
           </div>
-          <div className="rounded-card bg-void-2 px-3 py-3">
+          <div className="noir-card rounded-[22px] px-4 py-3.5">
             <p className="text-xs text-mist">{tr("Dài hạn, chia cho 1 − 0,45", "Long run, divided by 1 − 0.45")}</p>
-            <p className={"mt-1 font-serif text-3xl " + (impact.longRun >= 0 ? "text-teal-2" : "text-clay")}>
+            <p className={"mt-1 font-serif text-3xl " + (impact.longRun >= 0 ? "glow-teal text-teal-2" : "glow-clay text-clay")}>
               {pct(impact.longRun)}
             </p>
           </div>
@@ -289,7 +292,7 @@ function SimStage({ lab }: { lab: LabState }) {
           {impact.parts.map((p) => (
             <li key={p.id} className="grid grid-cols-[9rem_1fr_4.5rem] items-center gap-2 text-sm text-paper">
               <span className={p.sig ? "" : "text-mist"}>{varLabel(p.id)}</span>
-              <span className="relative h-2 rounded-full bg-paper/10">
+              <span className="noir-track relative h-2.5 rounded-full">
                 <span className="absolute inset-y-0 left-1/2 w-px bg-mist/50" />
                 <span
                   className={"absolute inset-y-0 rounded-full " + (p.pct >= 0 ? "bg-teal-2" : "bg-clay")}
@@ -344,7 +347,7 @@ function CoefStage({ lab }: { lab: LabState }) {
                 <span className="text-mist">{r.published ? ` ${r.published}` : ""}</span>
               </span>
             </div>
-            <div className="relative h-2 rounded-full bg-paper/10">
+            <div className="noir-track relative h-2.5 rounded-full">
               <span className="absolute inset-y-0 w-px bg-mist/70" style={{ left: `${x(0)}%` }} />
               <span
                 className="absolute inset-y-0 rounded-full bg-amber-2"
@@ -441,7 +444,7 @@ function PpmlStage({ lab }: { lab: LabState }) {
                 {r.stars} <span className="text-mist">n = {r.n}</span>
               </span>
             </div>
-            <div className="relative h-2 rounded-full bg-paper/10">
+            <div className="noir-track relative h-2.5 rounded-full">
               <span className="absolute inset-y-0 w-px bg-mist/70" style={{ left: `${x(0)}%` }} />
               <span
                 className="absolute inset-y-0 rounded-full bg-teal-2/80"
@@ -546,7 +549,7 @@ function XuanGlobe() {
             if (!playing && idx >= last) setIdx(0);
             setPlaying((p) => !p);
           }}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-paper bg-paper text-ink"
+          className="cosmic-btn inline-flex size-12 items-center justify-center rounded-full"
         >
           {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
         </button>
@@ -695,17 +698,17 @@ function DataStage({ lab }: { lab: LabState }) {
 export function FdiDock({ lab }: { lab: LabState }) {
   return (
     <div className="flex flex-col gap-4 p-4 pb-8">
-      <div className="flex flex-wrap gap-2">
-        <Chip active={lab.panel === "coef"} onClick={() => lab.setPanel("coef")}>
+      <div role="group" aria-label={tr("Phần", "Section")} className="noir-track flex flex-wrap gap-1 rounded-[22px] p-1">
+        <Chip flat active={lab.panel === "coef"} onClick={() => lab.setPanel("coef")}>
           {tr("Hệ số 2019", "2019 coefficients")}
         </Chip>
-        <Chip active={lab.panel === "sim"} onClick={() => lab.setPanel("sim")}>
+        <Chip flat active={lab.panel === "sim"} onClick={() => lab.setPanel("sim")}>
           {tr("Tác động", "Impact")}
         </Chip>
-        <Chip active={lab.panel === "ppml"} onClick={() => lab.setPanel("ppml")}>
+        <Chip flat active={lab.panel === "ppml"} onClick={() => lab.setPanel("ppml")}>
           {tr("Vì sao PPML", "Why PPML")}
         </Chip>
-        <Chip active={lab.panel === "data"} onClick={() => lab.setPanel("data")}>
+        <Chip flat active={lab.panel === "data"} onClick={() => lab.setPanel("data")}>
           {tr("Dữ liệu của bạn", "Your data")}
         </Chip>
       </div>
@@ -759,7 +762,7 @@ function CoefDock({ lab }: { lab: LabState }) {
           ))}
         </ul>
       ) : null}
-      <details className="rounded-card border border-line px-3 py-2">
+      <details className="noir-card rounded-[22px] px-4 py-2">
         <summary className="min-h-11 text-sm font-medium">{tr("Câu hỏi thảo luận", "Discussion questions")}</summary>
         <ol className="list-decimal pb-2 pl-4 text-sm text-muted">
           <li>{tr(
@@ -790,7 +793,7 @@ function SimDock({ lab }: { lab: LabState }) {
       <label className="block text-sm">
         <span className="mb-1 block font-medium">{tr("Đối tác đang xét", "Partner")}</span>
         <select
-          className="min-h-11 w-full rounded-lg border border-line bg-paper-2 px-2"
+          className="noir-track min-h-11 w-full rounded-full px-4 text-ink"
           value={lab.a}
           aria-label={tr("Đối tác đang xét", "Partner")}
           onChange={(e) => lab.setA(e.target.value)}
@@ -805,7 +808,7 @@ function SimDock({ lab }: { lab: LabState }) {
       <label className="block text-sm">
         <span className="mb-1 block font-medium">{tr("So khoảng cách với", "Compare distance with")}</span>
         <select
-          className="min-h-11 w-full rounded-lg border border-line bg-paper-2 px-2"
+          className="noir-track min-h-11 w-full rounded-full px-4 text-ink"
           value={lab.b}
           aria-label={tr("Quốc gia để so khoảng cách", "Country to compare distance with")}
           onChange={(e) => lab.setB(e.target.value)}
@@ -847,7 +850,7 @@ function SimDock({ lab }: { lab: LabState }) {
 }
 
 function DataDock({ lab }: { lab: LabState }) {
-  const selectClass = "min-h-11 w-full rounded-lg border border-line bg-paper-2 px-2";
+  const selectClass = "noir-track min-h-11 w-full rounded-full px-4 text-ink";
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-muted">
@@ -857,7 +860,7 @@ function DataDock({ lab }: { lab: LabState }) {
         )}
       </p>
       <div className="flex flex-wrap gap-2">
-        <label className="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-ink bg-ink px-3 text-sm font-medium text-paper">
+        <label className="cosmic-btn inline-flex min-h-11 cursor-pointer items-center rounded-full px-4 text-sm font-medium">
           {tr("Nạp CSV", "Load CSV")}
           <input
             type="file"
@@ -880,7 +883,7 @@ function DataDock({ lab }: { lab: LabState }) {
         </label>
         <button
           type="button"
-          className="min-h-11 rounded-full border border-line px-3 text-sm font-medium"
+          className="noir-raise min-h-11 rounded-full px-4 text-sm font-medium"
           onClick={() => {
             const url = URL.createObjectURL(new Blob([CSV_TEMPLATE], { type: "text/csv" }));
             const a = document.createElement("a");
@@ -892,7 +895,7 @@ function DataDock({ lab }: { lab: LabState }) {
         >
           {tr("Tải tệp mẫu", "Download template")}
         </button>
-        <button type="button" className="min-h-11 rounded-full border border-line px-3 text-sm font-medium" onClick={() => lab.loadTable(xuanXingTable(), ["lndist"])}>
+        <button type="button" className="noir-raise min-h-11 rounded-full px-4 text-sm font-medium" onClick={() => lab.loadTable(xuanXingTable(), ["lndist"])}>
           {tr("Nạp bảng Xuan & Xing", "Load the Xuan & Xing table")}
         </button>
       </div>
