@@ -48,8 +48,9 @@ function times(): string[] {
 }
 
 /**
- * Header clocks; daylight saving is handled by Intl. In the lab rooms they show only at 2xl;
- * over the story they are always there, Cần Thơ first, the other two from 900px and the names from 1440px.
+ * Header clocks; daylight saving is handled by Intl. In the lab rooms they show only on very wide screens;
+ * over the story they are always there, Cần Thơ first, the other two from 900px and the names from 1440px;
+ * in the lab rooms only when the header container is 2000px wide (the room dock takes 380px).
  */
 export function Clocks({ story = false }: { story?: boolean }) {
   const [now, setNow] = useState<string[]>(() => ["--:--", "--:--", "--:--"]);
@@ -59,18 +60,18 @@ export function Clocks({ story = false }: { story?: boolean }) {
     return () => window.clearInterval(id);
   }, []);
   return (
-    <div className={"items-center gap-1.5 " + (story ? "flex" : "hidden 2xl:flex")} aria-label={tr("Giờ địa phương", "Local times")}>
+    <div className={"items-center gap-1.5 " + (story ? "flex" : "hidden @min-[2000px]:flex")} aria-label={tr("Giờ địa phương", "Local times")}>
       {ZONES.map((z, i) => (
         <span
           key={z.id}
           title={tr(z.title[0], z.title[1])}
           className={
-            "noir-track flex min-h-9 items-center gap-1.5 rounded-full px-2.5 " + (i ? (story ? "hidden min-[900px]:flex" : "hidden 2xl:flex") : "")
+            "noir-track flex min-h-9 items-center gap-1.5 rounded-full px-2.5 " + (i ? (story ? "hidden min-[900px]:flex" : "flex") : "")
           }
         >
           <Flag id={z.id} />
           <b className="text-[13px] font-semibold text-paper tabular-nums">{now[i]}</b>
-          <i className={"hidden text-[11px] whitespace-nowrap text-mist not-italic " + (story ? "min-[1440px]:inline" : "2xl:inline")}>
+          <i className={"hidden text-[11px] whitespace-nowrap text-mist not-italic " + (story ? "min-[1440px]:inline" : "inline")}>
             {tr(z.vi, z.en)}
           </i>
         </span>
