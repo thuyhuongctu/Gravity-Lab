@@ -87,8 +87,8 @@ const SCENES: Scene[] = [
     k: ["Phi hành đoàn", "The crew"],
     h: ["Chín người, một câu hỏi", "Nine people, one question"],
     p: [
-      "Lumina, Minh Long, Lan Chi, Bảo Ngọc, Thu Hà, Gia Hân, thầy Tú, cùng Newton và Tinbergen.",
-      "Lumina, Minh Long, Lan Chi, Bảo Ngọc, Thu Hà, Gia Hân and lecturer Tú, with Newton and Tinbergen.",
+      "Mỗi người dẫn một cảnh: Lan Chi, Newton, Minh Long, Tinbergen, Bảo Ngọc, Thu Hà, Gia Hân, thầy Tú và Lumina. Bấm một gương mặt để quay lại cảnh đó.",
+      "Each one leads a scene: Lan Chi, Newton, Minh Long, Tinbergen, Bảo Ngọc, Thu Hà, Gia Hân, lecturer Tú and Lumina. Tap a face to go back to that scene.",
     ],
     cta: "cast",
   },
@@ -100,9 +100,21 @@ const SCENES: Scene[] = [
   },
 ];
 
-const CREW = ["huong", "minh-long", "lan-chi", "bao-ngoc", "tu", "thu-ha", "gia-han", "newton", "tinbergen"].map(
-  (id) => `${import.meta.env.BASE_URL}cast/v2/${id}.webp`,
-);
+/** One host per scene, in scene order: each one leads the class through a step of the story. */
+const HOSTS: Array<{ id: string; name: [string, string]; role: [string, string] }> = [
+  { id: "lan-chi", name: ["Lan Chi", "Lan Chi"], role: ["Gọi cả lớp lên tàu", "Calls the class aboard"] },
+  { id: "newton", name: ["Isaac Newton", "Isaac Newton"], role: ["Principia, 1687", "Principia, 1687"] },
+  { id: "minh-long", name: ["Minh Long", "Minh Long"], role: ["Giữ mũ = 2", "Keeps the exponent at 2"] },
+  { id: "tinbergen", name: ["Jan Tinbergen", "Jan Tinbergen"], role: ["Mô hình hấp dẫn thương mại, 1962", "Gravity model of trade, 1962"] },
+  { id: "bao-ngoc", name: ["Bảo Ngọc", "Bảo Ngọc"], role: ["Khoảng cách, β = −0,38", "Distance, β = −0.38"] },
+  { id: "thu-ha", name: ["Thu Hà", "Thu Hà"], role: ["Vốn năm trước và FTA", "Last year's capital and FTAs"] },
+  { id: "gia-han", name: ["Gia Hân", "Gia Hân"], role: ["Những năm FDI = 0", "Years with FDI = 0"] },
+  { id: "tu", name: ["Thầy Tú Phan", "Lecturer Tú Phan"], role: ["Phan & Do (2019)", "Phan & Do (2019)"] },
+  { id: "huong", name: ["Lumina", "Lumina"], role: ["Trợ giảng · câu hỏi của bạn", "Teaching assistant · your question"] },
+];
+
+const face = (id: string) => `${import.meta.env.BASE_URL}cast/v2/${id}-face.webp`;
+
 
 function webgl(): boolean {
   try {
@@ -128,6 +140,7 @@ const TONE = {
     mist: "text-[#a8a297]",
     accent: "accent-[#4fd1c5]",
     dot: "bg-[#2a2c31] shadow-[inset_0_2px_3px_rgba(0,0,0,0.8)]",
+    ring: "bg-[#f4ede1] ring-2 ring-[#4fd1c5]/60",
   },
   light: {
     sky: "bg-[#ece5d8]",
@@ -139,6 +152,7 @@ const TONE = {
     mist: "text-[#55504a]",
     accent: "accent-[#0a6577]",
     dot: "bg-[#d8cfbe] shadow-[inset_0_2px_3px_rgba(40,34,26,0.35)]",
+    ring: "bg-[#f4ede1] ring-2 ring-[#0a6577]/50",
   },
 };
 
@@ -194,7 +208,6 @@ export function SpaceJourney({
           vals: vals.current,
           calm,
           light,
-          crew: CREW,
           onScene: setScene,
         });
       })
@@ -285,6 +298,20 @@ export function SpaceJourney({
                 }
               >
                 <div className={CARD + " " + T.card + (seen[i] || failed ? " opacity-100" : " translate-y-10 scale-[0.96] opacity-0")}>
+                  <div className="mb-4 flex items-center gap-3">
+                    <img
+                      src={face(HOSTS[i]!.id)}
+                      alt=""
+                      width={48}
+                      height={48}
+                      loading={i < 2 ? "eager" : "lazy"}
+                      className={"size-12 shrink-0 rounded-full object-cover " + T.ring}
+                    />
+                    <p className="min-w-0 leading-tight">
+                      <span className="block text-[15px] font-semibold">{HOSTS[i]!.name[L]}</span>
+                      <span className={"block text-xs " + T.mist}>{HOSTS[i]!.role[L]}</span>
+                    </p>
+                  </div>
                   <p className={"text-xs font-semibold tracking-[0.14em] uppercase " + T.kicker}>{s.k[L]}</p>
                   <Heading
                     className={
@@ -316,6 +343,23 @@ export function SpaceJourney({
                     </label>
                   ) : null}
                   {s.c ? <p className={"mt-2.5 text-xs " + T.mist}>{s.c}</p> : null}
+                  {s.cta === "cast" ? (
+                    <ul className="mt-4 grid grid-cols-9 gap-1" aria-label={tr("Cả lớp", "The class")}>
+                      {HOSTS.map((h, j) => (
+                        <li key={h.id}>
+                          <button
+                            type="button"
+                            onClick={() => go(j)}
+                            title={h.name[L]}
+                            aria-label={tr(`${h.name[0]}, cảnh ${j + 1}`, `${h.name[1]}, scene ${j + 1}`)}
+                            className="block w-full rounded-full"
+                          >
+                            <img src={face(h.id)} alt="" loading="lazy" className={"aspect-square w-full rounded-full object-cover " + T.ring} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                   {s.cta ? (
                     <button
                       type="button"
