@@ -212,8 +212,8 @@ export function SectorFlow({ mode }: { mode: FdiMode }) {
         className="absolute inset-0 block h-full w-full"
         role="img"
         aria-label={tr(
-          `Dòng vốn FDI vào Việt Nam năm 2025 theo ngành, tổng ${fmt(d.total, 2)} tỷ USD`,
-          `FDI into Viet Nam in 2025 by sector, US$${fmt(d.total, 2)} bn in total`,
+          `Dòng vốn FDI vào Việt Nam (FDI inflows) năm 2025 theo ngành, tổng ${fmt(d.total, 2)} tỷ USD`,
+          `FDI inflows into Viet Nam in 2025 by sector, US$${fmt(d.total, 2)} bn in total`,
         )}
       />
       <div className="absolute top-4 left-[18px] flex flex-col gap-0.5">

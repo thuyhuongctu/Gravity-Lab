@@ -238,7 +238,7 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
     <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       {lead}
       <div>
-        <p className="text-xs font-medium text-teal-2">{tr("Gravity Lab · FDI vào Việt Nam", "Gravity Lab · FDI into Vietnam")}</p>
+        <p className="text-xs font-medium text-teal-2">{tr("Gravity Lab · Dòng vốn FDI vào Việt Nam (FDI inflows)", "Gravity Lab · FDI inflows into Vietnam")}</p>
         <h2 className="mt-2 max-w-xl font-serif text-2xl leading-snug text-paper">
           {tr("Khoảng cách còn quan trọng với dòng vốn không?", "Does distance still matter for capital flows?")}
         </h2>
@@ -298,8 +298,8 @@ function FdiGlobe({ lab }: { lab: LabState }) {
             if (id !== lab.a) lab.setB(id);
           }}
           label={tr(
-            `Địa cầu các nước nguồn FDI vào Việt Nam. Chạm một nước để so với ${lab.name(lab.a)}.`,
-            `Globe of the source countries of FDI into Vietnam. Tap a country to compare it with ${lab.name(lab.a)}.`,
+            `Địa cầu các nước nguồn dòng vốn FDI vào Việt Nam (FDI inflows). Chạm một nước để so với ${lab.name(lab.a)}.`,
+            `Globe of the source countries of FDI inflows into Vietnam. Tap a country to compare it with ${lab.name(lab.a)}.`,
           )}
         />
       </div>
@@ -634,8 +634,8 @@ function XuanGlobe() {
           arcs={arcs}
           focus={[hanoi]}
           label={tr(
-            `Địa cầu FDI thực hiện vào Việt Nam năm ${year}, theo Xuan và Xing (2008).`,
-            `Globe of realised FDI into Vietnam in ${year}, from Xuan and Xing (2008).`,
+            `Địa cầu dòng vốn FDI thực hiện vào Việt Nam (realised FDI inflows) năm ${year}, theo Xuan và Xing (2008).`,
+            `Globe of realised FDI inflows into Vietnam in ${year}, from Xuan and Xing (2008).`,
           )}
         />
       </div>

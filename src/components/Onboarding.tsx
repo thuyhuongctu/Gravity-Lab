@@ -10,7 +10,7 @@ const STEPS: Array<{ k: [string, string]; h: [string, string]; p: [string, strin
     k: ["Từ một quả táo rơi", "From a falling apple"],
     h: ["Lực giữ Mặt Trăng cũng kéo dòng vốn (capital flows)", "The force that holds the Moon also pulls capital"],
     p: [
-      "Học mô hình lực hấp dẫn (gravity model), từ định luật Newton đến đầu tư trực tiếp nước ngoài (FDI) vào Việt Nam, qua 9 cảnh 3D.",
+      "Học mô hình lực hấp dẫn (gravity model), từ định luật Newton đến dòng vốn đầu tư trực tiếp nước ngoài (FDI inflows) vào Việt Nam, qua 9 cảnh 3D.",
       "Learn the gravity model, from Newton’s law to foreign direct investment (FDI) in Viet Nam, across nine 3D scenes.",
     ],
     img: "telescope-orbits",

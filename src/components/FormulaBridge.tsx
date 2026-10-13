@@ -190,11 +190,11 @@ const STEPS: Step[] = [
   {
     cite: "Xuan & Xing (2008); Phan & Do (2019)",
     vi: {
-      title: "Từ hàng hóa sang dòng vốn: FDI vào Việt Nam",
+      title: "Từ hàng hóa sang dòng vốn: FDI vào Việt Nam (FDI inflows)",
       text: "Thay dòng thương mại bằng dòng vốn FDI từ nước nguồn i vào Việt Nam, theo năm t, và thêm các khoảng cách thể chế, văn hóa, kinh tế. Với mười sáu đối tác 2006–2015, Phan và Do (2019) ước lượng hệ số khoảng cách địa lý quanh −0,38.",
     },
     en: {
-      title: "From goods to capital: FDI into Vietnam",
+      title: "From goods to capital: FDI inflows into Vietnam",
       text: "Replace the trade flow with FDI from source country i into Vietnam in year t, and add institutional, cultural and economic distance. With sixteen partners over 2006–2015, Phan and Do (2019) estimate a geographic distance coefficient near −0.38.",
     },
     tokens: [

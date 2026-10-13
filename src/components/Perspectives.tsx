@@ -65,7 +65,7 @@ const LENSES: Array<{ vi: string; en: string; items: Item[] }> = [
       },
       {
         tag: "open",
-        vi: ["Mở rộng sang FDI", "Khoảng cách địa lý có tác động rõ đến FDI vào Việt Nam (β = −0,38); vai trò của thể chế, văn hóa và quan hệ nhân quả là hướng để lớp học tiếp tục kiểm định."],
+        vi: ["Mở rộng sang FDI", "Khoảng cách địa lý có tác động rõ đến dòng vốn FDI vào Việt Nam (FDI inflows; β = −0,38); vai trò của thể chế, văn hóa và quan hệ nhân quả là hướng để lớp học tiếp tục kiểm định."],
         en: ["Extending to FDI", "Geographic distance clearly matters for FDI into Việt Nam (β = −0.38); the roles of institutions, culture and causality are for the class to keep testing."],
         cite: "Phan & Do (2019)",
       },

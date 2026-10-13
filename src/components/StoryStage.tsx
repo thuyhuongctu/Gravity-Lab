@@ -157,11 +157,11 @@ const CHAPTERS: Chapter[] = [
     who: "Xuan & Xing",
     vi: {
       title: "FDI và xuất khẩu của Việt Nam",
-      text: "Dữ liệu FDI thực hiện vào Việt Nam theo nước nguồn, 1990–2004, đưa mô hình trọng lực về với dòng vốn vào Việt Nam.",
+      text: "Dữ liệu dòng vốn FDI thực hiện vào Việt Nam (realised FDI inflows) theo nước nguồn, 1990–2004, đưa mô hình trọng lực về với dòng vốn vào Việt Nam.",
     },
     en: {
       title: "FDI and Vietnam's exports",
-      text: "Realised FDI into Vietnam by source country, 1990–2004, brings the gravity model to capital flowing into Vietnam.",
+      text: "Realised FDI inflows into Vietnam by source country, 1990–2004, brings the gravity model to capital flowing into Vietnam.",
     },
   },
   {
@@ -195,11 +195,11 @@ const CHAPTERS: Chapter[] = [
     year: "2019",
     who: "Phan Anh Tu & Do Thuy Huong",
     vi: {
-      title: "Khoảng cách và quy mô thị trường của FDI vào Việt Nam",
+      title: "Khoảng cách và quy mô thị trường của dòng vốn FDI vào Việt Nam (FDI inflows)",
       text: "Mười sáu đối tác, 2006–2015, tám mô hình hiệu ứng ngẫu nhiên: khoảng cách địa lý, thể chế, văn hóa và kinh tế. Từ mô hình 4, hệ số khoảng cách địa lý giữ quanh −0,38.",
     },
     en: {
-      title: "Distance, market size and FDI into Vietnam",
+      title: "Distance, market size and FDI inflows into Vietnam",
       text: "Sixteen partners, 2006–2015, eight random-effects models: geographic, institutional, cultural and economic distance. From Model 4 on, the geographic distance coefficient holds near −0.38.",
     },
     cover: "lab",

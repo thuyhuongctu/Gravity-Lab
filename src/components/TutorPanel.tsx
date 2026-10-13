@@ -164,8 +164,8 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
                   <div className="noir-track mt-2 max-w-[95%] rounded-[20px] rounded-bl-md px-3.5 py-3">
                     <p className="text-sm leading-relaxed">
                       {tr(
-                        "Mình chưa có tài liệu cho câu này trong app, nên không trả lời để tránh đoán sai. Thử hỏi về mô hình trọng lực, FDI vào Việt Nam, OLS và PPML, hoặc cách dùng các phòng.",
-                        "There is no source for this in the app, so I won't guess. Try asking about the gravity model, FDI into Vietnam, OLS and PPML, or how to use the rooms.",
+                        "Mình chưa có tài liệu cho câu này trong app, nên không trả lời để tránh đoán sai. Thử hỏi về mô hình trọng lực, dòng vốn FDI vào Việt Nam (FDI inflows), OLS và PPML, hoặc cách dùng các phòng.",
+                        "There is no source for this in the app, so I won't guess. Try asking about the gravity model, FDI inflows into Vietnam, OLS and PPML, or how to use the rooms.",
                       )}
                     </p>
                     {chips(starters)}
