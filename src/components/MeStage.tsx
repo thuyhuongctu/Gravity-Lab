@@ -15,13 +15,13 @@ const ISSUES_URL = "https://github.com/thuyhuongctu/Gravity-Lab/issues";
 const PRO: Array<{ t: [string, string]; s: [string, string]; ready: boolean }> = [
   {
     t: ["Bộ dữ liệu FDI Việt Nam đã làm sạch (cleaned dataset)", "Cleaned Viet Nam FDI dataset"],
-    s: ["Tỉnh × đối tác × năm; giữ quan sát bằng 0 (zero flows)", "Province × partner × year · distance, GDP, FTA, PCI; zero flows retained"],
-    ready: false,
+    s: ["Đối tác × năm 1990–2004, khoảng cách; giữ quan sát bằng 0 (zero flows); CSV, Stata .do, từ điển biến", "Partner × year 1990–2004 with distance; zero flows retained; CSV, Stata .do and codebook"],
+    ready: true,
   },
   {
     t: ["Bản nháp kết quả chuẩn công bố (publication-ready)", "Publication-ready results draft"],
-    s: ["Bảng hệ số, mức ý nghĩa (significance), APA 7", "Coefficient table with significance stars, VI/EN interpretation, APA 7 references"],
-    ready: false,
+    s: ["Bảng hệ số có sao, diễn giải VI/EN, APA 7; xuất Word và LaTeX", "Coefficient table with significance stars, VI/EN interpretation, APA 7 references; Word and LaTeX"],
+    ready: true,
   },
   {
     t: ["Ước lượng PPML trên dữ liệu CSV/Excel của bạn", "PPML estimation on your own CSV/Excel data"],
@@ -103,8 +103,8 @@ export function MeStage({
       go: () => onRoom("lab", "coef"),
     },
     {
-      n: tr("PPML dữ liệu riêng", "PPML on your data"),
-      s: tr("Tải tệp CSV (upload)", "Upload a CSV file"),
+      n: tr("PPML và bộ dữ liệu", "PPML and the dataset"),
+      s: tr("Dữ liệu của bạn hoặc fdi_vn_panel", "Your data or fdi_vn_panel"),
       pro: true,
       icon: <FlaskConical className="size-5" />,
       go: () => onRoom("lab", "data"),
@@ -289,7 +289,7 @@ export function MeStage({
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button type="button" onClick={() => onRoom("lab", "data")} className="cosmic-btn min-h-12 rounded-full px-5 text-sm font-semibold">
-              {tr("Mở PPML với dữ liệu của bạn →", "Open PPML with your data →")}
+              {tr("Mở phòng PPML và bộ dữ liệu →", "Open PPML and the dataset →")}
             </button>
             <p className="text-xs leading-relaxed text-muted">
               {yearly
