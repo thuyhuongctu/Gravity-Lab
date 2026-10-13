@@ -401,7 +401,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       c.fillRect(0, 0, w, h);
       const px = (lon: number) => ((lon + 180) / 360) * w;
       const py = (lat: number) => ((90 - lat) / 180) * h;
-      const ring = (pts: Array<[number, number]>) => {
+      const trace = (pts: Array<[number, number]>) => {
         c.beginPath();
         let prev: number | null = null;
         pts.forEach(([lon, lat], i) => {
@@ -411,10 +411,9 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
           prev = lon;
         });
         c.closePath();
-        c.fill();
       };
-      c.fillStyle = "#c9b48d";
-      for (const r of LAND_RINGS) {
+      // Natural Earth admin-0 outlines: one ring per country, so the borders between them are real.
+      const countries: Array<Array<[number, number]>> = LAND_RINGS.map((r) => {
         const pts: Array<[number, number]> = [];
         let x = 0;
         let y = 0;
@@ -423,10 +422,28 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
           y += r[i + 1]!;
           pts.push([x / LAND_SCALE, y / LAND_SCALE]);
         }
-        ring(pts);
+        return pts;
+      });
+      c.fillStyle = "#c9b48d";
+      for (const pts of countries) {
+        trace(pts);
+        c.fill();
       }
       c.fillStyle = "#ff5e8a";
-      ring(VN_OUTLINE);
+      trace(VN_OUTLINE);
+      c.fill();
+      // Borders are drawn after every fill so no neighbour paints over them.
+      c.lineJoin = "round";
+      c.strokeStyle = "rgba(74,58,34,0.75)";
+      c.lineWidth = 2.2;
+      for (const pts of countries) {
+        trace(pts);
+        c.stroke();
+      }
+      c.strokeStyle = "#b8325c";
+      c.lineWidth = 2.6;
+      trace(VN_OUTLINE);
+      c.stroke();
       // Hoàng Sa and Trường Sa.
       c.fillStyle = "#ffc56b";
       for (const [lon, lat] of [
