@@ -1,0 +1,43 @@
+{
+  "packageId": "io.github.thuyhuongctu.gravitylab",
+  "host": "thuyhuongctu.github.io",
+  "name": "Gravity Lab",
+  "launcherName": "Gravity Lab",
+  "display": "standalone",
+  "themeColor": "#0a0b0d",
+  "themeColorDark": "#0a0b0d",
+  "navigationColor": "#0a0b0d",
+  "navigationColorDark": "#0a0b0d",
+  "navigationDividerColor": "#0a0b0d",
+  "navigationDividerColorDark": "#0a0b0d",
+  "backgroundColor": "#0a0b0d",
+  "enableNotifications": false,
+  "startUrl": "/Gravity-Lab/",
+  "iconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-512.png",
+  "maskableIconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-512-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "gravitylab"
+  },
+  "appVersionName": "2.8",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://thuyhuongctu.github.io/Gravity-Lab/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://thuyhuongctu.github.io/Gravity-Lab/",
+  "minSdkVersion": 21,
+  "orientation": "default",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "2.8"
+}
