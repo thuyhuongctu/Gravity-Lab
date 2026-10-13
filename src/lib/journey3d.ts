@@ -21,7 +21,7 @@ export type JourneyOptions = {
   light?: boolean;
   /** Reduced motion: no hop, no warp, idle at a quarter speed. */
   calm: boolean;
-  /** Full-body figurine photos for the crew, in order. */
+  /** Full-body figurine photos for the crew, in scene order: figure k hosts scene k. */
   crew: string[];
   /** Called when the nearest scene changes. */
   onScene?: (index: number) => void;
@@ -564,12 +564,14 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       const x1 = o * sp * (mob ? 0.95 : 0.5);
       const y1 = (mob ? 1.2 : 0) - Math.abs(o) * 0.5 + (u.k % 2 ? 0.6 : -0.4);
       const z1 = -20 - Math.abs(o) * 1.4;
+      // The host of the current scene rises out of the escort and grows.
+      const host = Math.max(0, 1 - Math.abs(cur - u.k)) * (1 - near);
       p.position.set(
         THREE.MathUtils.lerp(x0, x1, near),
-        THREE.MathUtils.lerp(y0, y1, near) + bob,
-        THREE.MathUtils.lerp(z0, z1, near),
+        THREE.MathUtils.lerp(y0, y1, near) + bob + host * (mob ? 0.9 : 1.6),
+        THREE.MathUtils.lerp(z0, z1, near) + host * 2,
       );
-      p.scale.setScalar((mob ? 0.55 : 0.62) + near * (mob ? 0.2 : 0.45));
+      p.scale.setScalar((mob ? 0.55 : 0.62) + near * (mob ? 0.2 : 0.45) + host * (mob ? 0.2 : 0.3));
       p.rotation.z = -o * 0.03 * (1 - near) + (calm ? 0 : Math.sin(t * 0.9 + u.k) * 0.03);
       const fl = 0.85 + (calm ? 0 : Math.sin(t * 22 + u.k * 3) * 0.15) + w * 0.8;
       u.flame.scale.set(2.2 * fl, 2.8 * fl, 1);
