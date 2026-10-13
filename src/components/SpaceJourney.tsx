@@ -114,7 +114,33 @@ function webgl(): boolean {
 }
 
 const CARD =
-  "w-full max-w-[440px] rounded-[30px] bg-[linear-gradient(160deg,rgba(38,40,45,0.88),rgba(20,21,25,0.92))] px-6 py-6 text-[#f1ece2] shadow-[inset_0_-9px_0_rgba(0,0,0,0.3),inset_0_3px_0_rgba(255,255,255,0.07),inset_-1px_-1px_0_rgba(94,234,212,0.3),0_30px_60px_-20px_rgba(0,0,0,0.95)] backdrop-blur-md transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] sm:px-[26px]";
+  "w-full max-w-[440px] rounded-[30px] px-6 py-6 backdrop-blur-md transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] sm:px-[26px]";
+
+/** Journey colours per theme: graphite void, or warm bone sky in the light theme. */
+const TONE = {
+  dark: {
+    sky: "bg-[#0a0b0d]",
+    vignette: "bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(4,4,5,0.9)_100%)]",
+    card: "bg-[linear-gradient(160deg,rgba(38,40,45,0.88),rgba(20,21,25,0.92))] text-[#f1ece2] shadow-[inset_0_-9px_0_rgba(0,0,0,0.3),inset_0_3px_0_rgba(255,255,255,0.07),inset_-1px_-1px_0_rgba(79,209,197,0.3),0_30px_60px_-20px_rgba(0,0,0,0.95)]",
+    kicker: "text-[#ffc56b]",
+    teal: "text-[#4fd1c5]",
+    body: "text-[#ddd6c8]",
+    mist: "text-[#a8a297]",
+    accent: "accent-[#4fd1c5]",
+    dot: "bg-[#2a2c31] shadow-[inset_0_2px_3px_rgba(0,0,0,0.8)]",
+  },
+  light: {
+    sky: "bg-[#ece5d8]",
+    vignette: "bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(120,104,82,0.22)_100%)]",
+    card: "bg-[linear-gradient(160deg,rgba(255,253,248,0.92),rgba(242,236,223,0.94))] text-[#1d1e22] shadow-[inset_0_-8px_0_rgba(40,34,26,0.08),inset_0_4px_0_rgba(255,255,255,0.9),inset_-1px_-1px_0_rgba(10,101,119,0.25),0_30px_50px_-24px_rgba(40,34,26,0.45)]",
+    kicker: "text-[#9a4a0c]",
+    teal: "text-[#0a6577]",
+    body: "text-[#3a3732]",
+    mist: "text-[#55504a]",
+    accent: "accent-[#0a6577]",
+    dot: "bg-[#d8cfbe] shadow-[inset_0_2px_3px_rgba(40,34,26,0.35)]",
+  },
+};
 
 /**
  * The scroll journey: a pinned clay-3D space scene behind nine cards, then `children`
@@ -129,7 +155,9 @@ export function SpaceJourney({
   onCast: () => void;
   children: ReactNode;
 }) {
-  const { lang } = usePrefs();
+  const { lang, theme } = usePrefs();
+  const light = theme === "light";
+  const T = TONE[light ? "light" : "dark"];
   const host = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const sections = useRef<HTMLElement[]>([]);
@@ -165,6 +193,7 @@ export function SpaceJourney({
           sections: () => sections.current.filter(Boolean),
           vals: vals.current,
           calm,
+          light,
           crew: CREW,
           onScene: setScene,
         });
@@ -205,7 +234,7 @@ export function SpaceJourney({
       handle.current?.dispose();
       handle.current = null;
     };
-  }, [calm]);
+  }, [calm, light]);
 
   const setVal = (k: keyof JourneyVals, v: number) => {
     vals.current[k] = v;
@@ -224,11 +253,11 @@ export function SpaceJourney({
   const num = (v: number) => fmt(v, 2);
 
   return (
-    <div className="absolute inset-0 bg-[#0a0b0d]">
+    <div className={"absolute inset-0 " + T.sky}>
       <div ref={host} aria-hidden="true" className="absolute inset-0" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(4,4,5,0.9)_100%)]"
+        className={"pointer-events-none absolute inset-0 " + T.vignette}
       />
       <div ref={scroller} className="absolute inset-0 overflow-y-auto">
         <div className="relative z-[2]">
@@ -255,8 +284,8 @@ export function SpaceJourney({
                   (right ? "min-[700px]:justify-end" : "min-[700px]:justify-start")
                 }
               >
-                <div className={CARD + (seen[i] || failed ? " opacity-100" : " translate-y-10 scale-[0.96] opacity-0")}>
-                  <p className="text-xs font-semibold tracking-[0.14em] text-[#ffc56b] uppercase">{s.k[L]}</p>
+                <div className={CARD + " " + T.card + (seen[i] || failed ? " opacity-100" : " translate-y-10 scale-[0.96] opacity-0")}>
+                  <p className={"text-xs font-semibold tracking-[0.14em] uppercase " + T.kicker}>{s.k[L]}</p>
                   <Heading
                     className={
                       "mt-2.5 font-serif leading-[1.04] tracking-[-0.03em] text-balance " +
@@ -266,11 +295,11 @@ export function SpaceJourney({
                     {s.h[L]}
                   </Heading>
                   {formula ? (
-                    <p className="mt-3 font-math text-[22px] whitespace-nowrap text-[#5eead4]" aria-live={s.slider ? "polite" : undefined}>
+                    <p className={"mt-3 font-math text-[22px] whitespace-nowrap " + T.teal} aria-live={s.slider ? "polite" : undefined}>
                       {formula}
                     </p>
                   ) : null}
-                  <p className="mt-3 text-base leading-[1.65] text-pretty text-[#ddd6c8]">{s.p[L]}</p>
+                  <p className={"mt-3 text-base leading-[1.65] text-pretty " + T.body}>{s.p[L]}</p>
                   {s.slider ? (
                     <label className="mt-3.5 grid grid-cols-[auto_minmax(0,1fr)_3rem] items-center gap-3 text-sm">
                       <span className="whitespace-nowrap">{s.slider.label[L]}</span>
@@ -281,17 +310,17 @@ export function SpaceJourney({
                         step={s.slider.step}
                         value={s.slider.id === "n" ? n : b}
                         onChange={(e) => setVal(s.slider!.id, Number(e.target.value))}
-                        className="h-7 w-full accent-[#ffc56b]"
+                        className={"h-7 w-full " + T.accent}
                       />
-                      <output className="text-right text-[#5eead4] tabular-nums">{num(s.slider.id === "n" ? n : b)}</output>
+                      <output className={"text-right tabular-nums " + T.teal}>{num(s.slider.id === "n" ? n : b)}</output>
                     </label>
                   ) : null}
-                  {s.c ? <p className="mt-2.5 text-xs text-[#a8a297]">{s.c}</p> : null}
+                  {s.c ? <p className={"mt-2.5 text-xs " + T.mist}>{s.c}</p> : null}
                   {s.cta ? (
                     <button
                       type="button"
                       onClick={s.cta === "lab" ? onLab : onCast}
-                      className="amber-btn mt-[18px] inline-flex min-h-[52px] items-center rounded-full px-[22px] font-semibold"
+                      className="cosmic-btn mt-[18px] inline-flex min-h-[52px] items-center rounded-full px-[22px] font-semibold"
                     >
                       {s.cta === "lab" ? tr("Vào phòng thí nghiệm →", "Enter the lab →") : tr("Gặp cả lớp →", "Meet the class →")}
                     </button>
@@ -322,8 +351,8 @@ export function SpaceJourney({
                 className={
                   "block w-3 transition-all duration-300 " +
                   (scene === i
-                    ? "h-[34px] rounded-[9px] bg-[radial-gradient(circle_at_36%_25%,#d6fff8,#5eead4_45%,#0b8a7a)] shadow-[inset_0_-3px_0_rgba(0,0,0,0.28)]"
-                    : "h-3 rounded-full bg-[#2a2c31] shadow-[inset_0_2px_3px_rgba(0,0,0,0.8)]")
+                    ? "h-[34px] rounded-[9px] bg-[radial-gradient(circle_at_36%_25%,#d3f6f1,#4fd1c5_48%,#1fa294)] shadow-[inset_0_-3px_0_rgba(0,0,0,0.28)]"
+                    : "h-3 rounded-full " + T.dot)
                 }
               />
             </button>
@@ -333,7 +362,9 @@ export function SpaceJourney({
       <p
         aria-hidden="true"
         className={
-          "pointer-events-none absolute bottom-5 left-1/2 z-[3] -translate-x-1/2 text-[13px] whitespace-nowrap text-[#a8a297] transition-opacity duration-500 " +
+          "pointer-events-none absolute bottom-5 left-1/2 z-[3] -translate-x-1/2 text-[13px] whitespace-nowrap transition-opacity duration-500 " +
+          T.mist +
+          " " +
           (hint ? "opacity-100" : "opacity-0")
         }
       >
