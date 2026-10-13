@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
-import { fmt, tr } from "@/lib/prefs";
+import type { JourneyHandle } from "@/lib/journey3d";
+import { tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 
 type Scene = {
@@ -9,7 +9,6 @@ type Scene = {
   p: [string, string];
   f?: [string, string];
   c?: string;
-  slider?: { id: keyof JourneyVals; min: number; max: number; step: number; label: [string, string] };
   cta?: "lab" | "cast";
 };
 
@@ -35,13 +34,13 @@ const SCENES: Scene[] = [
   },
   {
     k: ["Số mũ = 2", "Exponent = 2"],
-    h: ["Thử đổi số mũ", "Try changing the exponent"],
+    h: ["Xa gấp đôi, lực còn một phần tư", "Twice as far, a quarter of the pull"],
+    f: ["r² · số mũ = 2", "r² · exponent = 2"],
     p: [
-      "Với n = 2, quỹ đạo khép kín. Kéo thanh trượt: n khác 2 làm quỹ đạo xoay thành hình hoa hồng.",
-      "At n = 2 the orbit closes. Drag the slider: any other n makes the orbit precess into a rosette.",
+      "Trong vật lý, số mũ cố định, là nền tảng để tính quỹ đạo hành tinh và tàu vũ trụ.",
+      "In physics the exponent is fixed: the basis for computing the orbits of planets and spacecraft.",
     ],
     c: "Newton (1687/1999)",
-    slider: { id: "n", min: 1.5, max: 2.8, step: 0.01, label: ["Số mũ n", "Exponent n"] },
   },
   {
     k: ["Tinbergen · 1962", "Tinbergen · 1962"],
@@ -55,13 +54,13 @@ const SCENES: Scene[] = [
   },
   {
     k: ["FDI vào Việt Nam · 2006–2015", "FDI into Việt Nam · 2006–2015"],
-    h: ["Khoảng cách và dòng vốn", "Distance and capital"],
+    h: ["Xa thêm 1%, FDI giảm 0,38%", "1% farther, 0.38% less FDI"],
+    f: ["β = −0,38", "β = −0.38"],
     p: [
-      "Kéo β để xem dòng vốn quanh Việt Nam thay đổi. Ước lượng của bài: xa thêm 1%, FDI giảm 0,38%.",
-      "Drag β to see capital around Việt Nam change. The paper's estimate: 1% farther, 0.38% less FDI.",
+      "Khoảng cách địa lý có tác động rõ đến dòng vốn vào Việt Nam.",
+      "Geographic distance clearly matters for capital flowing into Việt Nam.",
     ],
     c: "Phan & Do (2019)",
-    slider: { id: "b", min: -1, max: 0, step: 0.01, label: ["Hệ số β", "Coefficient β"] },
   },
   {
     k: ["Hiệp định thương mại tự do", "Free-trade agreements"],
@@ -132,13 +131,12 @@ const CARD =
 const TONE = {
   dark: {
     sky: "bg-[#0a0b0d]",
-    vignette: "bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(4,4,5,0.9)_100%)]",
+    vignette: "bg-[radial-gradient(ellipse_70%_65%_at_50%_45%,transparent_35%,rgba(2,2,3,0.95)_100%)]",
     card: "bg-[linear-gradient(160deg,rgba(38,40,45,0.88),rgba(20,21,25,0.92))] text-[#f1ece2] shadow-[inset_0_-9px_0_rgba(0,0,0,0.3),inset_0_3px_0_rgba(255,255,255,0.07),inset_-1px_-1px_0_rgba(79,209,197,0.3),0_30px_60px_-20px_rgba(0,0,0,0.95)]",
     kicker: "text-[#ffc56b]",
     teal: "text-[#4fd1c5]",
     body: "text-[#ddd6c8]",
     mist: "text-[#a8a297]",
-    accent: "accent-[#4fd1c5]",
     dot: "bg-[#2a2c31] shadow-[inset_0_2px_3px_rgba(0,0,0,0.8)]",
     ring: "bg-[#f4ede1] ring-2 ring-[#4fd1c5]/60",
   },
@@ -150,7 +148,6 @@ const TONE = {
     teal: "text-[#0a6577]",
     body: "text-[#3a3732]",
     mist: "text-[#55504a]",
-    accent: "accent-[#0a6577]",
     dot: "bg-[#d8cfbe] shadow-[inset_0_2px_3px_rgba(40,34,26,0.35)]",
     ring: "bg-[#f4ede1] ring-2 ring-[#0a6577]/50",
   },
@@ -175,10 +172,7 @@ export function SpaceJourney({
   const host = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const sections = useRef<HTMLElement[]>([]);
-  const vals = useRef<JourneyVals>({ n: 2, b: -0.38 });
   const handle = useRef<JourneyHandle | null>(null);
-  const [n, setN] = useState(2);
-  const [b, setB] = useState(-0.38);
   const [scene, setScene] = useState(0);
   const [seen, setSeen] = useState<boolean[]>(() => SCENES.map((_, i) => i === 0));
   const [inJourney, setInJourney] = useState(true);
@@ -205,7 +199,7 @@ export function SpaceJourney({
         handle.current = mountJourney(el, {
           scroller: sc,
           sections: () => sections.current.filter(Boolean),
-          vals: vals.current,
+          faces: HOSTS.map((h) => face(h.id)),
           calm,
           light,
           onScene: setScene,
@@ -249,13 +243,6 @@ export function SpaceJourney({
     };
   }, [calm, light]);
 
-  const setVal = (k: keyof JourneyVals, v: number) => {
-    vals.current[k] = v;
-    if (k === "n") setN(v);
-    else setB(v);
-    handle.current?.poke();
-  };
-
   const go = (i: number) => {
     const sc = scroller.current;
     const s = sections.current[i];
@@ -263,7 +250,6 @@ export function SpaceJourney({
   };
 
   const L = lang === "vi" ? 0 : 1;
-  const num = (v: number) => fmt(v, 2);
 
   return (
     <div className={"absolute inset-0 " + T.sky}>
@@ -272,16 +258,12 @@ export function SpaceJourney({
         aria-hidden="true"
         className={"pointer-events-none absolute inset-0 " + T.vignette}
       />
+      <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0" />
       <div ref={scroller} className="absolute inset-0 overflow-y-auto">
         <div className="relative z-[2]">
           {SCENES.map((s, i) => {
             const right = i % 2 === 1;
-            const formula =
-              s.slider?.id === "n"
-                ? `F ∝ 1 / r^${num(n)}`
-                : s.slider?.id === "b"
-                  ? tr(`Xa thêm 1% → FDI ${b < 0 ? "−" : ""}${fmt(Math.abs(b), 2)}%`, `1% farther → FDI ${b < 0 ? "−" : ""}${fmt(Math.abs(b), 2)}%`)
-                  : s.f?.[L];
+            const formula = s.f?.[L];
             const Heading = i === 0 ? "h2" : "h3";
             return (
               <section
@@ -322,26 +304,11 @@ export function SpaceJourney({
                     {s.h[L]}
                   </Heading>
                   {formula ? (
-                    <p className={"mt-3 font-math text-[22px] whitespace-nowrap " + T.teal} aria-live={s.slider ? "polite" : undefined}>
+                    <p className={"mt-3 font-math text-[22px] whitespace-nowrap " + T.teal}>
                       {formula}
                     </p>
                   ) : null}
                   <p className={"mt-3 text-base leading-[1.65] text-pretty " + T.body}>{s.p[L]}</p>
-                  {s.slider ? (
-                    <label className="mt-3.5 grid grid-cols-[auto_minmax(0,1fr)_3rem] items-center gap-3 text-sm">
-                      <span className="whitespace-nowrap">{s.slider.label[L]}</span>
-                      <input
-                        type="range"
-                        min={s.slider.min}
-                        max={s.slider.max}
-                        step={s.slider.step}
-                        value={s.slider.id === "n" ? n : b}
-                        onChange={(e) => setVal(s.slider!.id, Number(e.target.value))}
-                        className={"h-7 w-full " + T.accent}
-                      />
-                      <output className={"text-right tabular-nums " + T.teal}>{num(s.slider.id === "n" ? n : b)}</output>
-                    </label>
-                  ) : null}
                   {s.c ? <p className={"mt-2.5 text-xs " + T.mist}>{s.c}</p> : null}
                   {s.cta === "cast" ? (
                     <ul className="mt-4 grid grid-cols-9 gap-1" aria-label={tr("Cả lớp", "The class")}>
