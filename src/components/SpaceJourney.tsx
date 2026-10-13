@@ -3,6 +3,7 @@ import { Volume2, Wind, X } from "lucide-react";
 import { Formula } from "@/components/Formula";
 import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
 import { fmt, tr } from "@/lib/prefs";
+import { duckAmbient } from "@/lib/sound";
 import { usePrefs } from "@/lib/use-prefs";
 
 type Scene = {
@@ -21,6 +22,9 @@ type Scene = {
  * The nine scenes (design handoff, narration.js), VI then EN. The Vietnamese keeps the
  * English technical terms in brackets, as the handoff asks.
  */
+/** Scenes and languages with no recording this session, so the browser voice is used at once. */
+const missing = new Set<string>();
+
 const CALM_KEY = "gravity-lab:calm";
 
 /** Reduced motion: the reader's own choice first, else the system setting. */
@@ -657,16 +661,28 @@ function Lumina({
   });
   const L = lang === "vi" ? 0 : 1;
   const text = NARRATION[Math.max(0, Math.min(8, scene))]![L];
-  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window;
+  const canSynth = typeof window !== "undefined" && "speechSynthesis" in window;
+  // Her voice: a recording in public/narration/ when there is one (see docs/LUMINA_RECORDING.md), else the browser's.
+  const canSpeak = canSynth || typeof Audio !== "undefined";
+  const clip = useRef<HTMLAudioElement | null>(null);
   // Cards sit left on even scenes, so Lumina sits right there, and the other way round.
   const right = scene % 2 === 0;
 
   const stop = () => {
-    if (canSpeak) window.speechSynthesis.cancel();
+    if (canSynth) window.speechSynthesis.cancel();
+    if (clip.current) {
+      clip.current.pause();
+      clip.current.src = "";
+      clip.current = null;
+      duckAmbient(false);
+    }
     setSpeaking(false);
   };
-  const speak = () => {
-    if (!canSpeak) return;
+  const synth = () => {
+    if (!canSynth) {
+      setSpeaking(false);
+      return;
+    }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = lang === "vi" ? "vi-VN" : "en-US";
@@ -674,7 +690,33 @@ function Lumina({
     u.onend = () => setSpeaking(false);
     u.onerror = () => setSpeaking(false);
     window.speechSynthesis.speak(u);
+  };
+  const speak = () => {
+    if (!canSpeak) return;
+    stop();
     setSpeaking(true);
+    if (typeof Audio === "undefined" || missing.has(`${scene}-${lang}`)) {
+      synth();
+      return;
+    }
+    const a = new Audio(`${import.meta.env.BASE_URL}narration/scene-${scene + 1}-${lang}.mp3`);
+    clip.current = a;
+    const fallback = () => {
+      if (clip.current !== a) return;
+      missing.add(`${scene}-${lang}`);
+      clip.current = null;
+      duckAmbient(false);
+      synth();
+    };
+    a.onerror = fallback;
+    a.onended = () => {
+      if (clip.current !== a) return;
+      clip.current = null;
+      duckAmbient(false);
+      setSpeaking(false);
+    };
+    duckAmbient(true);
+    a.play().catch(fallback);
   };
   // A new scene or language while she is talking: she moves on to that text.
   useEffect(() => {
