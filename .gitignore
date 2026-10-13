@@ -2,3 +2,7 @@ node_modules/
 dist/
 .env*
 *.log
+
+# Android signing key: never committed
+*.keystore
+*.jks
