@@ -29,22 +29,21 @@ export const TRADE_SCENES: Array<{ id: TradeSceneId; name: string; nameEn: strin
 
 type Seed = Omit<Economy, "x" | "y" | "homeX" | "homeY"> & { x: number; y: number };
 
-const INK = "#f3ece1";
-const AMBER = "#e7c27a";
-const TEAL = "#7ec8b8";
-const CLAY = "#e0a090";
+// One meaning per colour: Vietnam is flare pink, every partner is bone.
+const VN = "#c46a4a";
+const BONE = "#f0dcc0";
 
 /** GDP: nominal USD trillions, rounded, circa 2024. Coordinates: rough economic centers. */
 const ALL: Seed[] = [
-  { id: "vn", name: "Việt Nam", nameEn: "Vietnam", short: "VN", shortEn: "VN", gdp: 0.46, lat: 16.0, lon: 107.6, x: 0, y: 24, color: TEAL },
-  { id: "th", name: "Thái Lan", nameEn: "Thailand", short: "TH", shortEn: "TH", gdp: 0.53, lat: 13.8, lon: 100.5, x: -118, y: 8, color: INK },
-  { id: "sg", name: "Singapore", nameEn: "Singapore", short: "SG", shortEn: "SG", gdp: 0.53, lat: 1.3, lon: 103.8, x: -62, y: 128, color: INK },
-  { id: "id", name: "Indonesia", nameEn: "Indonesia", short: "ID", shortEn: "ID", gdp: 1.4, lat: -6.2, lon: 106.8, x: 18, y: 188, color: CLAY },
-  { id: "cn", name: "Trung Quốc", nameEn: "China", short: "TQ", shortEn: "CN", gdp: 18.5, lat: 31.2, lon: 121.5, x: 36, y: -150, color: AMBER },
-  { id: "kr", name: "Hàn Quốc", nameEn: "South Korea", short: "HQ", shortEn: "KR", gdp: 1.7, lat: 37.5, lon: 127.0, x: 132, y: -168, color: INK },
-  { id: "jp", name: "Nhật Bản", nameEn: "Japan", short: "NB", shortEn: "JP", gdp: 4.1, lat: 35.7, lon: 139.7, x: 210, y: -118, color: CLAY },
-  { id: "us", name: "Hoa Kỳ", nameEn: "United States", short: "HK", shortEn: "US", gdp: 29.0, lat: 39.0, lon: -98.0, x: 250, y: 36, color: AMBER },
-  { id: "eu", name: "Liên minh châu Âu", nameEn: "European Union", short: "EU", shortEn: "EU", gdp: 19.0, lat: 50.1, lon: 10.0, x: -230, y: -150, color: TEAL },
+  { id: "vn", name: "Việt Nam", nameEn: "Vietnam", short: "VN", shortEn: "VN", gdp: 0.46, lat: 16.0, lon: 107.6, x: 0, y: 24, color: VN },
+  { id: "th", name: "Thái Lan", nameEn: "Thailand", short: "TH", shortEn: "TH", gdp: 0.53, lat: 13.8, lon: 100.5, x: -118, y: 8, color: BONE },
+  { id: "sg", name: "Singapore", nameEn: "Singapore", short: "SG", shortEn: "SG", gdp: 0.53, lat: 1.3, lon: 103.8, x: -62, y: 128, color: BONE },
+  { id: "id", name: "Indonesia", nameEn: "Indonesia", short: "ID", shortEn: "ID", gdp: 1.4, lat: -6.2, lon: 106.8, x: 18, y: 188, color: BONE },
+  { id: "cn", name: "Trung Quốc", nameEn: "China", short: "TQ", shortEn: "CN", gdp: 18.5, lat: 31.2, lon: 121.5, x: 36, y: -150, color: BONE },
+  { id: "kr", name: "Hàn Quốc", nameEn: "South Korea", short: "HQ", shortEn: "KR", gdp: 1.7, lat: 37.5, lon: 127.0, x: 132, y: -168, color: BONE },
+  { id: "jp", name: "Nhật Bản", nameEn: "Japan", short: "NB", shortEn: "JP", gdp: 4.1, lat: 35.7, lon: 139.7, x: 210, y: -118, color: BONE },
+  { id: "us", name: "Hoa Kỳ", nameEn: "United States", short: "HK", shortEn: "US", gdp: 29.0, lat: 39.0, lon: -98.0, x: 250, y: 36, color: BONE },
+  { id: "eu", name: "Liên minh châu Âu", nameEn: "European Union", short: "EU", shortEn: "EU", gdp: 19.0, lat: 50.1, lon: 10.0, x: -230, y: -150, color: BONE },
 ];
 
 const LECTURE_IDS = ["vn", "th", "cn", "jp", "us", "eu"];

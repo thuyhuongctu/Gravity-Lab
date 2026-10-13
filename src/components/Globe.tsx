@@ -229,8 +229,8 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
 
       // Atmosphere: a teal rim light just outside the limb.
       const halo = ctx.createRadialGradient(c.x, c.y, R * 0.96, c.x, c.y, R * 1.12);
-      halo.addColorStop(0, "rgba(94,234,212,0.28)");
-      halo.addColorStop(1, "rgba(94,234,212,0)");
+      halo.addColorStop(0, "rgba(79,209,197,0.28)");
+      halo.addColorStop(1, "rgba(79,209,197,0)");
       ctx.fillStyle = halo;
       ctx.beginPath();
       ctx.arc(c.x, c.y, R * 1.12, 0, Math.PI * 2);
@@ -289,7 +289,7 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       ctx.restore();
 
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(94,234,212,0.35)";
+      ctx.strokeStyle = "rgba(79,209,197,0.35)";
       ctx.beginPath();
       ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
       ctx.stroke();
@@ -297,7 +297,7 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
       for (const arc of as) {
         const pts = arcPoints(toVec(arc.from.lon, arc.from.lat), toVec(arc.to.lon, arc.to.lat));
         const w = Math.max(0, Math.min(1, arc.weight));
-        const hue = arc.highlight ? "255,197,107" : "94,234,212";
+        const hue = arc.highlight ? "255,197,107" : "79,209,197";
         ctx.lineCap = "round";
         ctx.lineWidth = 4 + w * 10;
         ctx.strokeStyle = `rgba(${hue},${0.08 + w * 0.12})`;
@@ -329,8 +329,8 @@ export function Globe({ nodes, arcs, focus, onTap, label }: Props) {
         const y = c.y + p.y * R;
         const r = dotRadius(n);
         const glow = ctx.createRadialGradient(x, y, r * 0.2, x, y, r * 2.2);
-        glow.addColorStop(0, "rgba(94,234,212,0.3)");
-        glow.addColorStop(1, "rgba(94,234,212,0)");
+        glow.addColorStop(0, "rgba(79,209,197,0.3)");
+        glow.addColorStop(1, "rgba(79,209,197,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);

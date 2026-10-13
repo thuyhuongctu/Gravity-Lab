@@ -97,7 +97,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
               alt=""
               width={44}
               height={44}
-              className="size-11 shrink-0 rounded-full bg-[#f1e8de] object-cover shadow-[0_0_0_2px_rgba(94,234,212,0.55),0_0_24px_rgba(94,234,212,0.3)]"
+              className="size-11 shrink-0 rounded-full bg-[#f1e8de] object-cover shadow-[0_0_0_2px_rgba(79,209,197,0.55),0_0_24px_rgba(79,209,197,0.3)]"
             />
             <div className="min-w-0 flex-1">
               <p className="font-serif text-lg leading-tight">{tr("Lumina · Trợ giảng", "Lumina · Teaching assistant")}</p>
@@ -147,7 +147,7 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
                           onOpen(see.room, see.panel);
                           setOpen(false);
                         }}
-                        className="amber-btn mt-2.5 inline-flex min-h-9 items-center gap-1 rounded-full px-3.5 text-xs font-semibold"
+                        className="cosmic-btn mt-2.5 inline-flex min-h-9 items-center gap-1 rounded-full px-3.5 text-xs font-semibold"
                       >
                         {tr(t.reply.entry.see.vi, t.reply.entry.see.en)}
                         <ArrowRight className="size-3.5" />
