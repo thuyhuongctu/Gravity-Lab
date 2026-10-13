@@ -17,6 +17,8 @@ export type JourneyOptions = {
   sections: () => HTMLElement[];
   /** Live slider values, read every frame. */
   vals: JourneyVals;
+  /** Light theme: a warm bone sky instead of the graphite void. */
+  light?: boolean;
   /** Reduced motion: no hop, no warp, idle at a quarter speed. */
   calm: boolean;
   /** Full-body figurine photos for the crew, in order. */
@@ -48,8 +50,10 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   host.appendChild(el);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color("#0a0b0d");
-  scene.fog = new THREE.FogExp2("#0a0b0d", 0.006);
+  const light = !!opts.light;
+  const sky = light ? "#ece5d8" : "#0a0b0d";
+  scene.background = new THREE.Color(sky);
+  scene.fog = new THREE.FogExp2(sky, light ? 0.004 : 0.006);
   const cam = new THREE.PerspectiveCamera(50, 1, 0.1, 2000);
   const mobile = () => host.clientWidth < 700;
 
@@ -99,10 +103,10 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     return sp;
   };
 
-  scene.add(new THREE.AmbientLight("#4a4740", 0.7));
+  scene.add(light ? new THREE.AmbientLight("#fff4e2", 1.3) : new THREE.AmbientLight("#4a4740", 0.7));
   const key = new THREE.DirectionalLight("#ffe2a8", 1.6);
   key.position.set(30, 40, 30);
-  const rim = new THREE.DirectionalLight("#5eead4", 1.6);
+  const rim = new THREE.DirectionalLight("#4fd1c5", 1.6);
   rim.position.set(-40, 10, -60);
   scene.add(key, rim);
   const fill = new THREE.PointLight("#ffe2a8", 300, 0, 1.4);
@@ -114,7 +118,10 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const n = low ? 1500 : 4000;
     const pos = new Float32Array(n * 3);
     const col = new Float32Array(n * 3);
-    const pal = ["#ffffff", "#e8d9b8", "#5eead4", "#ffc56b"].map((c) => new THREE.Color(c));
+    // On the bone sky, additive light would vanish: draw darker dust instead.
+    const pal = (light ? ["#8a8173", "#b5a98f", "#0a6577", "#b4530a"] : ["#ffffff", "#e8d9b8", "#4fd1c5", "#ffc56b"]).map(
+      (c) => new THREE.Color(c),
+    );
     for (let i = 0; i < n; i++) {
       pos.set([(rand() - 0.5) * 700, (rand() - 0.5) * 500, 100 - rand() * 900], i * 3);
       const c = pal[i % 4]!;
@@ -127,12 +134,13 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       new THREE.Points(
         g,
         new THREE.PointsMaterial({
-          size: 1.8,
+          size: light ? 1.3 : 1.8,
           map: glow("#fff"),
           vertexColors: true,
           transparent: true,
+          opacity: light ? 0.55 : 1,
           depthWrite: false,
-          blending: THREE.AdditiveBlending,
+          blending: light ? THREE.NormalBlending : THREE.AdditiveBlending,
         }),
       ),
     );
@@ -144,6 +152,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       ["rgba(14,116,144,.35)", [-120, 60, -620], 320],
     ] as Array<[string, [number, number, number], number]>
   ).forEach(([c, p, s]) => {
+    if (light) return;
     const sp = sprite(c, s);
     sp.position.set(...p);
     scene.add(sp);
@@ -189,7 +198,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     piv.add(m);
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(10, 0.05, 8, 128),
-      new THREE.MeshBasicMaterial({ color: "#5eead4", transparent: true, opacity: 0.4 }),
+      new THREE.MeshBasicMaterial({ color: "#4fd1c5", transparent: true, opacity: 0.4 }),
     );
     ring.rotation.x = Math.PI / 2;
     g.add(e, piv, ring);
@@ -203,7 +212,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   {
     const g = place(2, 1);
     const s = ball(4, "#ffc56b", { emissive: "#ff8a2a", emissiveIntensity: 1.1 });
-    const p = ball(1.3, "#5eead4");
+    const p = ball(1.3, "#4fd1c5");
     g.add(s, sprite("rgba(255,170,80,.9)", 22), p);
     g.rotation.x = 0.9;
     const M = 1200;
@@ -245,7 +254,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       new THREE.Vector3(8, 2, 0),
     );
     const pk = ball(0.5, "#ffc56b", { emissive: "#ffc56b", emissiveIntensity: 1 });
-    g.add(a, b, new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.22, 8), new THREE.MeshBasicMaterial({ color: "#5eead4" })), pk);
+    g.add(a, b, new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.22, 8), new THREE.MeshBasicMaterial({ color: "#4fd1c5" })), pk);
     anim.push((t) => {
       pk.position.copy(curve.getPoint((t * 0.3) % 1));
       g.rotation.y = Math.sin(t * 0.3) * 0.3;
@@ -328,7 +337,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   {
     const g = place(5, -1);
     const t1 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#ffc56b"));
-    const t2 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#5eead4"));
+    const t2 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#4fd1c5"));
     t2.position.x = 5;
     t2.rotation.y = Math.PI / 2;
     g.add(t1, t2);
@@ -401,7 +410,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
         g.fillRect(0, 0, W, H);
         g.restore();
         g.lineWidth = 14;
-        g.strokeStyle = "#5eead4";
+        g.strokeStyle = "#4fd1c5";
         g.save();
         g.translate(7, 7);
         arch(g, W - 14, H - 14, (W - 14) / 2);
@@ -444,10 +453,10 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   const wg = new THREE.BufferGeometry();
   wg.setAttribute("position", new THREE.BufferAttribute(wpos, 3));
   const wmat = new THREE.LineBasicMaterial({
-    color: "#e8d9b8",
+    color: light ? "#8a8173" : "#e8d9b8",
     transparent: true,
     opacity: 0,
-    blending: THREE.AdditiveBlending,
+    blending: light ? THREE.NormalBlending : THREE.AdditiveBlending,
     depthWrite: false,
   });
   const warp = new THREE.LineSegments(wg, wmat);

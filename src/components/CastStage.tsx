@@ -294,7 +294,7 @@ export function CastStage({
                     src={suited ? person.astro : person.src}
                     alt={person.name}
                     loading="lazy"
-                    className="size-14 rounded-full bg-[#f1e8de] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1),0_0_0_2px_rgba(94,234,212,0.35),0_12px_18px_-8px_rgba(0,0,0,0.95)]"
+                    className="size-14 rounded-full bg-[#f1e8de] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1),0_0_0_2px_rgba(79,209,197,0.35),0_12px_18px_-8px_rgba(0,0,0,0.95)]"
                   />
                   <span className="font-serif text-[11px] leading-tight whitespace-nowrap text-amber">{say(person).symbol}</span>
                 </button>

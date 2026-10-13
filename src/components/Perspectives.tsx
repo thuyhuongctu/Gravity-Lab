@@ -4,7 +4,7 @@ type Tag = "ok" | "warn" | "open";
 type Item = { tag: Tag; vi: [string, string]; en: [string, string]; cite: string };
 
 const TAG: Record<Tag, { vi: string; en: string; cls: string }> = {
-  ok: { vi: "Vững", en: "Holds", cls: "bg-[#5eead4] text-[#062a30]" },
+  ok: { vi: "Vững", en: "Holds", cls: "bg-[#4fd1c5] text-[#062a30]" },
   warn: { vi: "Mở rộng", en: "Extended", cls: "bg-[#ffc56b] text-[#3a1a05]" },
   open: { vi: "Đang khám phá", en: "Open question", cls: "bg-[#ff7a9c] text-[#3a0d1c]" },
 };

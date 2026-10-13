@@ -77,7 +77,7 @@ function NextCard({ kicker, title, onClick, children }: { kicker: string; title:
         <span className="mt-0.5 block font-serif text-base leading-snug">{title}</span>
         {children}
       </span>
-      <span aria-hidden="true" className="amber-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full">
+      <span aria-hidden="true" className="cosmic-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full">
         <ArrowRight className="size-4" />
       </span>
     </button>
@@ -199,7 +199,7 @@ export function Observatory() {
               alt=""
               width={44}
               height={44}
-              className="size-9 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(94,234,212,0.25)] sm:size-11"
+              className="size-9 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(79,209,197,0.25)] sm:size-11"
             />
             <div className="min-w-0">
               <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">
@@ -426,7 +426,7 @@ export function Observatory() {
             <>
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_45%_0%,rgba(255,197,107,0.16),transparent_70%),radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(94,234,212,0.07),transparent_70%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_45%_0%,rgba(255,197,107,0.16),transparent_70%),radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(79,209,197,0.07),transparent_70%)]"
               />
               <div aria-hidden="true" className="noir-vignette pointer-events-none absolute inset-0" />
               <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0" />
