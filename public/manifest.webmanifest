@@ -1,7 +1,7 @@
 {
   "name": "Gravity Lab",
   "short_name": "Gravity Lab",
-  "description": "From a falling apple to FDI flows: learn the gravity model in 3D, from Newton's law through Tinbergen's trade model to FDI into Viet Nam. / Từ một quả táo rơi đến dòng vốn FDI: học mô hình lực hấp dẫn bằng 3D.",
+  "description": "From a falling apple to FDI flows: learn the gravity model in 3D, from Newton's law through Tinbergen's trade model to FDI inflows into Viet Nam. / Từ một quả táo rơi đến dòng vốn FDI: học mô hình lực hấp dẫn bằng 3D.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",

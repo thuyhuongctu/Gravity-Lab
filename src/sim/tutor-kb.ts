@@ -194,8 +194,8 @@ export const KB: Entry[] = [
     q: { vi: "Hệ số khoảng cách của thương mại thường bằng bao nhiêu?", en: "How large is the usual distance coefficient for trade?" },
     keys: "disdier head 2008 meta analysis phan tich tong hop distance elasticity 0.9 -1 trung binh average",
     a: {
-      vi: "Phân tích tổng hợp của Disdier và Head (2008) trên 1.467 ước lượng từ 103 bài cho thấy hệ số khoảng cách của thương mại trung bình gần 0,9 (về độ lớn); giá trị chuẩn thường dùng là −1. Với FDI vào Việt Nam, Phan và Do (2019) tìm được khoảng −0,38, nhỏ hơn nhiều.",
-      en: "Disdier and Head's (2008) meta-analysis of 1,467 estimates from 103 papers puts the trade distance coefficient near 0.9 in size on average; −1 is the usual benchmark. For FDI into Vietnam, Phan and Do (2019) find about −0.38, much smaller.",
+      vi: "Phân tích tổng hợp của Disdier và Head (2008) trên 1.467 ước lượng từ 103 bài cho thấy hệ số khoảng cách của thương mại trung bình gần 0,9 (về độ lớn); giá trị chuẩn thường dùng là −1. Với dòng vốn FDI vào Việt Nam (FDI inflows), Phan và Do (2019) tìm được khoảng −0,38, nhỏ hơn nhiều.",
+      en: "Disdier and Head's (2008) meta-analysis of 1,467 estimates from 103 papers puts the trade distance coefficient near 0.9 in size on average; −1 is the usual benchmark. For FDI inflows into Vietnam, Phan and Do (2019) find about −0.38, much smaller.",
     },
     cite: ["Disdier & Head (2008)", "Yotov et al. (2016)", "Phan & Do (2019)"],
   },
@@ -204,8 +204,8 @@ export const KB: Entry[] = [
     q: { vi: "Dữ liệu Xuan và Xing (2008) trong app dùng để làm gì?", en: "What is the Xuan and Xing (2008) data used for in the app?" },
     keys: "xuan xing 2008 du lieu mau sample data fdi thuc hien realised 1990 2004 nam bang 0 zero years",
     a: {
-      vi: "Xuan và Xing (2008) công bố FDI thực hiện vào Việt Nam theo nước nguồn, 1990–2004. App dùng bảng này làm dữ liệu mẫu: có nhiều năm bằng 0, nên thấy rõ OLS trên log phải bỏ quan sát còn PPML giữ cả mẫu. Bấm “Nạp bảng Xuan & Xing” trong mục Dữ liệu của bạn.",
-      en: "Xuan and Xing (2008) report realised FDI into Vietnam by source country, 1990–2004. The app uses this table as sample data: it has many zero years, so you can see OLS on logs dropping observations while PPML keeps the whole sample. Press “Load the Xuan & Xing table” under Your data.",
+      vi: "Xuan và Xing (2008) công bố dòng vốn FDI thực hiện vào Việt Nam (realised FDI inflows) theo nước nguồn, 1990–2004. App dùng bảng này làm dữ liệu mẫu: có nhiều năm bằng 0, nên thấy rõ OLS trên log phải bỏ quan sát còn PPML giữ cả mẫu. Bấm “Nạp bảng Xuan & Xing” trong mục Dữ liệu của bạn.",
+      en: "Xuan and Xing (2008) report realised FDI inflows into Vietnam by source country, 1990–2004. The app uses this table as sample data: it has many zero years, so you can see OLS on logs dropping observations while PPML keeps the whole sample. Press “Load the Xuan & Xing table” under Your data.",
     },
     cite: ["Xuan & Xing (2008)"],
     see: { room: "lab", panel: "data", vi: "Mở Dữ liệu của bạn", en: "Open Your data" },
@@ -244,7 +244,7 @@ export const KB: Entry[] = [
   },
   {
     id: "fdi-quality",
-    q: { vi: "FDI vào Việt Nam tăng có nghĩa là Việt Nam giữ lại nhiều giá trị hơn không?", en: "Does more FDI mean Vietnam keeps more value?" },
+    q: { vi: "Dòng vốn FDI vào Việt Nam (FDI inflows) tăng có nghĩa là Việt Nam giữ lại nhiều giá trị hơn không?", en: "Does more FDI mean Vietnam keeps more value?" },
     keys: "chat luong fdi quality quantity gia tri gia tang noi dia nuoc ngoai domestic foreign value added dva fva tiva oecd pathak hinrich 0.79 0.64",
     a: {
       vi: "Chưa chắc. Theo số liệu OECD TiVA do Pathak (2026) tổng hợp, 2017–2022 giá trị gia tăng nội địa trong xuất khẩu của Việt Nam tăng 50,6% nhưng giá trị gia tăng nước ngoài tăng 86,3%, nên tỷ lệ nội địa/nước ngoài giảm từ 0,79 xuống 0,64. Mô hình trọng lực giải thích vốn đến bao nhiêu, không cho biết giá trị giữ lại bao nhiêu.",

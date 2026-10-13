@@ -38,7 +38,7 @@ const SCENES: Scene[] = [
     h: ["Từ một quả táo rơi", "From a falling apple"],
     p: [
       "Cuộn để bay cùng lớp học — từ khu vườn của Newton đến dòng vốn đầu tư trực tiếp nước ngoài (FDI) chảy về Việt Nam.",
-      "Scroll to fly with the class — from Newton’s orchard to foreign direct investment (FDI) flowing into Viet Nam.",
+      "Scroll to fly with the class — from Newton’s orchard to foreign direct investment (FDI) inflows into Viet Nam.",
     ],
   },
   {
@@ -74,7 +74,7 @@ const SCENES: Scene[] = [
     c: "Jan Tinbergen (1903–1994) · Tinbergen (1962)",
   },
   {
-    k: ["FDI vào Việt Nam · 2006–2015", "FDI into Viet Nam · 2006–2015"],
+    k: ["Dòng vốn FDI vào Việt Nam (FDI inflows) · 2006–2015", "FDI inflows into Viet Nam · 2006–2015"],
     h: ["Xa thêm 1%, FDI giảm 0,38%", "1% farther, 0.38% less FDI"],
     p: [
       "Khoảng cách địa lý (geographic distance) có tác động âm, có ý nghĩa thống kê (statistically significant), đến dòng vốn vào Việt Nam. Kéo β để xem dòng vốn quanh Trái Đất thay đổi.",
@@ -170,7 +170,7 @@ const TOUR: Array<{ label: [string, string]; h: [string, string]; p: [string, st
   {
     label: ["Cuộn để bay (scroll)", "Scroll to fly"],
     h: ["Bay qua câu chuyện", "Fly through the story"],
-    p: ["Cuộn hoặc vuốt lên để đi qua 9 cảnh, từ khu vườn Newton đến FDI vào Việt Nam.", "Scroll or swipe up to travel through nine scenes, from Newton’s orchard to FDI in Viet Nam."],
+    p: ["Cuộn hoặc vuốt lên để đi qua 9 cảnh, từ khu vườn Newton đến dòng vốn FDI vào Việt Nam (FDI inflows).", "Scroll or swipe up to travel through nine scenes, from Newton’s orchard to FDI in Viet Nam."],
   },
   {
     label: ["Thanh trượt (slider)", "Slider"],
