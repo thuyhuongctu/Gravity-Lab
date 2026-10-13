@@ -62,7 +62,7 @@ export function About() {
           </p>
         </div>
         <div className="noir-card rounded-[26px] p-5 sm:p-6">
-          <p className="kicker text-amber">{tr("Quyền riêng tư (privacy)", "Privacy")}</p>
+          <p id="privacy-h" className="kicker text-amber">{tr("Quyền riêng tư (privacy)", "Privacy")}</p>
           <ul className="mt-3 flex flex-col gap-2.5 text-sm leading-relaxed">
             {privacy.map(([vi, en]) => (
               <li key={en} className="flex gap-2.5">

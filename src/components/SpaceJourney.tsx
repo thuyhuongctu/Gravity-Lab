@@ -4,7 +4,7 @@ import { Formula } from "@/components/Formula";
 import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
 import { fmt, tr } from "@/lib/prefs";
 import { duckAmbient } from "@/lib/sound";
-import { markEntered, useCalm } from "@/lib/journey-state";
+import { markEntered, rememberScene, takeResume, useCalm } from "@/lib/journey-state";
 import { usePrefs } from "@/lib/use-prefs";
 
 type Scene = {
@@ -25,6 +25,12 @@ type Scene = {
  */
 /** Scenes and languages with no recording this session, so the browser voice is used at once. */
 const missing = new Set<string>();
+
+/** Scene titles, for "Continue · Scene N" elsewhere in the app. */
+export function sceneTitle(i: number, lang: "vi" | "en"): string {
+  const s = SCENES[Math.max(0, Math.min(8, i))]!;
+  return s.h[lang === "vi" ? 0 : 1];
+}
 
 const SCENES: Scene[] = [
   {
@@ -328,7 +334,10 @@ export function SpaceJourney({
           light,
           intro,
           enteredAt: () => enteredAt,
-          onScene: setScene,
+          onScene: (i) => {
+            setScene(i);
+            rememberScene(i);
+          },
         });
       })
       .catch(() => setFailed(true));
@@ -402,6 +411,14 @@ export function SpaceJourney({
     const s = sections.current[i];
     if (sc && s) sc.scrollTo({ top: s.offsetTop + sc.clientHeight * 0.15, behavior: calm ? "auto" : "smooth" });
   };
+  // "Continue · Scene N" from the Me room: scroll there once the story is on screen.
+  useEffect(() => {
+    if (!entered) return;
+    const i = takeResume();
+    if (i === null) return;
+    const id = window.setTimeout(() => go(i), 350);
+    return () => window.clearTimeout(id);
+  }, [entered]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const L = lang === "vi" ? 0 : 1;
   const num = (v: number) => fmt(v, 2);
