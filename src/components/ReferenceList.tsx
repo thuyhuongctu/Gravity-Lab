@@ -46,6 +46,14 @@ const REFS: Ref[] = [
     ],
   },
   {
+    id: "gso-2026",
+    parts: [
+      {
+        text: "Cục Thống kê. (2026). Báo cáo tình hình kinh tế – xã hội quý IV và năm 2025 [Socio-economic situation report, Q4 and 2025]. Bộ Tài chính. https://www.nso.gov.vn",
+      },
+    ],
+  },
+  {
     id: "disdier-2008",
     parts: [
       {
