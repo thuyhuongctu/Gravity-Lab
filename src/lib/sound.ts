@@ -112,104 +112,129 @@ export function setVolume(v: number) {
   emit();
 }
 
-/* ---------- ambience ---------- */
+/* ---------- ambience: cosmic tones ---------- */
 
 let ambientBus: GainNode | null = null;
 let ambientStop: (() => void) | null = null;
+let ducked = false;
+const AMBIENT_LEVEL = 0.32;
+const DUCK = 0.22;
 
-function brownNoise(c: AudioContext): AudioBuffer {
-  const len = c.sampleRate * 6;
-  const buf = c.createBuffer(1, len, c.sampleRate);
-  const d = buf.getChannelData(0);
-  let last = 0;
-  for (let i = 0; i < len; i++) {
-    last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02;
-    d[i] = last * 3.2;
+/**
+ * Planetary frequencies (Cousto's octave method), Hz · gain · pan: Earth year (OM),
+ * Earth day, the Moon (synodic), Venus, Mercury. A 68.05 Hz sub is the year one octave down.
+ */
+const TONES: Array<[number, number, number]> = [
+  [136.1, 0.22, 0],
+  [194.18, 0.12, -0.5],
+  [210.42, 0.08, 0.5],
+  [221.23, 0.07, -0.3],
+  [141.27, 0.09, 0.35],
+];
+
+function reverb(c: AudioContext): ConvolverNode {
+  const len = c.sampleRate * 5;
+  const ir = c.createBuffer(2, len, c.sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = ir.getChannelData(ch);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
   }
-  return buf;
+  const v = c.createConvolver();
+  v.buffer = ir;
+  return v;
 }
 
 function startAmbient(c: AudioContext) {
   ambientBus = c.createGain();
   ambientBus.gain.value = 0;
-  ambientBus.gain.setTargetAtTime(0.32, c.currentTime, 1.4);
-  out(ambientBus, 0.9);
+  // Six seconds in, so the drone rises rather than starts.
+  ambientBus.gain.linearRampToValueAtTime((ducked ? DUCK : 1) * AMBIENT_LEVEL, c.currentTime + 6);
+  const comp = c.createDynamicsCompressor();
+  comp.threshold.value = -24;
+  comp.ratio.value = 3;
+  ambientBus.connect(comp);
+  out(comp, 0.9);
   const nodes: AudioScheduledSourceNode[] = [];
 
-  // A low open fifth (A1, E2, A2), each partial breathing on its own slow LFO.
-  const partials = [
-    { f: 55, type: "sine" as OscillatorType, g: 0.5, lfo: 0.043 },
-    { f: 82.41, type: "sine" as OscillatorType, g: 0.28, lfo: 0.061 },
-    { f: 110.3, type: "triangle" as OscillatorType, g: 0.12, lfo: 0.029 },
-    { f: 164.8, type: "sine" as OscillatorType, g: 0.06, lfo: 0.077 },
-  ];
-  for (const p of partials) {
-    const o = c.createOscillator();
-    o.type = p.type;
-    o.frequency.value = p.f;
-    const g = c.createGain();
-    g.gain.value = p.g * 0.6;
-    const lfo = c.createOscillator();
-    lfo.frequency.value = p.lfo;
-    const depth = c.createGain();
-    depth.gain.value = p.g * 0.4;
-    lfo.connect(depth);
-    depth.connect(g.gain);
-    o.connect(g);
-    g.connect(ambientBus);
-    o.start();
-    lfo.start();
-    nodes.push(o, lfo);
-  }
+  // Dry and wet (5 s convolver) paths into the bus.
+  const bus = c.createGain();
+  const dry = c.createGain();
+  dry.gain.value = 0.5;
+  const wet = c.createGain();
+  wet.gain.value = 0.55;
+  const verb = reverb(c);
+  bus.connect(dry);
+  bus.connect(verb);
+  verb.connect(wet);
+  dry.connect(ambientBus);
+  wet.connect(ambientBus);
 
-  // Solar wind: brown noise through a slowly sweeping low-pass.
-  const n = c.createBufferSource();
-  n.buffer = brownNoise(c);
-  n.loop = true;
+  // A low-pass swept very slowly, so the texture breathes over half a minute.
   const lp = c.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 420;
-  lp.Q.value = 0.8;
+  lp.frequency.value = 900;
+  lp.Q.value = 0.4;
+  lp.connect(bus);
   const sweep = c.createOscillator();
-  sweep.frequency.value = 0.031;
+  sweep.frequency.value = 0.03;
   const sweepDepth = c.createGain();
-  sweepDepth.gain.value = 300;
+  sweepDepth.gain.value = 420;
   sweep.connect(sweepDepth);
   sweepDepth.connect(lp.frequency);
-  const ng = c.createGain();
-  ng.gain.value = 0.22;
-  n.connect(lp);
-  lp.connect(ng);
-  ng.connect(ambientBus);
-  n.start();
   sweep.start();
-  nodes.push(n, sweep);
+  nodes.push(sweep);
 
-  // Now and then a faint high star tone, picked from the same fifth.
-  const stars = [440, 659.3, 880, 1318.5, 987.8];
-  let timer = 0;
-  const twinkle = () => {
-    if (!ctx || !ambientBus) return;
-    bell(
-      stars[Math.floor(Math.random() * stars.length)]!,
-      0.035,
-      5,
-      ambientBus,
-      Math.random() * 1.6 - 0.8,
-    );
-    timer = window.setTimeout(twinkle, 3500 + Math.random() * 6000);
-  };
-  timer = window.setTimeout(twinkle, 2500);
+  TONES.forEach(([f, g, p], i) => {
+    // Each tone twice, detuned left and right, so the pair beats slowly, felt as breathing.
+    for (const side of [0, 1]) {
+      const o = c.createOscillator();
+      o.type = i === 0 ? "sine" : "triangle";
+      o.frequency.value = f + (side ? 0.35 + i * 0.12 : -0.35 - i * 0.12);
+      const v = c.createGain();
+      v.gain.value = g * 0.5;
+      const pan = c.createStereoPanner();
+      pan.pan.value = Math.max(-1, Math.min(1, p + (side ? 0.35 : -0.35)));
+      const lfo = c.createOscillator();
+      lfo.frequency.value = 0.04 + i * 0.017;
+      const depth = c.createGain();
+      depth.gain.value = g * 0.35;
+      lfo.connect(depth);
+      depth.connect(v.gain);
+      lfo.start(c.currentTime + i * 1.3);
+      o.connect(v);
+      v.connect(pan);
+      pan.connect(lp);
+      o.start();
+      nodes.push(o, lfo);
+    }
+  });
+  const sub = c.createOscillator();
+  sub.frequency.value = 68.05;
+  const sv = c.createGain();
+  sv.gain.value = 0.1;
+  sub.connect(sv);
+  sv.connect(bus);
+  sub.start();
+  nodes.push(sub);
 
-  const bus = ambientBus;
+  const main = ambientBus;
   ambientStop = () => {
-    window.clearTimeout(timer);
     const t = c.currentTime;
-    bus.gain.cancelScheduledValues(t);
-    bus.gain.setTargetAtTime(0, t, 0.6);
+    main.gain.cancelScheduledValues(t);
+    main.gain.setTargetAtTime(0, t, 0.5);
     for (const node of nodes) node.stop(t + 3);
-    window.setTimeout(() => bus.disconnect(), 3200);
+    window.setTimeout(() => main.disconnect(), 3200);
   };
+}
+
+/** While the song plays, the tones fall to 22% over 2.5 s and rise again after. */
+export function duckAmbient(on: boolean) {
+  ducked = on;
+  if (!ctx || !ambientBus || !state.ambient) return;
+  const t = ctx.currentTime;
+  ambientBus.gain.cancelScheduledValues(t);
+  ambientBus.gain.setValueAtTime(ambientBus.gain.value, t);
+  ambientBus.gain.linearRampToValueAtTime((on ? DUCK : 1) * AMBIENT_LEVEL, t + 2.5);
 }
 
 export function setAmbient(on: boolean) {

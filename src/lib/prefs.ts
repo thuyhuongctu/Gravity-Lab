@@ -22,13 +22,14 @@ function write(key: string, value: string) {
   }
 }
 
+/** English first; Vietnamese is a full translation that keeps the English terms in brackets. */
 function initialLang(): Lang {
-  if (typeof window === "undefined") return "vi";
+  if (typeof window === "undefined") return "en";
   const fromUrl = new URLSearchParams(window.location.search).get("lang");
   if (fromUrl === "vi" || fromUrl === "en") return fromUrl;
   const saved = read(LANG_KEY);
   if (saved === "vi" || saved === "en") return saved;
-  return "vi";
+  return "en";
 }
 
 function initialTheme(): Theme {

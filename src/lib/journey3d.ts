@@ -25,6 +25,10 @@ export type JourneyOptions = {
   calm: boolean;
   /** Called when the nearest scene changes. */
   onScene?: (index: number) => void;
+  /** performance.now() when the visitor entered, or null while the splash is up. */
+  enteredAt: () => number | null;
+  /** Hero apple entrance, chosen per visit: 0 drop, 1 orbit, 2 sculpt, 3 swing, 4 warp. */
+  intro: number;
 };
 
 export type JourneyHandle = {
@@ -188,12 +192,13 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     return g;
   };
 
-  // 1. The apple.
+  // 1. The hero apple, with five entrance variants (one per visit, never the same twice in a row).
   {
     const g = place(0, 1);
+    const ap = new THREE.Group();
+    g.add(ap);
     const a = ball(5, "#e2483a");
     a.scale.set(1, 0.92, 1);
-    g.add(a);
     const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.35, 2.4, 12), clay("#6a4422"));
     stem.position.y = 5.4;
     stem.rotation.z = 0.2;
@@ -201,10 +206,110 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     leaf.scale.set(1.4, 0.25, 0.7);
     leaf.position.set(1.6, 5.6, 0);
     leaf.rotation.z = 0.5;
-    g.add(stem, leaf);
+    ap.add(a, stem, leaf);
+    const shadow = new THREE.Mesh(
+      new THREE.CircleGeometry(5, 48),
+      new THREE.MeshBasicMaterial({ color: "#000", transparent: true, opacity: 0.35, depthWrite: false }),
+    );
+    shadow.rotation.x = -Math.PI / 2;
+    shadow.position.y = -5.2;
+    const flash = sprite("rgba(255,214,150,.95)", 0.01);
+    g.add(shadow, flash);
+    const mode = opts.intro;
+    const DUR = opts.calm ? 0 : [2.4, 3.2, 2.6, 3.4, 2.2][mode]!;
+    const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
+    const bounce = (x: number) => {
+      const n = 7.5625;
+      const d = 2.75;
+      if (x < 1 / d) return n * x * x;
+      if (x < 2 / d) return n * (x -= 1.5 / d) * x + 0.75;
+      if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + 0.9375;
+      return n * (x -= 2.625 / d) * x + 0.984375;
+    };
     anim.push((t) => {
-      g.rotation.y = t * 0.4;
-      g.position.y = (mobile() ? 4 : 0) + Math.sin(t) * 0.6;
+      // The entrance starts 3.6 s after "Enter", so the apple lands as the camera arrives.
+      const en = opts.enteredAt();
+      const te = en === null ? -1 : (performance.now() - en) / 1000 - 3.6;
+      const u = DUR ? (te < 0 ? 0 : Math.min(1, te / DUR)) : 1;
+      let x = 0;
+      let y = 0;
+      let z = 0;
+      let sc = 1;
+      let sx = 1;
+      let sy = 1;
+      let ry = t * 0.4;
+      let fl = 0;
+      if (u < 1)
+        switch (mode) {
+          case 0: {
+            // Newton's drop: falls and bounces, squashing on the floor.
+            y = (1 - bounce(u)) * 30;
+            const k = Math.max(0, 1 - y / 1.6) * (1 - u);
+            sy = 1 - 0.3 * k;
+            sx = 1 + 0.18 * k;
+            ry = u * 1.2;
+            break;
+          }
+          case 1: {
+            // Captured into orbit: spirals in.
+            const e = easeOut(u);
+            const r = (1 - e) * 32;
+            const ang = u * Math.PI * 5;
+            x = Math.cos(ang) * r;
+            z = Math.sin(ang) * r;
+            y = (1 - e) * 8;
+            sc = 0.35 + 0.65 * e;
+            break;
+          }
+          case 2: {
+            // Kneaded from clay: wobbles into shape.
+            const e = easeOut(u);
+            const w = Math.sin(u * Math.PI * 7) * (1 - u);
+            sc = e;
+            sy = 1 + 0.3 * w;
+            sx = 1 - 0.18 * w;
+            ry = u * Math.PI * 2;
+            break;
+          }
+          case 3: {
+            // Swings on the branch, then drops.
+            const H = 14;
+            const L = 10;
+            if (u < 0.68) {
+              const v = u / 0.68;
+              const th = 0.75 * Math.sin(v * Math.PI * 3) * (1 - 0.55 * v);
+              x = L * Math.sin(th);
+              y = H + L * (1 - Math.cos(th));
+              ap.rotation.z = th;
+            } else {
+              const v = (u - 0.68) / 0.32;
+              y = H * (1 - bounce(v));
+              ap.rotation.z = 0;
+              const k = Math.max(0, 1 - y / 1.6) * (1 - v);
+              sy = 1 - 0.25 * k;
+              sx = 1 + 0.15 * k;
+            }
+            break;
+          }
+          default: {
+            // Warps in from deep space, with a flash on arrival.
+            const e = easeOut(u);
+            z = -(1 - e) * 240;
+            sc = 0.2 + 0.8 * e;
+            fl = Math.max(0, 1 - Math.abs(u - 0.9) / 0.1);
+          }
+        }
+      if (u >= 1) {
+        y = Math.sin(Math.max(0, te) - DUR) * 0.6;
+        ap.rotation.z = 0;
+      }
+      ap.position.set(x, y, z);
+      ap.scale.set(sc * sx, sc * sy, sc * sx);
+      ap.rotation.y = ry;
+      flash.scale.setScalar(0.01 + fl * 34);
+      const lift = Math.max(0, y);
+      (shadow.material as THREE.MeshBasicMaterial).opacity = 0.35 * Math.max(0, 1 - lift / 20) * Math.min(1, sc * 1.2);
+      shadow.scale.setScalar(Math.max(0.2, 1 - lift / 40) * sc);
     });
   }
   // 2. The Earth and the Moon.
@@ -524,6 +629,17 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     tmp.x = mx;
     look.lerp(tmp, calm ? 0.5 : 0.1);
     cam.lookAt(look);
+    // Entry: the camera glides in from far behind over 7 s while the fog thickens.
+    {
+      const en = opts.enteredAt();
+      const k = calm ? 1 : en === null ? 0 : Math.min(1, (performance.now() - en) / 7000);
+      const q = 1 - Math.pow(1 - k, 3);
+      const far = (1 - q) * 420;
+      cam.position.z += far;
+      cam.position.y += far * 0.12 + Math.sin(t * 0.15) * (1 - q) * 6;
+      cam.position.x += Math.sin(t * 0.1) * (1 - q) * 14;
+      (scene.fog as THREE.FogExp2).density = (light ? 0.004 : 0.009) * (0.35 + 0.65 * q);
+    }
 
     const w = calm ? 0 : Math.min(1, speed * 25);
     wmat.opacity = w * 0.8;
