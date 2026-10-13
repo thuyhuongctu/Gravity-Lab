@@ -7,6 +7,7 @@ import { DistancePuzzle } from "@/components/DistancePuzzle";
 import { SpaceJourney } from "@/components/SpaceJourney";
 import { Perspectives } from "@/components/Perspectives";
 import { SongStory } from "@/components/SongStory";
+import { About } from "@/components/About";
 import { NewtonFigure } from "@/components/NewtonFigure";
 import { VnWatermark } from "@/components/VnWatermark";
 import { RoomCover, type CoverRoom } from "@/components/RoomCover";
@@ -482,6 +483,7 @@ export function StoryStage({
       </ol>
       <Perspectives />
       <SongStory />
+      <About />
       <div className="h-10" />
       </div>
     </div>

@@ -8,6 +8,7 @@ import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage"
 import { StoryStage } from "@/components/StoryStage";
 import { SoundPanel } from "@/components/SoundPanel";
 import { Clocks } from "@/components/Clocks";
+import { Onboarding } from "@/components/Onboarding";
 import { setAmbient } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
 import { SONGS, getSong, pickSong, subscribeSong, toggleSong } from "@/lib/song";
@@ -204,11 +205,12 @@ export function Observatory() {
 
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
+      <Onboarding />
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper/10 px-3 py-3 sm:gap-3 sm:px-5 xl:flex-nowrap">
           <div className="order-1 flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
             <img
-              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=4`}
+              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=5`}
               alt=""
               width={44}
               height={44}

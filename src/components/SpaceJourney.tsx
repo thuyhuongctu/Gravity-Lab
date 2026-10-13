@@ -147,6 +147,39 @@ const NARRATION: Array<[string, string]> = [
   ],
 ];
 
+/** Lumina's quick tour, four steps (design handoff, GL Play Store 1i–1l). VI then EN. */
+const TOUR: Array<{ label: [string, string]; h: [string, string]; p: [string, string] }> = [
+  {
+    label: ["Cuộn để bay (scroll)", "Scroll to fly"],
+    h: ["Bay qua câu chuyện", "Fly through the story"],
+    p: ["Cuộn hoặc vuốt lên để đi qua 9 cảnh, từ khu vườn Newton đến FDI vào Việt Nam.", "Scroll or swipe up to travel through nine scenes, from Newton’s orchard to FDI in Viet Nam."],
+  },
+  {
+    label: ["Thanh trượt (slider)", "Slider"],
+    h: ["Thay một tham số (parameter)", "Change one parameter"],
+    p: [
+      "Kéo thanh trượt để thay đổi số mũ (exponent) n. Với n = 2 quỹ đạo khép kín; giá trị khác làm quỹ đạo tiến động (precession).",
+      "Drag the slider to change the exponent n. At n = 2 the orbit closes; any other value makes it precess.",
+    ],
+  },
+  {
+    label: ["Lumina", "Lumina"],
+    h: ["Hỏi tôi bất cứ điều gì", "Ask me anything"],
+    p: [
+      "Chạm vào ảnh của tôi ở bất kỳ cảnh nào để nghe giải thích ngắn, bằng tiếng Anh hoặc tiếng Việt. Nút trợ giảng trên đầu trang trả lời câu hỏi của bạn kèm nguồn.",
+      "Tap my portrait in any scene for a short explanation, read aloud in English or Vietnamese. The tutor button in the header answers your questions with sources.",
+    ],
+  },
+  {
+    label: ["Phòng thí nghiệm", "Laboratory"],
+    h: ["Ước lượng với dữ liệu thật", "Estimate with real data"],
+    p: [
+      "Mở phòng thí nghiệm để xem hệ số năm 2019, FDI theo ngành năm 2025, hoặc nạp dữ liệu CSV của bạn và ước lượng bằng PPML.",
+      "Open the laboratory to explore the 2019 coefficients, FDI by sector in 2025, or load your own CSV and estimate with PPML.",
+    ],
+  },
+];
+
 /** One host per scene, in scene order: each one leads the class through a step of the story. */
 const HOSTS: Array<{ id: string; name: [string, string]; role: [string, string] }> = [
   { id: "lan-chi", name: ["Lan Chi", "Lan Chi"], role: ["Gọi cả lớp lên tàu", "Calls the class aboard"] },
@@ -504,7 +537,7 @@ export function SpaceJourney({
           ))}
         </nav>
       ) : null}
-      {inJourney ? <Lumina scene={scene} open={luOpen} setOpen={setLuOpen} T={T} entered={entered} /> : null}
+      {inJourney ? <Lumina scene={scene} open={luOpen} setOpen={setLuOpen} T={T} entered={entered} onLab={onLab} /> : null}
       <p
         aria-hidden="true"
         className={
@@ -555,15 +588,19 @@ function Lumina({
   setOpen,
   T,
   entered,
+  onLab,
 }: {
   scene: number;
   open: boolean;
   setOpen: (v: boolean) => void;
   T: (typeof TONE)["dark"];
   entered: boolean;
+  onLab: () => void;
 }) {
   const { lang } = usePrefs();
   const [speaking, setSpeaking] = useState(false);
+  // The quick tour runs inside the panel; null means she is explaining the scene.
+  const [tour, setTour] = useState<number | null>(null);
   const [pulse, setPulse] = useState(() => {
     try {
       return !localStorage.getItem(LUMINA_KEY);
@@ -601,6 +638,7 @@ function Lumina({
   const toggle = () => {
     if (open) {
       stop();
+      setTour(null);
       setOpen(false);
       return;
     }
@@ -653,7 +691,7 @@ function Lumina({
         >
           <div className="flex items-center gap-2">
             <b className={"flex-1 text-xs font-semibold tracking-[0.12em] uppercase " + T.kicker}>
-              {tr("Cảnh", "Scene")} {scene + 1} / 9
+              {tour === null ? `${tr("Cảnh", "Scene")} ${scene + 1} / 9` : `${tr("Lumina · Hướng dẫn nhanh (quick tour)", "Lumina · Quick tour")} ${tour + 1} / ${TOUR.length}`}
             </b>
             <button
               type="button"
@@ -664,22 +702,70 @@ function Lumina({
               <X className="size-4" />
             </button>
           </div>
-          <p className={"mt-2.5 text-[15px] leading-[1.6] text-pretty " + T.body} aria-live="polite">
-            {text}
-          </p>
-          {canSpeak ? (
-            <div className="mt-3.5 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={speaking ? stop : speak}
-                aria-pressed={speaking}
-                className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold"
-              >
-                <Volume2 className="size-4" />
-                {speaking ? tr("Dừng", "Stop") : tr("Nghe", "Listen")}
-              </button>
-            </div>
-          ) : null}
+          {tour === null ? (
+            <>
+              <p className={"mt-2.5 text-[15px] leading-[1.6] text-pretty " + T.body} aria-live="polite">
+                {text}
+              </p>
+              <div className="mt-3.5 flex flex-wrap items-center gap-2">
+                {canSpeak ? (
+                  <button
+                    type="button"
+                    onClick={speaking ? stop : speak}
+                    aria-pressed={speaking}
+                    className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold"
+                  >
+                    <Volume2 className="size-4" />
+                    {speaking ? tr("Dừng", "Stop") : tr("Nghe", "Listen")}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => {
+                    stop();
+                    setTour(0);
+                  }}
+                  className={"inline-flex min-h-11 items-center rounded-full px-4 text-[13px] font-semibold " + T.well}
+                >
+                  {tr("Hướng dẫn nhanh", "Quick tour")}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className={"mt-2.5 text-xs " + T.mist}>{TOUR[tour]!.label[L]}</p>
+              <p className="mt-1 font-serif text-xl leading-tight">{TOUR[tour]!.h[L]}</p>
+              <p className={"mt-2 text-[15px] leading-[1.6] text-pretty " + T.body}>{TOUR[tour]!.p[L]}</p>
+              <div className="mt-3.5 flex items-center gap-2">
+                <span className="flex gap-1.5" aria-hidden="true">
+                  {TOUR.map((_, k) => (
+                    <span key={k} className={"h-1.5 rounded-full transition-all " + (k === tour ? "w-[22px] bg-[#4fd1c5]" : "w-1.5 bg-[#a8a297]/60")} />
+                  ))}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setTour(null)}
+                  className={"ml-auto inline-flex min-h-11 items-center rounded-full px-3.5 text-[13px] font-semibold " + T.well}
+                >
+                  {tr("Bỏ qua", "Skip")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (tour < TOUR.length - 1) setTour(tour + 1);
+                    else {
+                      setTour(null);
+                      setOpen(false);
+                      onLab();
+                    }
+                  }}
+                  className="cosmic-btn inline-flex min-h-11 items-center rounded-full px-4 text-[13px] font-semibold"
+                >
+                  {tour < TOUR.length - 1 ? tr("Tiếp tục", "Continue") : tr("Vào phòng thí nghiệm →", "Open the lab →")}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       ) : null}
     </>
