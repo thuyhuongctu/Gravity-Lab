@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { ArrowRight, LocateFixed, Moon, Move, Pause, Play, Sun, Trash2 } from "lucide-react";
 import { OrbitCanvas, type OrbitSnap } from "@/components/OrbitCanvas";
 import { TradeCanvas } from "@/components/TradeCanvas";
@@ -7,6 +7,10 @@ import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiL
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
 import { SoundPanel } from "@/components/SoundPanel";
+import { Clocks } from "@/components/Clocks";
+import { setAmbient } from "@/lib/sound";
+import { useSound } from "@/lib/use-sound";
+import { SONGS, getSong, pickSong, subscribeSong, toggleSong } from "@/lib/song";
 import { TutorPanel } from "@/components/TutorPanel";
 import { RoomCover } from "@/components/RoomCover";
 import { ReferenceList } from "@/components/ReferenceList";
@@ -116,6 +120,15 @@ export function Observatory() {
   const [gamma, setGamma] = useState(1.1);
   const [boosts, setBoosts] = useState<Record<string, number>>({});
   const lab = useLabState();
+  const sound = useSound();
+  const song = useSyncExternalStore(subscribeSong, getSong, getSong);
+  // The header song follows the language: switching language restarts it in the other version.
+  useEffect(() => {
+    if (song.playing && song.id !== lang) {
+      pickSong(lang);
+      toggleSong();
+    }
+  }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
   const [who, setWho] = useState<string | null>(null);
 
   function enterFromClass(room: "orbit" | "trade" | "lab", panel: LabPanel | null, id: string) {
@@ -215,6 +228,7 @@ export function Observatory() {
             </div>
           </div>
           <div className="order-2 flex shrink-0 items-center gap-1.5 sm:gap-2 xl:order-3">
+            <Clocks />
             <a
               href={APP_DOI_URL}
               target="_blank"
@@ -227,6 +241,35 @@ export function Observatory() {
             >
               DOI {APP_DOI}
             </a>
+            <button
+              type="button"
+              onClick={() => {
+                if (!song.playing && song.id !== lang) pickSong(lang);
+                toggleSong();
+              }}
+              aria-pressed={song.playing}
+              aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
+              title={SONGS[lang].title}
+              className={
+                "inline-flex min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap sm:min-h-11 2xl:max-w-60 " +
+                (song.playing ? "cosmic-btn" : "noir-raise text-paper")
+              }
+            >
+              <span aria-hidden="true">{song.playing ? "❚❚" : "♫"}</span>
+              <span className="hidden truncate 2xl:inline">{SONGS[lang].title}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setAmbient(!sound.ambient)}
+              aria-pressed={sound.ambient}
+              title={tr("Âm vũ trụ: tần số các hành tinh", "Cosmic tones: planetary frequencies")}
+              className={
+                "hidden min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap sm:inline-flex sm:min-h-11 " +
+                (sound.ambient ? "cosmic-btn" : "noir-raise text-paper")
+              }
+            >
+              ◉ {tr("Âm vũ trụ", "Tones")}
+            </button>
             <div
               className="noir-track flex rounded-full p-1"
               role="group"
