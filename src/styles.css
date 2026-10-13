@@ -634,3 +634,11 @@ input[type="range"]:focus-visible::-moz-range-thumb {
     filter: none;
   }
 }
+
+/* The story header floats over the 3D journey and fades into the sky. */
+.story-head {
+  background: linear-gradient(to bottom, rgb(10 11 13 / 0.82), rgb(10 11 13 / 0));
+}
+:root[data-theme="light"] .story-head {
+  background: linear-gradient(to bottom, rgb(236 229 216 / 0.92), rgb(236 229 216 / 0));
+}

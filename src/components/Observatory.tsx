@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { ArrowRight, LocateFixed, Moon, Move, Pause, Play, Sun, Trash2 } from "lucide-react";
+import { ArrowRight, LocateFixed, Menu, Moon, Move, Pause, Play, Sun, Trash2, Wind } from "lucide-react";
 import { OrbitCanvas, type OrbitSnap } from "@/components/OrbitCanvas";
 import { TradeCanvas } from "@/components/TradeCanvas";
 import { GlobeCanvas } from "@/components/GlobeCanvas";
@@ -7,7 +7,8 @@ import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiL
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
 import { SoundPanel } from "@/components/SoundPanel";
-import { Clocks } from "@/components/Clocks";
+import { Clocks, Flag } from "@/components/Clocks";
+import { toggleCalm, useCalm, useEntered } from "@/lib/journey-state";
 import { Onboarding } from "@/components/Onboarding";
 import { setAmbient } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
@@ -97,11 +98,42 @@ const MASS_BALL: Record<string, { ball: string; size: number }> = {
   star: { ball: "ball-amber", size: 28 },
 };
 
+type Mode = "story" | "orbit" | "trade" | "lab" | "cast";
+
+const ROOMS: Array<[Mode, string, string]> = [
+  ["story", "Câu chuyện", "Story"],
+  ["cast", "Nhân vật", "Cast"],
+  ["orbit", "Quỹ đạo", "Orbit"],
+  ["trade", "Thương mại", "Trade"],
+  ["lab", "FDI", "FDI"],
+];
+
 export function Observatory() {
   const { lang, theme } = usePrefs();
   const simRef = useRef<Simulation | null>(null);
   const [ready, setReady] = useState(false);
-  const [mode, setMode] = useState<"story" | "orbit" | "trade" | "lab" | "cast">("story");
+  const [mode, setMode] = useState<Mode>("story");
+  // Over the story the header is a transparent overlay (design handoff); a menu holds the rooms and settings.
+  const story = mode === "story";
+  const entered = useEntered();
+  const calm = useCalm();
+  const [menu, setMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const onDown = (e: PointerEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setMenu(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenu(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menu]);
   const [massId, setMassId] = useState<MassId>("planet");
   const [timeScale, setTimeScale] = useState(1);
   const [paused, setPaused] = useState(false);
@@ -203,199 +235,211 @@ export function Observatory() {
     setPairId(null);
   }
 
+  const go = (id: Mode) => {
+    setWho(null);
+    setMode(id);
+    setMenu(false);
+  };
+  const tabs = (vertical: boolean) => (
+    <div
+      className={vertical ? "flex flex-col gap-1" : "noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 xl:order-2 xl:w-auto"}
+      role="tablist"
+      aria-orientation={vertical ? "vertical" : undefined}
+      aria-label={tr("Chế độ", "Mode")}
+    >
+      {ROOMS.map(([id, vi, en]) => (
+        <button
+          key={id}
+          type="button"
+          role="tab"
+          aria-selected={mode === id}
+          onClick={() => go(id)}
+          className={
+            "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " + (vertical ? "text-left " : "") + (mode === id ? "cosmic-btn" : "text-mist")
+          }
+        >
+          {tr(vi, en)}
+        </button>
+      ))}
+    </div>
+  );
+  const songBtn = (
+    <button
+      type="button"
+      onClick={() => {
+        if (!song.playing && song.id !== lang) pickSong(lang);
+        toggleSong();
+      }}
+      aria-pressed={song.playing}
+      aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
+      title={SONGS[lang].title}
+      className={
+        "min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap " +
+        (story ? "inline-flex xl:min-h-11 xl:max-w-60 " : "hidden 2xl:inline-flex 2xl:min-h-11 2xl:max-w-60 ") +
+        (song.playing ? "cosmic-btn" : "noir-raise text-paper")
+      }
+    >
+      <span aria-hidden="true">{song.playing ? "❚❚" : "♫"}</span>
+      <span className={"hidden truncate " + (story ? "xl:inline" : "2xl:inline")}>{SONGS[lang].title}</span>
+    </button>
+  );
+  const tonesBtn = (cls: string) => (
+    <button
+      type="button"
+      onClick={() => setAmbient(!sound.ambient)}
+      aria-pressed={sound.ambient}
+      title={tr("Âm vũ trụ: tần số các hành tinh", "Cosmic tones: planetary frequencies")}
+      className={"min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap " + cls + " " + (sound.ambient ? "cosmic-btn" : "noir-raise text-paper")}
+    >
+      ◉ {tr("Âm vũ trụ", "Tones")}
+    </button>
+  );
+  const langSeg = (
+    <div className="noir-track flex rounded-full p-1" role="group" aria-label={tr("Ngôn ngữ", "Language")}>
+      {(["vi", "en"] as const).map((l) => (
+        <button
+          key={l}
+          type="button"
+          lang={l}
+          aria-pressed={lang === l}
+          onClick={() => setLang(l)}
+          className={"min-h-9 min-w-9 rounded-full px-2 text-xs font-semibold uppercase sm:min-w-10 " + (lang === l ? "cosmic-btn" : "text-mist")}
+        >
+          {l === "vi" ? "VI" : "EN"}
+        </button>
+      ))}
+    </div>
+  );
+  const themeBtn = (
+    <button
+      type="button"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      aria-label={theme === "dark" ? tr("Chuyển sang giao diện sáng", "Switch to light theme") : tr("Chuyển sang giao diện tối", "Switch to dark theme")}
+      className="noir-raise inline-flex min-h-10 min-w-10 items-center justify-center rounded-full text-paper sm:min-h-11 sm:min-w-11"
+    >
+      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+    </button>
+  );
+  const doiLink = (cls: string) => (
+    <a
+      href={APP_DOI_URL}
+      target="_blank"
+      rel="noreferrer"
+      className={"min-h-11 items-center rounded-full border border-paper/20 px-3 text-xs text-mist " + cls}
+      title={tr("Trích dẫn ứng dụng này qua DOI Zenodo", "Cite this app through its Zenodo DOI")}
+    >
+      DOI {APP_DOI}
+    </a>
+  );
+  const tutor = (
+    <TutorPanel
+      onOpen={(room, panel) => {
+        if (panel) lab.setPanel(panel);
+        setWho(null);
+        setMode(room);
+      }}
+    />
+  );
+  const header = story ? (
+    <header
+      className={
+        "story-head pointer-events-none absolute inset-x-0 top-0 z-[6] flex items-center justify-between gap-2 px-3 py-3 transition-opacity duration-[2000ms] sm:gap-3 sm:px-[clamp(16px,3vw,32px)] sm:py-[18px] " +
+        (entered ? "visible opacity-100 delay-[1200ms]" : "invisible opacity-0")
+      }
+    >
+      <div className="pointer-events-auto flex min-w-0 items-center gap-2.5 sm:gap-3">
+        <img
+          src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=5`}
+          alt=""
+          width={44}
+          height={44}
+          className="size-10 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(79,209,197,0.25)]"
+        />
+        <div className="min-w-0">
+          <h1 className="font-serif text-xl leading-none font-extrabold tracking-[-0.02em] text-paper max-[639px]:sr-only">Gravity Lab</h1>
+          <p className="mt-1 hidden items-center gap-1.5 text-[11px] font-semibold tracking-[0.1em] whitespace-nowrap uppercase text-amber min-[700px]:flex">
+            <Flag id="vn" />
+            <span>{tr("Làm tại Đồng bằng sông Cửu Long · Việt Nam", "Made in the Mekong Delta · Việt Nam")}</span>
+          </p>
+        </div>
+      </div>
+      <div className="pointer-events-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <Clocks story />
+        {songBtn}
+        {tonesBtn("hidden sm:inline-flex")}
+        <button
+          type="button"
+          onClick={toggleCalm}
+          aria-pressed={calm}
+          aria-label={tr("Giảm chuyển động", "Reduce motion")}
+          title={tr("Giảm chuyển động (reduce motion)", "Reduce motion")}
+          className={"hidden min-h-10 min-w-10 items-center justify-center rounded-full min-[700px]:inline-flex " + (calm ? "pill-on" : "noir-raise text-paper")}
+        >
+          <Wind className="size-4" aria-hidden="true" />
+        </button>
+        {langSeg}
+        {tutor}
+        <div ref={menuRef} className="relative">
+          <button
+            type="button"
+            onClick={() => setMenu((v) => !v)}
+            aria-expanded={menu}
+            aria-haspopup="true"
+            aria-label={tr("Các phòng và cài đặt", "Rooms and settings")}
+            className={"inline-flex min-h-10 min-w-10 items-center justify-center rounded-full sm:min-h-11 sm:min-w-11 " + (menu ? "bg-teal-2 text-void" : "noir-raise text-paper")}
+          >
+            <Menu className="size-4" />
+          </button>
+          {menu ? (
+            <div className="noir-card absolute top-12 right-0 z-[7] w-[min(300px,calc(100vw-24px))] rounded-[24px] p-3 text-ink">
+              {tabs(true)}
+              <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-paper/10 pt-3">
+                <SoundPanel />
+                {themeBtn}
+                {tonesBtn("inline-flex sm:hidden")}
+                {doiLink("inline-flex")}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </header>
+  ) : (
+    <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper/10 px-3 py-3 sm:gap-3 sm:px-5 xl:flex-nowrap">
+      <div className="order-1 flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
+        <img
+          src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=5`}
+          alt=""
+          width={44}
+          height={44}
+          className="size-9 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(79,209,197,0.25)] sm:size-11"
+        />
+        <div className="min-w-0">
+          <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">{tr("Trọng lực", "Gravity Lab")}</h1>
+          <p className={"mt-1 hidden truncate text-xs text-mist sm:block " + (mode === "cast" ? "" : "xl:max-2xl:hidden")}>
+            {mode === "cast" ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe") : tr("Vũ trụ, thương mại, rồi FDI", "The universe, trade, then FDI")}
+          </p>
+        </div>
+      </div>
+      <div className="order-2 flex shrink-0 items-center gap-1.5 sm:gap-2 xl:order-3">
+        <Clocks />
+        {doiLink("hidden sm:inline-flex")}
+        {songBtn}
+        {tonesBtn("hidden 2xl:inline-flex 2xl:min-h-11")}
+        {langSeg}
+        {tutor}
+        <SoundPanel />
+        {themeBtn}
+      </div>
+      {tabs(false)}
+    </header>
+  );
+
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <Onboarding />
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper/10 px-3 py-3 sm:gap-3 sm:px-5 xl:flex-nowrap">
-          <div className="order-1 flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
-            <img
-              src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=5`}
-              alt=""
-              width={44}
-              height={44}
-              className="size-9 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(79,209,197,0.25)] sm:size-11"
-            />
-            <div className="min-w-0">
-              <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">
-                {tr("Trọng lực", "Gravity Lab")}
-              </h1>
-              <p className={"mt-1 hidden truncate text-xs text-mist sm:block " + (mode === "story" || mode === "cast" ? "" : "xl:max-2xl:hidden")}>
-                {mode === "story"
-                  ? tr("Từ Newton đến dòng vốn", "From Newton to capital flows")
-                  : mode === "cast"
-                    ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe")
-                    : tr("Vũ trụ, thương mại, rồi FDI", "The universe, trade, then FDI")}
-              </p>
-            </div>
-          </div>
-          <div className="order-2 flex shrink-0 items-center gap-1.5 sm:gap-2 xl:order-3">
-            <Clocks />
-            <a
-              href={APP_DOI_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden min-h-11 items-center rounded-full border border-paper/20 px-3 text-xs text-mist sm:inline-flex"
-              title={tr(
-                "Trích dẫn ứng dụng này qua DOI Zenodo",
-                "Cite this app through its Zenodo DOI",
-              )}
-            >
-              DOI {APP_DOI}
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                if (!song.playing && song.id !== lang) pickSong(lang);
-                toggleSong();
-              }}
-              aria-pressed={song.playing}
-              aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
-              title={SONGS[lang].title}
-              className={
-                "hidden min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap 2xl:inline-flex 2xl:min-h-11 2xl:max-w-60 " +
-                (song.playing ? "cosmic-btn" : "noir-raise text-paper")
-              }
-            >
-              <span aria-hidden="true">{song.playing ? "❚❚" : "♫"}</span>
-              <span className="hidden truncate 2xl:inline">{SONGS[lang].title}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setAmbient(!sound.ambient)}
-              aria-pressed={sound.ambient}
-              title={tr("Âm vũ trụ: tần số các hành tinh", "Cosmic tones: planetary frequencies")}
-              className={
-                "hidden min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap 2xl:inline-flex 2xl:min-h-11 " +
-                (sound.ambient ? "cosmic-btn" : "noir-raise text-paper")
-              }
-            >
-              ◉ {tr("Âm vũ trụ", "Tones")}
-            </button>
-            <div
-              className="noir-track flex rounded-full p-1"
-              role="group"
-              aria-label={tr("Ngôn ngữ", "Language")}
-            >
-              {(["vi", "en"] as const).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  lang={l}
-                  aria-pressed={lang === l}
-                  onClick={() => setLang(l)}
-                  className={
-                    "min-h-9 min-w-9 rounded-full px-2 text-xs font-semibold uppercase sm:min-w-10 " +
-                    (lang === l ? "cosmic-btn" : "text-mist")
-                  }
-                >
-                  {l === "vi" ? "VI" : "EN"}
-                </button>
-              ))}
-            </div>
-            <TutorPanel
-              onOpen={(room, panel) => {
-                if (panel) lab.setPanel(panel);
-                setWho(null);
-                setMode(room);
-              }}
-            />
-            <SoundPanel />
-            <button
-              type="button"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label={
-                theme === "dark"
-                  ? tr("Chuyển sang giao diện sáng", "Switch to light theme")
-                  : tr("Chuyển sang giao diện tối", "Switch to dark theme")
-              }
-              className="noir-raise inline-flex min-h-10 min-w-10 items-center justify-center rounded-full text-paper sm:min-h-11 sm:min-w-11"
-            >
-              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-            </button>
-          </div>
-          <div
-            className="noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 xl:order-2 xl:w-auto"
-            role="tablist"
-            aria-label={tr("Chế độ", "Mode")}
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "story"}
-              className={
-                "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "story" ? "cosmic-btn" : "text-mist")
-              }
-              onClick={() => {
-                setWho(null);
-                setMode("story");
-              }}
-            >
-              {tr("Câu chuyện", "Story")}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "cast"}
-              className={
-                "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "cast" ? "cosmic-btn" : "text-mist")
-              }
-              onClick={() => {
-                setWho(null);
-                setMode("cast");
-              }}
-            >
-              {tr("Nhân vật", "Cast")}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "orbit"}
-              className={
-                "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "orbit" ? "cosmic-btn" : "text-mist")
-              }
-              onClick={() => {
-                setWho(null);
-                setMode("orbit");
-              }}
-            >
-              {tr("Quỹ đạo", "Orbit")}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "trade"}
-              className={
-                "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "trade" ? "cosmic-btn" : "text-mist")
-              }
-              onClick={() => {
-                setWho(null);
-                setMode("trade");
-              }}
-            >
-              {tr("Thương mại", "Trade")}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === "lab"}
-              className={
-                "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
-                (mode === "lab" ? "cosmic-btn" : "text-mist")
-              }
-              onClick={() => {
-                setWho(null);
-                setMode("lab");
-              }}
-            >
-              FDI
-            </button>
-          </div>
-        </header>
+      <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
+        {header}
 
         <main className="relative min-h-0 flex-1">
           {mode === "orbit" && ready && simRef.current ? (
