@@ -53,7 +53,7 @@ export function datasetCSV(): string {
 
 /** A Stata script that imports the CSV, labels it, declares the panel and saves a .dta. */
 export function datasetDo(): string {
-  return `* Gravity Lab - fdi_vn_panel: realised FDI into Viet Nam by partner and year, 1990-2004
+  return `* Gravity Lab - fdi_vn_panel: realised FDI inflows into Viet Nam by partner and year, 1990-2004
 * Source: Xuan & Xing (2008), Table 1; distances computed from capital coordinates (haversine).
 * Zero years are kept so PPML can use the whole sample (Santos Silva & Tenreyro, 2006).
 version 14
@@ -62,7 +62,7 @@ import delimited "fdi_vn_panel.csv", varnames(1) encoding(utf8) clear
 label variable iso3     "Partner economy (ISO 3166-1 alpha-3)"
 label variable partner  "Partner economy, name"
 label variable year     "Year"
-label variable fdi_musd "Realised FDI into Viet Nam, USD million"
+label variable fdi_musd "Realised FDI inflows into Viet Nam, USD million"
 label variable fdi_zero "1 if realised FDI is zero in that year"
 label variable dist_km  "Great-circle distance Ha Noi - partner capital, km"
 label variable ln_dist  "log of dist_km"
@@ -93,7 +93,7 @@ Gravity Lab · Can Tho University. A teaching dataset for the gravity model.
 | iso3 | string | Mã đối tác ISO 3166-1 alpha-3 · Partner economy code |
 | partner | string | Tên đối tác (tiếng Anh) · Partner name (English) |
 | year | integer | Năm · Year |
-| fdi_musd | number | FDI thực hiện vào Việt Nam, triệu USD · Realised FDI into Viet Nam, USD million |
+| fdi_musd | number | dòng vốn FDI thực hiện vào Việt Nam (realised FDI inflows), triệu USD · Realised FDI inflows into Viet Nam, USD million |
 | fdi_zero | 0/1 | 1 nếu FDI thực hiện bằng 0 trong năm đó · 1 if realised FDI is zero that year |
 | dist_km | number | Khoảng cách vòng lớn Hà Nội – thủ đô đối tác, km · Great-circle distance Hà Nội – partner capital, km |
 | ln_dist | number | log(dist_km) |
@@ -217,8 +217,8 @@ export function draftFromModel(modelIndex: number): Draft {
     });
   return {
     title: {
-      vi: `Bảng 1. Kết quả ước lượng mô hình lực hấp dẫn cho FDI vào Việt Nam, 2006–2015 (Mô hình ${k})`,
-      en: `Table 1. Gravity-model estimates for FDI into Viet Nam, 2006–2015 (Model ${k})`,
+      vi: `Bảng 1. Kết quả ước lượng mô hình lực hấp dẫn cho dòng vốn FDI vào Việt Nam (FDI inflows), 2006–2015 (Mô hình ${k})`,
+      en: `Table 1. Gravity-model estimates for FDI inflows into Viet Nam, 2006–2015 (Model ${k})`,
     },
     method: {
       vi: "Mô hình tác động ngẫu nhiên (REM) với sai số chuẩn vững, dữ liệu bảng đối tác × năm. Hệ số lấy từ Phan và Do (2019), Bảng 6.",

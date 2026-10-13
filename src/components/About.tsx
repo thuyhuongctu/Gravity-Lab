@@ -47,8 +47,8 @@ export function About() {
           </div>
           <p className="mt-4 text-[15px] leading-relaxed">
             {tr(
-              "Tôi xây dựng Gravity Lab để sinh viên kinh tế được nhìn thấy mô hình lực hấp dẫn (gravity model) — từ định luật Newton đến FDI vào Việt Nam — thay vì chỉ đọc về nó.",
-              "I built Gravity Lab so economics students can see the gravity model — from Newton’s law to FDI into Viet Nam — rather than only read about it.",
+              "Tôi xây dựng Gravity Lab để sinh viên kinh tế được nhìn thấy mô hình lực hấp dẫn (gravity model) — từ định luật Newton đến dòng vốn FDI vào Việt Nam (FDI inflows) — thay vì chỉ đọc về nó.",
+              "I built Gravity Lab so economics students can see the gravity model — from Newton’s law to FDI inflows into Viet Nam — rather than only read about it.",
             )}
           </p>
           <p className="mt-2 text-[15px] leading-relaxed">
