@@ -25,10 +25,11 @@ import {
 import { Pause, Play } from "lucide-react";
 import { ReferenceList } from "@/components/ReferenceList";
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
+import { SectorBars, SectorFlow, type FdiMode } from "@/components/SectorFlow";
 import { fmt, fmtInt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 
-export type LabPanel = "coef" | "sim" | "ppml" | "data";
+export type LabPanel = "coef" | "sim" | "ppml" | "data" | "sector";
 
 function num(n: number, digits = 2): string {
   return fmt(n, digits);
@@ -69,6 +70,7 @@ function Chip({
 export function useLabState() {
   const { lang } = usePrefs();
   const [panel, setPanel] = useState<LabPanel>("sim");
+  const [fdiMode, setFdiMode] = useState<FdiMode>("disb");
   const [model, setModel] = useState(7);
   const [a, setA] = useState("JPN");
   const [b, setB] = useState("DEU");
@@ -163,7 +165,7 @@ export function useLabState() {
   }
 
   return {
-    panel, setPanel, model, setModel, a, setA, b, setB, econ, setEcon, inst, setInst, open, setOpen, fta, setFta, check, setCheck,
+    panel, setPanel, fdiMode, setFdiMode, model, setModel, a, setA, b, setB, econ, setEcon, inst, setInst, open, setOpen, fta, setFta, check, setCheck,
     impact, rows, lesson, name,
     table, yCol, setYCol, unitCol, setUnitCol, yearCol, setYearCol, xCols, setXCols, yLevel, setYLevel, yearFE, setYearFE, clusterOn, setClusterOn,
     estMsg: estMsg || tr("Nạp tệp CSV để bắt đầu.", "Load a CSV file to start."), est, numCols, loadTable, runEstimate, note,
@@ -193,6 +195,7 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
       {lab.panel === "coef" ? <CoefStage lab={lab} /> : null}
       {lab.panel === "ppml" ? <PpmlStage lab={lab} /> : null}
       {lab.panel === "data" ? <DataStage lab={lab} /> : null}
+      {lab.panel === "sector" ? <SectorStage lab={lab} /> : null}
     </div>
   );
 }
@@ -731,6 +734,22 @@ function DataStage({ lab }: { lab: LabState }) {
   );
 }
 
+/** FDI by sector, 2025: capital flowing from the world into Việt Nam's sectors. */
+function SectorStage({ lab }: { lab: LabState }) {
+  return (
+    <div className="flex max-w-3xl flex-col gap-3">
+      <p className="kicker text-amber-2">{tr("FDI theo ngành · 2025", "FDI by sector · 2025")}</p>
+      <SectorFlow mode={lab.fdiMode} />
+      <p className="text-xs text-mist">
+        {tr(
+          "Mỗi biểu tượng bay qua là khoảng một tỷ USD trong một năm; ⚙ chế biến, chế tạo · ▦ bất động sản · ϟ điện, khí đốt · ◆ ngành khác. Số liệu Cục Thống kê (2026); vốn thực hiện là số ước tính.",
+          "Each icon crossing is roughly one billion US dollars in a year: ⚙ manufacturing · ▦ real estate · ϟ electricity and gas · ◆ other sectors. Data: General Statistics Office (2026); disbursed capital is an estimate.",
+        )}
+      </p>
+    </div>
+  );
+}
+
 export function FdiDock({ lab }: { lab: LabState }) {
   return (
     <div className="flex flex-col gap-4 p-4 pb-8">
@@ -744,6 +763,9 @@ export function FdiDock({ lab }: { lab: LabState }) {
         <Chip flat active={lab.panel === "ppml"} onClick={() => lab.setPanel("ppml")}>
           {tr("Vì sao PPML", "Why PPML")}
         </Chip>
+        <Chip flat active={lab.panel === "sector"} onClick={() => lab.setPanel("sector")}>
+          {tr("Theo ngành 2025", "By sector 2025")}
+        </Chip>
         <Chip flat active={lab.panel === "data"} onClick={() => lab.setPanel("data")}>
           {tr("Dữ liệu của bạn", "Your data")}
         </Chip>
@@ -751,6 +773,7 @@ export function FdiDock({ lab }: { lab: LabState }) {
       {lab.panel === "coef" ? <CoefDock lab={lab} /> : null}
       {lab.panel === "sim" ? <SimDock lab={lab} /> : null}
       {lab.panel === "data" ? <DataDock lab={lab} /> : null}
+      {lab.panel === "sector" ? <SectorBars mode={lab.fdiMode} setMode={lab.setFdiMode} /> : null}
       {lab.panel === "ppml" ? (
         <p className="text-sm text-muted">
           {tr(

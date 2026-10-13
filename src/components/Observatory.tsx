@@ -251,7 +251,7 @@ export function Observatory() {
               aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
               title={SONGS[lang].title}
               className={
-                "inline-flex min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap sm:min-h-11 2xl:max-w-60 " +
+                "hidden min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap 2xl:inline-flex 2xl:min-h-11 2xl:max-w-60 " +
                 (song.playing ? "cosmic-btn" : "noir-raise text-paper")
               }
             >
@@ -264,7 +264,7 @@ export function Observatory() {
               aria-pressed={sound.ambient}
               title={tr("Âm vũ trụ: tần số các hành tinh", "Cosmic tones: planetary frequencies")}
               className={
-                "hidden min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap sm:inline-flex sm:min-h-11 " +
+                "hidden min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap 2xl:inline-flex 2xl:min-h-11 " +
                 (sound.ambient ? "cosmic-btn" : "noir-raise text-paper")
               }
             >

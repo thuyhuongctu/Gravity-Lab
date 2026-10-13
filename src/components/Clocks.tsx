@@ -56,7 +56,7 @@ export function Clocks() {
     return () => window.clearInterval(id);
   }, []);
   return (
-    <div className="hidden items-center gap-1.5 xl:flex" aria-label={tr("Giờ địa phương", "Local times")}>
+    <div className="hidden items-center gap-1.5 2xl:flex" aria-label={tr("Giờ địa phương", "Local times")}>
       {ZONES.map((z, i) => (
         <span
           key={z.id}

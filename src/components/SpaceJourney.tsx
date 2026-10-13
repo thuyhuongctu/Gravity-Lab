@@ -511,7 +511,7 @@ export function SpaceJourney({
           "pointer-events-none absolute bottom-5 left-1/2 z-[3] -translate-x-1/2 text-[13px] whitespace-nowrap transition-opacity duration-500 max-[699px]:hidden " +
           T.mist +
           " " +
-          (hint && entered ? "opacity-100" : "opacity-0")
+          (hint && entered && inJourney ? "opacity-100" : "opacity-0")
         }
       >
         {tr("Cuộn để bay ↓", "Scroll to fly ↓")}
