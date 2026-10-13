@@ -18,11 +18,11 @@ import {
   varLabel,
   xuanXingGrid,
   xuanXingSeries,
-  xuanXingTable,
   type CsvTable,
   type PanelEstimate,
 } from "@/sim/gravity-lab";
-import { Pause, Play } from "lucide-react";
+import { Download, FileText, Pause, Play } from "lucide-react";
+import { DATASET_COLUMNS, datasetCSV, datasetCodebook, datasetDo, datasetPanel, draftFromEstimate, draftFromModel, draftToDocx, draftToLatex, type Draft } from "@/sim/pro";
 import { ReferenceList } from "@/components/ReferenceList";
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
 import { SectorBars, SectorFlow, type FdiMode } from "@/components/SectorFlow";
@@ -64,6 +64,65 @@ function Chip({
     >
       {children}
     </button>
+  );
+}
+
+/** Hand the reader a file; nothing leaves the device. */
+function saveFile(name: string, data: string | Uint8Array, type: string) {
+  const blob = new Blob([data as BlobPart], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/** The cleaned panel as a table the lab can estimate on. */
+function panelTable(): CsvTable {
+  return { columns: [...DATASET_COLUMNS], rows: datasetPanel() };
+}
+
+/** Pro: the results draft with its interpretation in the current language, and Word / LaTeX exports. */
+function DraftCard({ draft, file }: { draft: Draft; file: string }) {
+  const { lang } = usePrefs();
+  const L = lang === "vi" ? "vi" : "en";
+  return (
+    <div className="noir-card rounded-[26px] px-4 py-4 sm:px-5">
+      <p className="kicker text-amber-2">
+        {tr("Bản nháp kết quả (publication-ready)", "Results draft")} · <span className="normal-case">Pro</span>
+      </p>
+      <p className="mt-1 text-xs text-mist">{draft.method[L]}</p>
+      <ul className="mt-3 flex list-disc flex-col gap-1.5 pl-4 text-sm text-paper">
+        {draft.paragraphs[L].map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-sm font-semibold"
+          onClick={() => saveFile(`${file}.docx`, draftToDocx(draft), "application/vnd.openxmlformats-officedocument.wordprocessingml.document")}
+        >
+          <FileText className="size-4" />
+          {tr("Tải Word (.docx)", "Download Word (.docx)")}
+        </button>
+        <button
+          type="button"
+          className="noir-raise inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-sm font-medium text-paper"
+          onClick={() => saveFile(`${file}.tex`, draftToLatex(draft), "application/x-tex")}
+        >
+          <FileText className="size-4" />
+          {tr("Tải LaTeX (.tex)", "Download LaTeX (.tex)")}
+        </button>
+      </div>
+      <p className="mt-2 text-xs text-mist">
+        {tr(
+          "Bảng với sao mức ý nghĩa, diễn giải VI và EN, tài liệu tham khảo APA 7. Hãy đối chiếu từng con số với kết quả của bạn trước khi nộp.",
+          "Table with significance stars, VI and EN interpretation, APA 7 references. Check every number against your own output before submission.",
+        )}
+      </p>
+    </div>
   );
 }
 
@@ -410,6 +469,7 @@ function CoefStage({ lab }: { lab: LabState }) {
           ))}
         </ul>
       ) : null}
+      <DraftCard draft={draftFromModel(lab.model)} file={`gravity-lab-model-${lab.model + 1}`} />
     </div>
   );
 }
@@ -730,6 +790,9 @@ function DataStage({ lab }: { lab: LabState }) {
           {lab.estMsg}
         </p>
       ) : null}
+      {est ? (
+        <DraftCard draft={draftFromEstimate(est, { y: lab.yCol, yearFE: lab.yearFE, cluster: lab.clusterOn, unit: lab.unitCol })} file="gravity-lab-results" />
+      ) : null}
     </div>
   );
 }
@@ -954,9 +1017,31 @@ function DataDock({ lab }: { lab: LabState }) {
         >
           {tr("Tải tệp mẫu", "Download template")}
         </button>
-        <button type="button" className="noir-raise min-h-11 rounded-full px-4 text-sm font-medium" onClick={() => lab.loadTable(xuanXingTable(), ["lndist"])}>
-          {tr("Nạp bảng Xuan & Xing", "Load the Xuan & Xing table")}
+        <button type="button" className="noir-raise min-h-11 rounded-full px-4 text-sm font-medium" onClick={() => lab.loadTable(panelTable(), ["ln_dist"])}>
+          {tr("Nạp bộ dữ liệu FDI", "Load the FDI dataset")}
         </button>
+      </div>
+      <div className="noir-card rounded-[22px] px-4 py-3">
+        <p className="kicker text-amber">
+          {tr("Bộ dữ liệu FDI Việt Nam (cleaned dataset)", "Cleaned Viet Nam FDI dataset")} · <span className="normal-case">Pro</span>
+        </p>
+        <p className="mt-1 text-xs text-muted">
+          {tr(
+            "fdi_vn_panel: đối tác × năm, 1990–2004, 150 dòng; FDI thực hiện (Xuan & Xing, 2008), khoảng cách tới Hà Nội; giữ các năm bằng 0. Từ điển biến hướng dẫn ghép GDP, FTA, PCI.",
+            "fdi_vn_panel: partner × year, 1990–2004, 150 rows; realised FDI (Xuan & Xing, 2008), distance to Hà Nội; zero years kept. The codebook explains how to merge GDP, FTA and PCI.",
+          )}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button type="button" className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold" onClick={() => saveFile("fdi_vn_panel.csv", datasetCSV(), "text/csv")}>
+            <Download className="size-3.5" /> CSV
+          </button>
+          <button type="button" className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold" onClick={() => saveFile("fdi_vn_panel.do", datasetDo(), "text/plain")}>
+            <Download className="size-3.5" /> Stata .do
+          </button>
+          <button type="button" className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold" onClick={() => saveFile("fdi_vn_panel_codebook.md", datasetCodebook(), "text/markdown")}>
+            <Download className="size-3.5" /> {tr("Từ điển biến", "Codebook")}
+          </button>
+        </div>
       </div>
       {lab.table && lab.numCols.length ? (
         <>
