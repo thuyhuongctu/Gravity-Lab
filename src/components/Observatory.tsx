@@ -251,7 +251,7 @@ export function Observatory() {
               aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
               title={SONGS[lang].title}
               className={
-                "hidden min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap lg:inline-flex lg:min-h-11 2xl:max-w-60 " +
+                "hidden min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap 2xl:inline-flex 2xl:min-h-11 2xl:max-w-60 " +
                 (song.playing ? "cosmic-btn" : "noir-raise text-paper")
               }
             >
