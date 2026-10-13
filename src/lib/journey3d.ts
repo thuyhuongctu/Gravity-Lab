@@ -17,6 +17,8 @@ export type JourneyOptions = {
   sections: () => HTMLElement[];
   /** Live slider values, read every frame. */
   vals: JourneyVals;
+  /** Portrait discs for the crew ring in scene 8. */
+  faces: string[];
   /** Light theme: a warm bone sky instead of the graphite void. */
   light?: boolean;
   /** Reduced motion: no hop, no warp, idle at a quarter speed. */
@@ -40,6 +42,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   const R = new THREE.WebGLRenderer({ antialias: true, powerPreference: "low-power" });
   R.setPixelRatio(Math.min(window.devicePixelRatio, low ? 1.25 : 2));
   R.toneMapping = THREE.ACESFilmicToneMapping;
+  R.toneMappingExposure = 0.95;
   R.outputColorSpace = THREE.SRGBColorSpace;
   const el = R.domElement;
   el.style.display = "block";
@@ -51,7 +54,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   const light = !!opts.light;
   const sky = light ? "#ece5d8" : "#0a0b0d";
   scene.background = new THREE.Color(sky);
-  scene.fog = new THREE.FogExp2(sky, light ? 0.004 : 0.006);
+  scene.fog = new THREE.FogExp2(sky, light ? 0.004 : 0.009);
   const cam = new THREE.PerspectiveCamera(50, 1, 0.1, 2000);
   const mobile = () => host.clientWidth < 700;
 
@@ -77,20 +80,35 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   // Seeded noise, so the clay grain is the same on every load.
   let seed = 7;
   const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
-  const noise = cnv(256, 256, (g) => {
-    const d = g.createImageData(256, 256);
+  // Thumbed clay: soft dents and lumps over a fine grain.
+  const noise = cnv(512, 512, (g, w, h) => {
+    g.fillStyle = "#808080";
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 900; i++) {
+      const x = rand() * w;
+      const y = rand() * h;
+      const r = 4 + rand() * 22;
+      const v = rand() < 0.5 ? 40 : 200;
+      const gr = g.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, `rgba(${v},${v},${v},.35)`);
+      gr.addColorStop(1, "rgba(128,128,128,0)");
+      g.fillStyle = gr;
+      g.fillRect(x - r, y - r, r * 2, r * 2);
+    }
+    const d = g.getImageData(0, 0, w, h);
     for (let i = 0; i < d.data.length; i += 4) {
-      const v = 120 + rand() * 70;
-      d.data[i] = d.data[i + 1] = d.data[i + 2] = v;
-      d.data[i + 3] = 255;
+      const n = (rand() - 0.5) * 26;
+      d.data[i]! += n;
+      d.data[i + 1]! += n;
+      d.data[i + 2]! += n;
     }
     g.putImageData(d, 0, 0);
   });
   noise.wrapS = noise.wrapT = THREE.RepeatWrapping;
-  noise.repeat.set(3, 3);
+  noise.repeat.set(2, 2);
   noise.colorSpace = THREE.NoColorSpace;
   const clay = (color: string, x: THREE.MeshStandardMaterialParameters = {}) =>
-    new THREE.MeshStandardMaterial({ color, roughness: 0.92, metalness: 0, bumpMap: noise, bumpScale: 0.6, ...x });
+    new THREE.MeshStandardMaterial({ color, roughness: 0.96, metalness: 0, bumpMap: noise, bumpScale: 1.4, ...x });
   const ball = (r: number, col: string, x?: THREE.MeshStandardMaterialParameters) =>
     new THREE.Mesh(new THREE.SphereGeometry(r, 64, 64), clay(col, x));
   const sprite = (col: string, s: number) => {
@@ -101,13 +119,16 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     return sp;
   };
 
-  scene.add(light ? new THREE.AmbientLight("#fff4e2", 1.3) : new THREE.AmbientLight("#4a4740", 0.7));
-  const key = new THREE.DirectionalLight("#ffe2a8", 1.6);
-  key.position.set(30, 40, 30);
-  const rim = new THREE.DirectionalLight("#4fd1c5", 1.6);
+  // A warm spotlight rides with the camera; a teal rim from behind; a soft fill.
+  scene.add(light ? new THREE.HemisphereLight("#fff4e2", "#b5a98f", 1.4) : new THREE.HemisphereLight("#3a362f", "#050506", 0.45));
+  const key = new THREE.SpotLight("#ffdca0", 700, 0, 0.6, 0.7, 1.2);
+  key.position.set(10, 26, 18);
+  key.target.position.set(0, -4, -30);
+  cam.add(key, key.target);
+  const rim = new THREE.DirectionalLight("#4fd1c5", 2.4);
   rim.position.set(-40, 10, -60);
-  scene.add(key, rim);
-  const fill = new THREE.PointLight("#ffe2a8", 300, 0, 1.4);
+  scene.add(rim);
+  const fill = new THREE.PointLight("#ffe2a8", 90, 0, 1.6);
   cam.add(fill);
   scene.add(cam);
 
@@ -206,17 +227,26 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       e.rotation.y = t * 0.3;
     });
   }
-  // 3. The Sun and a planet on a rosette: n = 2 closes the orbit, any other n precesses.
+  // 3. The Sun and a planet. Faint rings at 1×, 2× and 3× the distance; the live path is a
+  // rosette: n = 2 closes the orbit, any other n makes it precess.
   {
     const g = place(2, 1);
     const s = ball(4, "#ffc56b", { emissive: "#ff8a2a", emissiveIntensity: 1.1 });
-    const p = ball(1.3, "#4fd1c5");
+    const p = ball(1.4, "#4fd1c5");
     g.add(s, sprite("rgba(255,170,80,.9)", 22), p);
-    g.rotation.x = 0.9;
+    [6, 11, 16].forEach((r, k) => {
+      const o = new THREE.Mesh(
+        new THREE.TorusGeometry(r, 0.04, 6, 128),
+        new THREE.MeshBasicMaterial({ color: "#e8d9b8", transparent: true, opacity: 0.22 - k * 0.05 }),
+      );
+      o.rotation.x = Math.PI / 2;
+      g.add(o);
+    });
+    g.rotation.x = 0.5;
     const M = 1200;
     const lg = new THREE.BufferGeometry();
     lg.setAttribute("position", new THREE.BufferAttribute(new Float32Array(M * 3), 3));
-    g.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ color: "#e8d9b8", transparent: true, opacity: 0.55 })));
+    g.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ color: "#4fd1c5", transparent: true, opacity: 0.7 })));
     const rAt = (th: number, n: number) => 8.4 / (1 + 0.45 * Math.cos(Math.sqrt(Math.max(0.05, 3 - n)) * th));
     const turns = 6 * Math.PI;
     let lastN = NaN;
@@ -367,21 +397,29 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       g.rotation.y = Math.sin(t * 0.3) * 0.5;
     });
   }
-  // 8. The class: nine clay moons in a slow ring, one per scene host.
+  // 8. The class: nine portrait discs with teal clay rims, in a slow ring; each disc stays upright.
   {
     const g = place(7, -1);
-    const cols = ["#e8d9b8", "#4fd1c5", "#ffc56b", "#ff7a9c"];
-    const moons = Array.from({ length: 9 }, (_, k) => {
-      const m = ball(k === 8 ? 0.8 : 0.55, cols[k % 4]!);
-      g.add(m);
-      return m;
+    const ring = new THREE.Group();
+    g.add(ring);
+    const loader = new THREE.TextureLoader();
+    const rimMat = clay("#4fd1c5");
+    opts.faces.forEach((src, k) => {
+      const a = (k / opts.faces.length) * Math.PI * 2;
+      const tex = loader.load(src);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      textures.push(tex);
+      const p = new THREE.Group();
+      p.add(
+        new THREE.Mesh(new THREE.CircleGeometry(2, 48), new THREE.MeshBasicMaterial({ map: tex })),
+        new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.22, 16, 48), rimMat),
+      );
+      p.position.set(Math.cos(a) * 9, Math.sin(a) * 9, 0);
+      ring.add(p);
     });
-    g.add(ball(1.4, "#26282d"));
     anim.push((t) => {
-      moons.forEach((m, k) => {
-        const a = t * 0.25 + (k / 9) * Math.PI * 2;
-        m.position.set(Math.cos(a) * 4.2, Math.sin(a * 2) * 0.4, Math.sin(a) * 4.2);
-      });
+      ring.rotation.z = t * 0.12;
+      ring.children.forEach((c) => (c.rotation.z = -t * 0.12));
     });
   }
   // 9. By the Hậu River: an amber sun, the apple in orbit.

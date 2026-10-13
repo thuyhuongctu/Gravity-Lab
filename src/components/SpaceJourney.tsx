@@ -35,10 +35,10 @@ const SCENES: Scene[] = [
   },
   {
     k: ["Số mũ = 2", "Exponent = 2"],
-    h: ["Thử đổi số mũ", "Try changing the exponent"],
+    h: ["Xa gấp đôi, lực còn một phần tư", "Twice as far, a quarter of the pull"],
     p: [
-      "Với n = 2, quỹ đạo khép kín. Kéo thanh trượt: n khác 2 làm quỹ đạo xoay thành hình hoa hồng.",
-      "At n = 2 the orbit closes. Drag the slider: any other n makes the orbit precess into a rosette.",
+      "Trong vật lý, số mũ cố định ở 2 nên quỹ đạo khép kín. Kéo thanh trượt: n khác 2 làm quỹ đạo xoay thành hình hoa hồng.",
+      "In physics the exponent is fixed at 2, so the orbit closes. Drag the slider: any other n makes it precess into a rosette.",
     ],
     c: "Newton (1687/1999)",
     slider: { id: "n", min: 1.5, max: 2.8, step: 0.01, label: ["Số mũ n", "Exponent n"] },
@@ -55,10 +55,10 @@ const SCENES: Scene[] = [
   },
   {
     k: ["FDI vào Việt Nam · 2006–2015", "FDI into Việt Nam · 2006–2015"],
-    h: ["Khoảng cách và dòng vốn", "Distance and capital"],
+    h: ["Xa thêm 1%, FDI giảm 0,38%", "1% farther, 0.38% less FDI"],
     p: [
-      "Kéo β để xem dòng vốn quanh Việt Nam thay đổi. Ước lượng của bài: xa thêm 1%, FDI giảm 0,38%.",
-      "Drag β to see capital around Việt Nam change. The paper's estimate: 1% farther, 0.38% less FDI.",
+      "Khoảng cách địa lý có tác động rõ đến dòng vốn vào Việt Nam. Kéo β để xem dòng vốn quanh Trái Đất thay đổi.",
+      "Geographic distance clearly matters for capital flowing into Việt Nam. Drag β to see the capital around the Earth change.",
     ],
     c: "Phan & Do (2019)",
     slider: { id: "b", min: -1, max: 0, step: 0.01, label: ["Hệ số β", "Coefficient β"] },
@@ -132,7 +132,7 @@ const CARD =
 const TONE = {
   dark: {
     sky: "bg-[#0a0b0d]",
-    vignette: "bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(4,4,5,0.9)_100%)]",
+    vignette: "bg-[radial-gradient(ellipse_70%_65%_at_50%_45%,transparent_35%,rgba(2,2,3,0.95)_100%)]",
     card: "bg-[linear-gradient(160deg,rgba(38,40,45,0.88),rgba(20,21,25,0.92))] text-[#f1ece2] shadow-[inset_0_-9px_0_rgba(0,0,0,0.3),inset_0_3px_0_rgba(255,255,255,0.07),inset_-1px_-1px_0_rgba(79,209,197,0.3),0_30px_60px_-20px_rgba(0,0,0,0.95)]",
     kicker: "text-[#ffc56b]",
     teal: "text-[#4fd1c5]",
@@ -206,6 +206,7 @@ export function SpaceJourney({
           scroller: sc,
           sections: () => sections.current.filter(Boolean),
           vals: vals.current,
+          faces: HOSTS.map((h) => face(h.id)),
           calm,
           light,
           onScene: setScene,
@@ -272,6 +273,7 @@ export function SpaceJourney({
         aria-hidden="true"
         className={"pointer-events-none absolute inset-0 " + T.vignette}
       />
+      <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0" />
       <div ref={scroller} className="absolute inset-0 overflow-y-auto">
         <div className="relative z-[2]">
           {SCENES.map((s, i) => {
