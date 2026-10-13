@@ -6,9 +6,10 @@ import { GlobeCanvas } from "@/components/GlobeCanvas";
 import { FdiDock, FdiStage, useLabState, type LabPanel } from "@/components/FdiLab";
 import { CastStage, Crew, HolderBar, shownPeople } from "@/components/CastStage";
 import { StoryStage } from "@/components/StoryStage";
+import { MeStage } from "@/components/MeStage";
 import { SoundPanel } from "@/components/SoundPanel";
 import { Clocks, Flag } from "@/components/Clocks";
-import { toggleCalm, useCalm, useEntered } from "@/lib/journey-state";
+import { resumeAt, toggleCalm, useCalm, useEntered } from "@/lib/journey-state";
 import { Onboarding } from "@/components/Onboarding";
 import { setAmbient } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
@@ -98,7 +99,7 @@ const MASS_BALL: Record<string, { ball: string; size: number }> = {
   star: { ball: "ball-amber", size: 28 },
 };
 
-type Mode = "story" | "orbit" | "trade" | "lab" | "cast";
+type Mode = "story" | "orbit" | "trade" | "lab" | "cast" | "me";
 
 const ROOMS: Array<[Mode, string, string]> = [
   ["story", "Câu chuyện", "Story"],
@@ -106,6 +107,7 @@ const ROOMS: Array<[Mode, string, string]> = [
   ["orbit", "Quỹ đạo", "Orbit"],
   ["trade", "Thương mại", "Trade"],
   ["lab", "FDI", "FDI"],
+  ["me", "Tôi", "Me"],
 ];
 
 export function Observatory() {
@@ -239,6 +241,17 @@ export function Observatory() {
     setWho(null);
     setMode(id);
     setMenu(false);
+  };
+  // About and Privacy live at the end of the story; open the story and scroll there.
+  const showStorySection = (id: string) => {
+    go("story");
+    let tries = 0;
+    const tick = () => {
+      const h = document.getElementById(id);
+      if (h) h.scrollIntoView({ block: "start", behavior: "smooth" });
+      else if (tries++ < 20) window.setTimeout(tick, 100);
+    };
+    window.setTimeout(tick, 150);
   };
   const tabs = (vertical: boolean) => (
     <div
@@ -416,8 +429,12 @@ export function Observatory() {
         />
         <div className="min-w-0">
           <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">{tr("Trọng lực", "Gravity Lab")}</h1>
-          <p className={"mt-1 hidden truncate text-xs text-mist sm:block " + (mode === "cast" ? "" : "xl:max-2xl:hidden")}>
-            {mode === "cast" ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe") : tr("Vũ trụ, thương mại, rồi FDI", "The universe, trade, then FDI")}
+          <p className={"mt-1 hidden truncate text-xs text-mist sm:block " + (mode === "cast" || mode === "me" ? "" : "xl:max-2xl:hidden")}>
+            {mode === "cast"
+              ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe")
+              : mode === "me"
+                ? tr("Tài khoản, Pro và cài đặt", "Account, Pro and settings")
+                : tr("Vũ trụ, thương mại, rồi FDI", "The universe, trade, then FDI")}
           </p>
         </div>
       </div>
@@ -497,6 +514,20 @@ export function Observatory() {
             />
           ) : null}
           {mode === "cast" ? <CastStage onOpen={enterFromClass} /> : null}
+          {mode === "me" ? (
+            <MeStage
+              onStory={(i) => {
+                resumeAt(i);
+                go("story");
+              }}
+              onRoom={(room, panel) => {
+                if (panel) lab.setPanel(panel);
+                go(room);
+              }}
+              onAbout={() => showStorySection("about-h")}
+              onPrivacy={() => showStorySection("privacy-h")}
+            />
+          ) : null}
           {mode === "story" ? (
             <StoryStage
               onOpen={(room, panel) => {
@@ -588,7 +619,7 @@ export function Observatory() {
         </main>
       </div>
 
-      {mode === "cast" || mode === "story" ? null : (
+      {mode === "cast" || mode === "story" || mode === "me" ? null : (
         <aside className="surface noir-panel dock-scroll w-full shrink-0 overflow-y-auto border-t border-line text-ink lg:w-[23.75rem] lg:border-t-0">
           <div className="hidden px-4 pt-4 lg:block">
             <RoomCover room={mode} />

@@ -54,3 +54,35 @@ export function useCalm() {
 export function useEntered() {
   return useSyncExternalStore(subscribe, getEntered, () => false);
 }
+
+/** Where the reader left the story, so the Me room can offer "Continue · Scene N/9". */
+const SCENE_KEY = "gravity-lab:scene";
+let resumeTo: number | null = null;
+
+export function rememberScene(i: number) {
+  try {
+    localStorage.setItem(SCENE_KEY, String(i));
+  } catch {
+    // Not remembered.
+  }
+}
+
+export function lastScene(): number {
+  try {
+    const v = Number(localStorage.getItem(SCENE_KEY));
+    return Number.isInteger(v) && v >= 0 && v <= 8 ? v : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Ask the journey to scroll to a scene once it mounts; read once by the journey. */
+export function resumeAt(i: number) {
+  resumeTo = i;
+}
+
+export function takeResume(): number | null {
+  const v = resumeTo;
+  resumeTo = null;
+  return v;
+}
