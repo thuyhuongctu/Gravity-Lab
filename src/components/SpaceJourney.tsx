@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { JourneyHandle } from "@/lib/journey3d";
-import { tr } from "@/lib/prefs";
+import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
+import { fmt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 
 type Scene = {
@@ -9,6 +9,7 @@ type Scene = {
   p: [string, string];
   f?: [string, string];
   c?: string;
+  slider?: { id: keyof JourneyVals; min: number; max: number; step: number; label: [string, string] };
   cta?: "lab" | "cast";
 };
 
@@ -35,12 +36,12 @@ const SCENES: Scene[] = [
   {
     k: ["Số mũ = 2", "Exponent = 2"],
     h: ["Xa gấp đôi, lực còn một phần tư", "Twice as far, a quarter of the pull"],
-    f: ["r² · số mũ = 2", "r² · exponent = 2"],
     p: [
-      "Trong vật lý, số mũ cố định, là nền tảng để tính quỹ đạo hành tinh và tàu vũ trụ.",
-      "In physics the exponent is fixed: the basis for computing the orbits of planets and spacecraft.",
+      "Trong vật lý, số mũ cố định ở 2 nên quỹ đạo khép kín. Kéo thanh trượt: n khác 2 làm quỹ đạo xoay thành hình hoa hồng.",
+      "In physics the exponent is fixed at 2, so the orbit closes. Drag the slider: any other n makes it precess into a rosette.",
     ],
     c: "Newton (1687/1999)",
+    slider: { id: "n", min: 1.5, max: 2.8, step: 0.01, label: ["Số mũ n", "Exponent n"] },
   },
   {
     k: ["Tinbergen · 1962", "Tinbergen · 1962"],
@@ -55,12 +56,12 @@ const SCENES: Scene[] = [
   {
     k: ["FDI vào Việt Nam · 2006–2015", "FDI into Việt Nam · 2006–2015"],
     h: ["Xa thêm 1%, FDI giảm 0,38%", "1% farther, 0.38% less FDI"],
-    f: ["β = −0,38", "β = −0.38"],
     p: [
-      "Khoảng cách địa lý có tác động rõ đến dòng vốn vào Việt Nam.",
-      "Geographic distance clearly matters for capital flowing into Việt Nam.",
+      "Khoảng cách địa lý có tác động rõ đến dòng vốn vào Việt Nam. Kéo β để xem dòng vốn quanh Trái Đất thay đổi.",
+      "Geographic distance clearly matters for capital flowing into Việt Nam. Drag β to see the capital around the Earth change.",
     ],
     c: "Phan & Do (2019)",
+    slider: { id: "b", min: -1, max: 0, step: 0.01, label: ["Hệ số β", "Coefficient β"] },
   },
   {
     k: ["Hiệp định thương mại tự do", "Free-trade agreements"],
@@ -137,6 +138,7 @@ const TONE = {
     teal: "text-[#4fd1c5]",
     body: "text-[#ddd6c8]",
     mist: "text-[#a8a297]",
+    accent: "accent-[#4fd1c5]",
     dot: "bg-[#2a2c31] shadow-[inset_0_2px_3px_rgba(0,0,0,0.8)]",
     ring: "bg-[#f4ede1] ring-2 ring-[#4fd1c5]/60",
   },
@@ -148,6 +150,7 @@ const TONE = {
     teal: "text-[#0a6577]",
     body: "text-[#3a3732]",
     mist: "text-[#55504a]",
+    accent: "accent-[#0a6577]",
     dot: "bg-[#d8cfbe] shadow-[inset_0_2px_3px_rgba(40,34,26,0.35)]",
     ring: "bg-[#f4ede1] ring-2 ring-[#0a6577]/50",
   },
@@ -172,7 +175,10 @@ export function SpaceJourney({
   const host = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const sections = useRef<HTMLElement[]>([]);
+  const vals = useRef<JourneyVals>({ n: 2, b: -0.38 });
   const handle = useRef<JourneyHandle | null>(null);
+  const [n, setN] = useState(2);
+  const [b, setB] = useState(-0.38);
   const [scene, setScene] = useState(0);
   const [seen, setSeen] = useState<boolean[]>(() => SCENES.map((_, i) => i === 0));
   const [inJourney, setInJourney] = useState(true);
@@ -199,6 +205,7 @@ export function SpaceJourney({
         handle.current = mountJourney(el, {
           scroller: sc,
           sections: () => sections.current.filter(Boolean),
+          vals: vals.current,
           faces: HOSTS.map((h) => face(h.id)),
           calm,
           light,
@@ -243,6 +250,13 @@ export function SpaceJourney({
     };
   }, [calm, light]);
 
+  const setVal = (k: keyof JourneyVals, v: number) => {
+    vals.current[k] = v;
+    if (k === "n") setN(v);
+    else setB(v);
+    handle.current?.poke();
+  };
+
   const go = (i: number) => {
     const sc = scroller.current;
     const s = sections.current[i];
@@ -250,6 +264,7 @@ export function SpaceJourney({
   };
 
   const L = lang === "vi" ? 0 : 1;
+  const num = (v: number) => fmt(v, 2);
 
   return (
     <div className={"absolute inset-0 " + T.sky}>
@@ -263,7 +278,12 @@ export function SpaceJourney({
         <div className="relative z-[2]">
           {SCENES.map((s, i) => {
             const right = i % 2 === 1;
-            const formula = s.f?.[L];
+            const formula =
+              s.slider?.id === "n"
+                ? `F ∝ 1 / r^${num(n)}`
+                : s.slider?.id === "b"
+                  ? tr(`Xa thêm 1% → FDI ${b < 0 ? "−" : ""}${fmt(Math.abs(b), 2)}%`, `1% farther → FDI ${b < 0 ? "−" : ""}${fmt(Math.abs(b), 2)}%`)
+                  : s.f?.[L];
             const Heading = i === 0 ? "h2" : "h3";
             return (
               <section
@@ -304,11 +324,26 @@ export function SpaceJourney({
                     {s.h[L]}
                   </Heading>
                   {formula ? (
-                    <p className={"mt-3 font-math text-[22px] whitespace-nowrap " + T.teal}>
+                    <p className={"mt-3 font-math text-[22px] whitespace-nowrap " + T.teal} aria-live={s.slider ? "polite" : undefined}>
                       {formula}
                     </p>
                   ) : null}
                   <p className={"mt-3 text-base leading-[1.65] text-pretty " + T.body}>{s.p[L]}</p>
+                  {s.slider ? (
+                    <label className="mt-3.5 grid grid-cols-[auto_minmax(0,1fr)_3rem] items-center gap-3 text-sm">
+                      <span className="whitespace-nowrap">{s.slider.label[L]}</span>
+                      <input
+                        type="range"
+                        min={s.slider.min}
+                        max={s.slider.max}
+                        step={s.slider.step}
+                        value={s.slider.id === "n" ? n : b}
+                        onChange={(e) => setVal(s.slider!.id, Number(e.target.value))}
+                        className={"h-7 w-full " + T.accent}
+                      />
+                      <output className={"text-right tabular-nums " + T.teal}>{num(s.slider.id === "n" ? n : b)}</output>
+                    </label>
+                  ) : null}
                   {s.c ? <p className={"mt-2.5 text-xs " + T.mist}>{s.c}</p> : null}
                   {s.cta === "cast" ? (
                     <ul className="mt-4 grid grid-cols-9 gap-1" aria-label={tr("Cả lớp", "The class")}>

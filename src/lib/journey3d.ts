@@ -8,16 +8,20 @@ import * as THREE from "three";
 import { LAND_RINGS, LAND_SCALE } from "@/data/land";
 import { VN_OUTLINE } from "@/lib/vn-outline";
 
+export type JourneyVals = { n: number; b: number };
+
 export type JourneyOptions = {
   /** The element that scrolls; its scroll position drives the camera. */
   scroller: HTMLElement;
   /** The nine scene sections, in order. */
   sections: () => HTMLElement[];
+  /** Live slider values, read every frame. */
+  vals: JourneyVals;
   /** Portrait discs for the crew ring in scene 8. */
   faces: string[];
   /** Light theme: a warm bone sky instead of the graphite void. */
   light?: boolean;
-  /** Reduced motion: no hop, idle at a quarter speed. */
+  /** Reduced motion: no hop, no warp, idle at a quarter speed. */
   calm: boolean;
   /** Called when the nearest scene changes. */
   onScene?: (index: number) => void;
@@ -26,6 +30,8 @@ export type JourneyOptions = {
 export type JourneyHandle = {
   dispose: () => void;
   setActive: (on: boolean) => void;
+  /** Redraw after a slider moves (calm mode does not loop). */
+  poke: () => void;
 };
 
 const N = 9;
@@ -221,26 +227,46 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       e.rotation.y = t * 0.3;
     });
   }
-  // 3. The Sun and a planet, with orbits at 1×, 2× and 3× the distance: twice as far, a quarter of the pull.
+  // 3. The Sun and a planet. Faint rings at 1×, 2× and 3× the distance; the live path is a
+  // rosette: n = 2 closes the orbit, any other n makes it precess.
   {
     const g = place(2, 1);
     const s = ball(4, "#ffc56b", { emissive: "#ff8a2a", emissiveIntensity: 1.1 });
-    const piv = new THREE.Group();
     const p = ball(1.4, "#4fd1c5");
-    p.position.x = 11;
-    piv.add(p);
-    g.add(s, sprite("rgba(255,170,80,.9)", 22), piv);
+    g.add(s, sprite("rgba(255,170,80,.9)", 22), p);
     [6, 11, 16].forEach((r, k) => {
       const o = new THREE.Mesh(
         new THREE.TorusGeometry(r, 0.04, 6, 128),
-        new THREE.MeshBasicMaterial({ color: "#e8d9b8", transparent: true, opacity: 0.35 - k * 0.08 }),
+        new THREE.MeshBasicMaterial({ color: "#e8d9b8", transparent: true, opacity: 0.22 - k * 0.05 }),
       );
       o.rotation.x = Math.PI / 2;
       g.add(o);
     });
-    g.rotation.x = 0.3;
+    g.rotation.x = 0.5;
+    const M = 1200;
+    const lg = new THREE.BufferGeometry();
+    lg.setAttribute("position", new THREE.BufferAttribute(new Float32Array(M * 3), 3));
+    g.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ color: "#4fd1c5", transparent: true, opacity: 0.7 })));
+    const rAt = (th: number, n: number) => 8.4 / (1 + 0.45 * Math.cos(Math.sqrt(Math.max(0.05, 3 - n)) * th));
+    const turns = 6 * Math.PI;
+    let lastN = NaN;
     anim.push((t) => {
-      piv.rotation.y = t * 0.5;
+      const n = opts.vals.n;
+      if (n !== lastN) {
+        lastN = n;
+        const a = lg.attributes.position!.array as Float32Array;
+        for (let i = 0; i < M; i++) {
+          const th = (i / (M - 1)) * turns;
+          const r = rAt(th, n);
+          a[i * 3] = Math.cos(th) * r;
+          a[i * 3 + 1] = 0;
+          a[i * 3 + 2] = Math.sin(th) * r;
+        }
+        lg.attributes.position!.needsUpdate = true;
+      }
+      const th = (t * 0.8) % turns;
+      const r = rAt(th, n);
+      p.position.set(Math.cos(th) * r, 0, Math.sin(th) * r);
     });
   }
   // 4. Two economies joined by a trade arc, a packet travelling along it.
@@ -262,7 +288,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       g.rotation.y = Math.sin(t * 0.3) * 0.3;
     });
   }
-  // 5. The Earth with Việt Nam, Hoàng Sa and Trường Sa.
+  // 5. The Earth with Việt Nam; capital particles thin out as β grows more negative.
   {
     const g = place(4, 1);
     const map = cnv(2048, 1024, (c, w, h) => {
@@ -310,9 +336,29 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const e = new THREE.Mesh(new THREE.SphereGeometry(6, 96, 96), clay("#ffffff", { map, bumpScale: 0.25 }));
     g.add(e);
     e.rotation.x = 0.3;
+    const caps: THREE.Mesh[] = [];
+    const cg = new THREE.SphereGeometry(0.32, 12, 12);
+    const cm = clay("#ffc56b", { emissive: "#ffc56b", emissiveIntensity: 0.6 });
+    for (let i = 0; i < 40; i++) {
+      const m = new THREE.Mesh(cg, cm);
+      m.userData = { a: rand() * 7, r: 9 + rand() * 9, y: (rand() - 0.5) * 8, s: 0.3 + rand() * 0.5 };
+      g.add(m);
+      caps.push(m);
+    }
     anim.push((t) => {
       // Sphere UV starts at lon −180 on −x; this turn brings Việt Nam (≈106°E) to the camera.
-      e.rotation.y = -4.92 + Math.sin(t * 0.25) * 0.35;
+      e.rotation.y = -4.92 + Math.sin(t * 0.25) * 0.25;
+      const b = opts.vals.b;
+      const show = Math.round(40 * Math.exp(b * 1.6));
+      const pull = 1 + b * 0.5;
+      caps.forEach((m, i) => {
+        const u = m.userData as { a: number; r: number; y: number; s: number };
+        m.visible = i < show;
+        const ph = (t * u.s * 0.25 + u.a) % 1;
+        const rr = 6.6 + (u.r - 6.6) * (1 - ph) * pull;
+        const ang = u.a * 6 + t * u.s;
+        m.position.set(Math.cos(ang) * rr, u.y * (1 - ph), Math.sin(ang) * rr);
+      });
     });
   }
   // 6. An FTA: two interlocked clay rings.
@@ -387,6 +433,28 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     });
   }
 
+  // Warp streaks between scenes, scaled by scroll speed.
+  const WN = low ? 250 : 700;
+  const wpos = new Float32Array(WN * 6);
+  const wseed: Array<[number, number, number]> = [];
+  for (let i = 0; i < WN; i++) {
+    const ang = rand() * 7;
+    const rad = 14 + rand() * 60;
+    wseed.push([Math.cos(ang) * rad, Math.sin(ang) * rad, -rand() * 220]);
+  }
+  const wg = new THREE.BufferGeometry();
+  wg.setAttribute("position", new THREE.BufferAttribute(wpos, 3));
+  const wmat = new THREE.LineBasicMaterial({
+    color: light ? "#8a8173" : "#e8d9b8",
+    transparent: true,
+    opacity: 0,
+    blending: light ? THREE.NormalBlending : THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const warp = new THREE.LineSegments(wg, wmat);
+  warp.frustumCulled = false;
+  cam.add(warp);
+
   // Scroll → target scene (0..8), with the reference line 15% down the viewport.
   let target = 0;
   let cur = 0;
@@ -436,7 +504,9 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const calm = opts.calm;
     tt += dt * (calm ? 0.25 : 1);
     const t = tt;
+    const prev = cur;
     cur += (target - cur) * (calm ? 0.2 : 0.06);
+    const speed = Math.abs(cur - prev);
     const i = Math.min(N - 2, Math.floor(cur));
     const f = cur - i;
     const e = f * f * (3 - 2 * f);
@@ -455,6 +525,21 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     look.lerp(tmp, calm ? 0.5 : 0.1);
     cam.lookAt(look);
 
+    const w = calm ? 0 : Math.min(1, speed * 25);
+    wmat.opacity = w * 0.8;
+    warp.visible = w > 0.01;
+    if (warp.visible) {
+      const len = 2 + w * 40;
+      const adv = speed * 900;
+      for (let k = 0; k < WN; k++) {
+        const s = wseed[k]!;
+        s[2] += adv;
+        if (s[2] > 0) s[2] -= 220;
+        wpos.set([s[0], s[1], s[2], s[0], s[1], s[2] - len], k * 6);
+      }
+      wg.attributes.position!.needsUpdate = true;
+    }
+
     anim.forEach((fn) => fn(t));
     R.render(scene, cam);
     // Calm mode still eases to the scroll target, then stops drawing.
@@ -470,6 +555,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   kick();
 
   return {
+    poke: kick,
     setActive(on) {
       if (on === active) return;
       active = on;
