@@ -21,8 +21,6 @@ export type JourneyOptions = {
   light?: boolean;
   /** Reduced motion: no hop, no warp, idle at a quarter speed. */
   calm: boolean;
-  /** Full-body figurine photos for the crew, in scene order: figure k hosts scene k. */
-  crew: string[];
   /** Called when the nearest scene changes. */
   onScene?: (index: number) => void;
 };
@@ -369,65 +367,21 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       g.rotation.y = Math.sin(t * 0.3) * 0.5;
     });
   }
-  // 8. The crew: figurines in arched clay portholes, flying with the camera.
-  place(7, -1);
-  const fleet = new THREE.Group();
-  cam.add(fleet);
+  // 8. The class: nine clay moons in a slow ring, one per scene host.
   {
-    const arch = (g: CanvasRenderingContext2D, w: number, h: number, r: number) => {
-      g.beginPath();
-      g.moveTo(0, h);
-      g.lineTo(0, r);
-      g.arc(w / 2, r, w / 2, Math.PI, 0);
-      g.lineTo(w, h);
-      g.closePath();
-    };
-    const nozzleMat = clay("#e8d9b8");
-    opts.crew.forEach((src, k) => {
-      const W = 300;
-      const H = 420;
-      const c = document.createElement("canvas");
-      c.width = W;
-      c.height = H;
-      const g = c.getContext("2d")!;
-      const tex = new THREE.CanvasTexture(c);
-      tex.colorSpace = THREE.SRGBColorSpace;
-      textures.push(tex);
-      const img = new Image();
-      img.onload = () => {
-        g.save();
-        arch(g, W, H, W / 2);
-        g.clip();
-        g.fillStyle = "#f4ede1";
-        g.fillRect(0, 0, W, H);
-        const s = Math.max(W / img.width, H / img.height);
-        g.drawImage(img, (W - img.width * s) / 2, (H - img.height * s) * 0.2, img.width * s, img.height * s);
-        const sh = g.createLinearGradient(0, 0, W, H);
-        sh.addColorStop(0, "rgba(255,255,255,.18)");
-        sh.addColorStop(0.4, "rgba(255,255,255,0)");
-        sh.addColorStop(1, "rgba(0,0,0,.35)");
-        g.fillStyle = sh;
-        g.fillRect(0, 0, W, H);
-        g.restore();
-        g.lineWidth = 14;
-        g.strokeStyle = "#4fd1c5";
-        g.save();
-        g.translate(7, 7);
-        arch(g, W - 14, H - 14, (W - 14) / 2);
-        g.stroke();
-        g.restore();
-        tex.needsUpdate = true;
-      };
-      img.src = src;
-      const card = new THREE.Mesh(new THREE.PlaneGeometry(3, 4.2), new THREE.MeshBasicMaterial({ map: tex, transparent: true }));
-      const flame = sprite("rgba(255,170,80,.95)", 2.6);
-      flame.position.y = -2.6;
-      const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.6, 0.7, 20), nozzleMat);
-      nozzle.position.y = -2.25;
-      const p = new THREE.Group();
-      p.add(card, nozzle, flame);
-      p.userData = { k, off: k - (opts.crew.length - 1) / 2, flame };
-      fleet.add(p);
+    const g = place(7, -1);
+    const cols = ["#e8d9b8", "#4fd1c5", "#ffc56b", "#ff7a9c"];
+    const moons = Array.from({ length: 9 }, (_, k) => {
+      const m = ball(k === 8 ? 0.8 : 0.55, cols[k % 4]!);
+      g.add(m);
+      return m;
+    });
+    g.add(ball(1.4, "#26282d"));
+    anim.push((t) => {
+      moons.forEach((m, k) => {
+        const a = t * 0.25 + (k / 9) * Math.PI * 2;
+        m.position.set(Math.cos(a) * 4.2, Math.sin(a * 2) * 0.4, Math.sin(a) * 4.2);
+      });
     });
   }
   // 9. By the Hậu River: an amber sun, the apple in orbit.
@@ -503,7 +457,6 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   const tmp = new THREE.Vector3();
   let last = performance.now();
   let tt = 0;
-  let fleetSide = 7;
   let raf = 0;
   let active = true;
   const frame = (now: number) => {
@@ -548,34 +501,6 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       }
       wg.attributes.position!.needsUpdate = true;
     }
-
-    // The crew escorts low on the side away from the card, then gathers in scene 8.
-    const near = Math.max(0, 1 - Math.abs(cur - 7));
-    const sp = mob ? 1.15 : 3.4;
-    fleetSide += ((Math.round(cur) % 2 ? -1 : 1) * (mob ? 0 : 7) - fleetSide) * 0.04;
-    fleet.position.x = fleetSide * (1 - near) + (mob ? 0 : -9.5) * near;
-    fleet.children.forEach((p) => {
-      const u = p.userData as { k: number; off: number; flame: THREE.Sprite };
-      const o = u.off;
-      const bob = calm ? 0 : Math.sin(t * 1.4 + u.k) * 0.25;
-      const x0 = o * sp * 0.42;
-      const y0 = -8.2 - Math.abs(o) * 0.3;
-      const z0 = -24 - Math.abs(o) * 1.2;
-      const x1 = o * sp * (mob ? 0.95 : 0.5);
-      const y1 = (mob ? 1.2 : 0) - Math.abs(o) * 0.5 + (u.k % 2 ? 0.6 : -0.4);
-      const z1 = -20 - Math.abs(o) * 1.4;
-      // The host of the current scene rises out of the escort and grows.
-      const host = Math.max(0, 1 - Math.abs(cur - u.k)) * (1 - near);
-      p.position.set(
-        THREE.MathUtils.lerp(x0, x1, near),
-        THREE.MathUtils.lerp(y0, y1, near) + bob + host * (mob ? 0.9 : 1.6),
-        THREE.MathUtils.lerp(z0, z1, near) + host * 2,
-      );
-      p.scale.setScalar((mob ? 0.55 : 0.62) + near * (mob ? 0.2 : 0.45) + host * (mob ? 0.2 : 0.3));
-      p.rotation.z = -o * 0.03 * (1 - near) + (calm ? 0 : Math.sin(t * 0.9 + u.k) * 0.03);
-      const fl = 0.85 + (calm ? 0 : Math.sin(t * 22 + u.k * 3) * 0.15) + w * 0.8;
-      u.flame.scale.set(2.2 * fl, 2.8 * fl, 1);
-    });
 
     anim.forEach((fn) => fn(t));
     R.render(scene, cam);

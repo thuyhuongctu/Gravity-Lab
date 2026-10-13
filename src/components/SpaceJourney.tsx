@@ -114,8 +114,7 @@ const HOSTS: Array<{ id: string; name: [string, string]; role: [string, string] 
 ];
 
 const face = (id: string) => `${import.meta.env.BASE_URL}cast/v2/${id}-face.webp`;
-/** Full-body figurines for the 3D fleet, in scene order, so figure k hosts scene k. */
-const CREW = HOSTS.map((h) => `${import.meta.env.BASE_URL}cast/v2/${h.id}.webp`);
+
 
 function webgl(): boolean {
   try {
@@ -209,7 +208,6 @@ export function SpaceJourney({
           vals: vals.current,
           calm,
           light,
-          crew: CREW,
           onScene: setScene,
         });
       })
