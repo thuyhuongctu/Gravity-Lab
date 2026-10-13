@@ -255,7 +255,7 @@ export function Observatory() {
   };
   const tabs = (vertical: boolean) => (
     <div
-      className={vertical ? "flex flex-col gap-1" : "noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 xl:order-2 xl:w-auto"}
+      className={vertical ? "flex flex-col gap-1" : "noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 @min-[1180px]:order-2 @min-[1180px]:w-auto"}
       role="tablist"
       aria-orientation={vertical ? "vertical" : undefined}
       aria-label={tr("Chế độ", "Mode")}
@@ -288,12 +288,12 @@ export function Observatory() {
       title={SONGS[lang].title}
       className={
         "min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap " +
-        (story ? "inline-flex xl:min-h-11 xl:max-w-60 " : "hidden 2xl:inline-flex 2xl:min-h-11 2xl:max-w-60 ") +
+        (story ? "inline-flex xl:min-h-11 xl:max-w-60 " : "hidden min-h-11 @min-[1400px]:inline-flex @min-[1800px]:max-w-60 ") +
         (song.playing ? "cosmic-btn" : "noir-raise text-paper")
       }
     >
       <span aria-hidden="true">{song.playing ? "❚❚" : "♫"}</span>
-      <span className={"hidden truncate " + (story ? "xl:inline" : "2xl:inline")}>{SONGS[lang].title}</span>
+      <span className={"hidden truncate " + (story ? "xl:inline" : "@min-[1800px]:inline")}>{SONGS[lang].title}</span>
     </button>
   );
   const tonesBtn = (cls: string) => (
@@ -418,7 +418,7 @@ export function Observatory() {
       </div>
     </header>
   ) : (
-    <header className="nebula-head flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper/10 px-3 py-3 sm:gap-3 sm:px-5 xl:flex-nowrap">
+    <header className="nebula-head @container flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper/10 px-3 py-3 sm:gap-3 sm:px-5 @min-[1180px]:flex-nowrap">
       <div className="order-1 flex min-w-0 flex-1 basis-0 items-center gap-2.5 sm:gap-3">
         <img
           src={`${import.meta.env.BASE_URL}icons/icon-192.png?v=5`}
@@ -429,7 +429,7 @@ export function Observatory() {
         />
         <div className="min-w-0">
           <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">{tr("Trọng lực", "Gravity Lab")}</h1>
-          <p className={"mt-1 hidden truncate text-xs text-mist sm:block " + (mode === "cast" || mode === "me" ? "" : "xl:max-2xl:hidden")}>
+          <p className="mt-1 hidden truncate text-xs text-mist sm:block">
             {mode === "cast"
               ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe")
               : mode === "me"
@@ -438,11 +438,11 @@ export function Observatory() {
           </p>
         </div>
       </div>
-      <div className="order-2 flex shrink-0 items-center gap-1.5 sm:gap-2 xl:order-3">
+      <div className="order-2 flex shrink-0 items-center gap-1.5 sm:gap-2 @min-[1180px]:order-3">
         <Clocks />
-        {doiLink("hidden sm:inline-flex")}
+        {doiLink("hidden @min-[1500px]:inline-flex")}
         {songBtn}
-        {tonesBtn("hidden 2xl:inline-flex 2xl:min-h-11")}
+        {tonesBtn("hidden @min-[1800px]:inline-flex min-h-11")}
         {langSeg}
         {tutor}
         <SoundPanel />
