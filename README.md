@@ -97,10 +97,11 @@ This repository is a standalone edition of Gravity Lab, separated from the [BizO
 
 Please cite the version you used. The concept DOI covers all versions and always resolves to the latest release: **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**.
 
-> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.7) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23327722
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.8) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23330642
 
 | Version | DOI |
 | --- | --- |
+| v2.8 | [10.5281/zenodo.23330642](https://doi.org/10.5281/zenodo.23330642) |
 | v2.7 | [10.5281/zenodo.23327722](https://doi.org/10.5281/zenodo.23327722) |
 | v2.6 | [10.5281/zenodo.23316154](https://doi.org/10.5281/zenodo.23316154) |
 | v2.5 | [10.5281/zenodo.23314720](https://doi.org/10.5281/zenodo.23314720) |
