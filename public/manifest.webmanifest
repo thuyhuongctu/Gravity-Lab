@@ -2,7 +2,7 @@
   "name": "Gravity Lab — Trọng lực",
   "short_name": "Gravity Lab",
   "description": "Newton's gravity, the Tinbergen trade model and FDI into Vietnam, in one browser lab. / Lực hấp dẫn Newton, mô hình thương mại Tinbergen và FDI vào Việt Nam trong một phòng thí nghiệm trên trình duyệt.",
-  "lang": "vi",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

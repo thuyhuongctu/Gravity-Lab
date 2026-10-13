@@ -593,3 +593,44 @@ input[type="range"]:focus-visible::-moz-range-thumb {
 :root[data-theme="light"] .noir-grain {
   display: none;
 }
+
+/* Lumina's "explains" button pulses until it is opened once. */
+.lu-pulse {
+  animation: lu-pulse 1.8s ease-out infinite;
+}
+@keyframes lu-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgb(79 209 197 / 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 18px rgb(79 209 197 / 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lu-pulse {
+    animation: none;
+    box-shadow: 0 0 0 2px #4fd1c5;
+  }
+}
+/* On narrow screens the scene card steps aside while Lumina's panel is open. */
+@media (max-width: 1100px) {
+  .lu-open .journey-card {
+    opacity: 0 !important;
+    transform: translateY(12px) scale(0.98) !important;
+    pointer-events: none;
+  }
+}
+
+/* The entry splash rises out of a blur. */
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}

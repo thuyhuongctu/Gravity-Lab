@@ -176,23 +176,19 @@ export function SoundPanel() {
             </details>
             <p className="text-xs leading-relaxed text-muted">
               {tr(
-                "Lời: nhóm tác giả Gravity Lab. Nhạc tạo bằng công cụ AI từ lời và mô tả phong cách của tác giả. Bật bài hát sẽ tắt nhạc nền không gian.",
-                "Lyrics by the Gravity Lab authors. Music generated with an AI tool from the authors' lyrics and style description. Playing the song turns off the space ambience.",
+                "Lời: nhóm tác giả Gravity Lab. Nhạc tạo bằng công cụ AI từ lời và mô tả phong cách của tác giả. Khi bài hát phát, âm vũ trụ lắng xuống bên dưới.",
+                "Lyrics by the Gravity Lab authors. Music generated with an AI tool from the authors' lyrics and style description. While the song plays, the cosmic tones duck underneath it.",
               )}
             </p>
           </div>
 
           <Toggle
             on={sound.ambient}
-            onChange={(on) => {
-              // One at a time: the ambience and the song do not mix.
-              if (on && getSong().playing) toggleSong();
-              setAmbient(on);
-            }}
-            label={tr("Nhạc nền không gian", "Space ambience")}
+            onChange={setAmbient}
+            label={tr("Âm vũ trụ", "Cosmic tones")}
             hint={tr(
-              "Hợp âm quãng năm trầm, tiếng gió Mặt Trời và những nốt sao lấp lánh, tổng hợp ngay trong trình duyệt.",
-              "A low open fifth, a solar wind and the odd twinkling star, synthesised in the browser.",
+              "Tiếng ngân từ tần số các hành tinh theo cách tính quãng tám của Cousto: năm Trái Đất (136,10 Hz), ngày Trái Đất, Mặt Trăng, Sao Kim, Sao Thủy, tổng hợp ngay trong trình duyệt. Nên dùng tai nghe.",
+              "A drone from planetary frequencies by Cousto's octave method: the Earth year (136.10 Hz), the Earth day, the Moon, Venus and Mercury, synthesised in the browser. Headphones recommended.",
             )}
           />
           <Toggle

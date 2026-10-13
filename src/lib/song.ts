@@ -1,4 +1,4 @@
-import { getSound, setAmbient, subscribeSound } from "@/lib/sound";
+import { duckAmbient, getSound, subscribeSound } from "@/lib/sound";
 
 export type SongId = "vi" | "en";
 
@@ -35,9 +35,18 @@ function audio(): HTMLAudioElement {
   subscribeSound(() => {
     if (el) el.volume = getSound().volume;
   });
-  el.addEventListener("play", () => set({ playing: true }));
-  el.addEventListener("pause", () => set({ playing: false }));
-  el.addEventListener("ended", () => set({ playing: false, time: 0 }));
+  el.addEventListener("play", () => {
+    duckAmbient(true);
+    set({ playing: true });
+  });
+  el.addEventListener("pause", () => {
+    duckAmbient(false);
+    set({ playing: false });
+  });
+  el.addEventListener("ended", () => {
+    duckAmbient(false);
+    set({ playing: false, time: 0 });
+  });
   el.addEventListener("loadedmetadata", () => set({ duration: el?.duration ?? 0 }));
   el.addEventListener("timeupdate", () => set({ time: el?.currentTime ?? 0 }));
   return el;
@@ -63,12 +72,11 @@ export function pickSong(id: SongId) {
   set({ id, playing: false, time: 0, duration: 0 });
 }
 
-/** Play or pause. The space ambience is switched off so the two do not clash. */
+/** Play or pause. The cosmic tones duck underneath the song rather than stop. */
 export function toggleSong() {
   const a = audio();
   if (a.paused) {
     if (!a.getAttribute("src")) a.src = SONGS[state.id].src;
-    if (getSound().ambient) setAmbient(false);
     void a.play().catch(() => set({ playing: false }));
   } else {
     a.pause();
