@@ -8,7 +8,7 @@ const ZONES = [
   { id: "nl", tz: "Europe/Amsterdam", vi: "The Hague", en: "The Hague", title: ["Hà Lan · Tinbergen (UTC+1/+2)", "Netherlands · Tinbergen (UTC+1/+2)"] },
 ] as const;
 
-function Flag({ id }: { id: (typeof ZONES)[number]["id"] }) {
+export function Flag({ id }: { id: (typeof ZONES)[number]["id"] }) {
   const common = { viewBox: "0 0 30 20", width: 18, height: 12, "aria-hidden": true, className: "shrink-0 rounded-[2px]" };
   if (id === "vn")
     return (
@@ -47,8 +47,11 @@ function times(): string[] {
   });
 }
 
-/** Header clocks; daylight saving is handled by Intl. Only Cần Thơ shows below xl. */
-export function Clocks() {
+/**
+ * Header clocks; daylight saving is handled by Intl. In the lab rooms they show only at 2xl;
+ * over the story they are always there, Cần Thơ first, the other two from 900px and the names from 1440px.
+ */
+export function Clocks({ story = false }: { story?: boolean }) {
   const [now, setNow] = useState<string[]>(() => ["--:--", "--:--", "--:--"]);
   useEffect(() => {
     setNow(times());
@@ -56,16 +59,20 @@ export function Clocks() {
     return () => window.clearInterval(id);
   }, []);
   return (
-    <div className="hidden items-center gap-1.5 2xl:flex" aria-label={tr("Giờ địa phương", "Local times")}>
+    <div className={"items-center gap-1.5 " + (story ? "flex" : "hidden 2xl:flex")} aria-label={tr("Giờ địa phương", "Local times")}>
       {ZONES.map((z, i) => (
         <span
           key={z.id}
           title={tr(z.title[0], z.title[1])}
-          className={"noir-track flex min-h-9 items-center gap-1.5 rounded-full px-2.5 " + (i ? "hidden 2xl:flex" : "")}
+          className={
+            "noir-track flex min-h-9 items-center gap-1.5 rounded-full px-2.5 " + (i ? (story ? "hidden min-[900px]:flex" : "hidden 2xl:flex") : "")
+          }
         >
           <Flag id={z.id} />
           <b className="text-[13px] font-semibold text-paper tabular-nums">{now[i]}</b>
-          <i className="hidden text-[11px] whitespace-nowrap text-mist not-italic 2xl:inline">{tr(z.vi, z.en)}</i>
+          <i className={"hidden text-[11px] whitespace-nowrap text-mist not-italic " + (story ? "min-[1440px]:inline" : "2xl:inline")}>
+            {tr(z.vi, z.en)}
+          </i>
         </span>
       ))}
     </div>
