@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Volume2, X } from "lucide-react";
+import { Volume2, Wind, X } from "lucide-react";
+import { Formula } from "@/components/Formula";
 import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
 import { fmt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
@@ -9,6 +10,8 @@ type Scene = {
   h: [string, string];
   p: [string, string];
   f?: [string, string];
+  /** The same formula in LaTeX, typeset by KaTeX; `f` is the fallback. */
+  tex?: [string, string];
   c?: string;
   slider?: { id: keyof JourneyVals; min: number; max: number; step: number; label: [string, string] };
   cta?: "lab" | "cast";
@@ -18,6 +21,20 @@ type Scene = {
  * The nine scenes (design handoff, narration.js), VI then EN. The Vietnamese keeps the
  * English technical terms in brackets, as the handoff asks.
  */
+const CALM_KEY = "gravity-lab:calm";
+
+/** Reduced motion: the reader's own choice first, else the system setting. */
+function readCalm(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const v = localStorage.getItem(CALM_KEY);
+    if (v === "1" || v === "0") return v === "1";
+  } catch {
+    // Fall through to the system setting.
+  }
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 const SCENES: Scene[] = [
   {
     k: ["Gravity Lab · Đại học Cần Thơ", "Gravity Lab · Can Tho University"],
@@ -31,6 +48,7 @@ const SCENES: Scene[] = [
     k: ["Woolsthorpe · 1666", "Woolsthorpe · 1666"],
     h: ["Lực kéo quả táo cũng giữ Mặt Trăng", "The pull on the apple also holds the Moon"],
     f: ["F = G·m₁m₂ / r²", "F = G·m₁m₂ / r²"],
+    tex: ["F = G\\,\\dfrac{m_1 m_2}{r^2}", "F = G\\,\\dfrac{m_1 m_2}{r^2}"],
     p: [
       "Hai khối lượng (masses) hút nhau; lực yếu dần theo bình phương khoảng cách (inverse-square law).",
       "Two masses attract each other; the force weakens with the square of the distance between them.",
@@ -51,6 +69,7 @@ const SCENES: Scene[] = [
     k: ["Tinbergen · 1962", "Tinbergen · 1962"],
     h: ["Khối lượng thành quy mô kinh tế (economic size)", "Mass becomes economic size"],
     f: ["Tᵢⱼ = G·YᵢYⱼ / Dᵢⱼᵞ", "Tᵢⱼ = G·YᵢYⱼ / Dᵢⱼᵞ"],
+    tex: ["T_{ij} = G\\,\\dfrac{Y_i\\,Y_j}{D_{ij}^{\\gamma}}", "T_{ij} = G\\,\\dfrac{Y_i\\,Y_j}{D_{ij}^{\\gamma}}"],
     p: [
       "Nền kinh tế lớn giao thương nhiều hơn; khoảng cách vẫn cản trở. Số mũ γ giờ được ước lượng (estimated) từ dữ liệu.",
       "Larger economies trade more; distance still impedes trade. The exponent γ is now estimated from data.",
@@ -71,6 +90,7 @@ const SCENES: Scene[] = [
     k: ["Hiệp định thương mại tự do (FTA)", "Free-trade agreements"],
     h: ["Một FTA kéo vốn lại gần", "An FTA pulls capital closer"],
     f: ["β = 1,01 → +174,6%", "β = 1.01 → +174.6%"],
+    tex: ["\\beta = 1{,}01 \\;\\rightarrow\\; +174{,}6\\%", "\\beta = 1.01 \\;\\rightarrow\\; +174.6\\%"],
     p: [
       "Khi có FTA, dòng FDI cao hơn khoảng 174,6% trong năm đầu; về dài hạn, chia cho 1 − 0,45, khoảng 527%.",
       "With an FTA in force, FDI is about 174.6% higher in the first year; in the long run, divided by 1 − 0.45, about 527%.",
@@ -81,6 +101,7 @@ const SCENES: Scene[] = [
     k: ["PPML", "PPML"],
     h: ["Những năm bằng 0 vẫn được giữ lại (zero flows)", "Zero-flow years are retained"],
     f: ["FDI = 0 → PPML", "FDI = 0 → PPML"],
+    tex: ["\\mathrm{FDI} = 0 \\;\\rightarrow\\; \\mathrm{PPML}", "\\mathrm{FDI} = 0 \\;\\rightarrow\\; \\mathrm{PPML}"],
     p: [
       "Ước lượng trên mức (levels) thay vì log giúp dùng toàn bộ mẫu (full sample).",
       "Estimating in levels rather than logs uses the full sample.",
@@ -293,9 +314,17 @@ export function SpaceJourney({
   const [splashGone, setSplashGone] = useState(enteredAt !== null);
   // Each scene is 1.3 viewports tall, measured on the scroller (the story pane, not the window).
   const [paneH, setPaneH] = useState(0);
-  const calm = useRef(
-    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  ).current;
+  const [calm, setCalm] = useState(readCalm);
+  function toggleCalm() {
+    setCalm((c) => {
+      try {
+        localStorage.setItem(CALM_KEY, c ? "0" : "1");
+      } catch {
+        // Not remembered: the system setting applies again next time.
+      }
+      return !c;
+    });
+  }
 
   useEffect(() => {
     const el = host.current;
@@ -416,6 +445,8 @@ export function SpaceJourney({
                 : s.slider?.id === "b"
                   ? tr(`Xa thêm 1% → FDI ${b < 0 ? "−" : ""}${fmt(Math.abs(b), 2)}%`, `1% farther → FDI ${b < 0 ? "−" : ""}${fmt(Math.abs(b), 2)}%`)
                   : s.f?.[L];
+            // The β line is prose with a number in it, so it stays as text.
+            const tex = s.slider?.id === "n" ? `F \\propto \\dfrac{1}{r^{${num(n).replace(",", "{,}")}}}` : s.slider ? undefined : s.tex?.[L];
             const Heading = i === 0 ? "h2" : "h3";
             return (
               <section
@@ -457,7 +488,7 @@ export function SpaceJourney({
                   </Heading>
                   {formula ? (
                     <p className={"mt-3 font-math text-[22px] whitespace-nowrap " + T.teal} aria-live={s.slider ? "polite" : undefined}>
-                      {formula}
+                      <Formula tex={tex} text={formula} />
                     </p>
                   ) : null}
                   <p className={"mt-3 text-base leading-[1.65] text-pretty " + T.body}>{s.p[L]}</p>
@@ -536,6 +567,22 @@ export function SpaceJourney({
             </button>
           ))}
         </nav>
+      ) : null}
+      {inJourney ? (
+        <button
+          type="button"
+          onClick={toggleCalm}
+          aria-pressed={calm}
+          className={
+            "absolute top-3 left-3 z-[4] inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold " +
+            (calm ? "pill-on" : T.panel) +
+            " " +
+            ui
+          }
+        >
+          <Wind className="size-4" aria-hidden="true" />
+          <span className="max-[699px]:sr-only">{tr("Giảm chuyển động (reduce motion)", "Reduce motion")}</span>
+        </button>
       ) : null}
       {inJourney ? <Lumina scene={scene} open={luOpen} setOpen={setLuOpen} T={T} entered={entered} onLab={onLab} /> : null}
       <p
