@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Volume2, Wind, X } from "lucide-react";
+import { Volume2, X } from "lucide-react";
 import { Formula } from "@/components/Formula";
 import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
 import { fmt, tr } from "@/lib/prefs";
 import { duckAmbient } from "@/lib/sound";
+import { markEntered, useCalm } from "@/lib/journey-state";
 import { usePrefs } from "@/lib/use-prefs";
 
 type Scene = {
@@ -24,20 +25,6 @@ type Scene = {
  */
 /** Scenes and languages with no recording this session, so the browser voice is used at once. */
 const missing = new Set<string>();
-
-const CALM_KEY = "gravity-lab:calm";
-
-/** Reduced motion: the reader's own choice first, else the system setting. */
-function readCalm(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    const v = localStorage.getItem(CALM_KEY);
-    if (v === "1" || v === "0") return v === "1";
-  } catch {
-    // Fall through to the system setting.
-  }
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 const SCENES: Scene[] = [
   {
@@ -318,17 +305,7 @@ export function SpaceJourney({
   const [splashGone, setSplashGone] = useState(enteredAt !== null);
   // Each scene is 1.3 viewports tall, measured on the scroller (the story pane, not the window).
   const [paneH, setPaneH] = useState(0);
-  const [calm, setCalm] = useState(readCalm);
-  function toggleCalm() {
-    setCalm((c) => {
-      try {
-        localStorage.setItem(CALM_KEY, c ? "0" : "1");
-      } catch {
-        // Not remembered: the system setting applies again next time.
-      }
-      return !c;
-    });
-  }
+  const calm = useCalm();
 
   useEffect(() => {
     const el = host.current;
@@ -407,6 +384,7 @@ export function SpaceJourney({
   function enter() {
     if (enteredAt !== null) return;
     enteredAt = performance.now();
+    markEntered();
     setEntered(true);
     handle.current?.poke();
     window.setTimeout(() => setSplashGone(true), 1600);
@@ -572,22 +550,6 @@ export function SpaceJourney({
           ))}
         </nav>
       ) : null}
-      {inJourney ? (
-        <button
-          type="button"
-          onClick={toggleCalm}
-          aria-pressed={calm}
-          className={
-            "absolute top-3 left-3 z-[4] inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold " +
-            (calm ? "pill-on" : T.panel) +
-            " " +
-            ui
-          }
-        >
-          <Wind className="size-4" aria-hidden="true" />
-          <span className="max-[699px]:sr-only">{tr("Giảm chuyển động (reduce motion)", "Reduce motion")}</span>
-        </button>
-      ) : null}
       {inJourney ? <Lumina scene={scene} open={luOpen} setOpen={setLuOpen} T={T} entered={entered} onLab={onLab} /> : null}
       <p
         aria-hidden="true"
@@ -752,7 +714,7 @@ function Lumina({
         aria-expanded={open}
         aria-controls="lumina-panel"
         className={
-          "absolute z-[4] flex min-h-14 items-center gap-2.5 rounded-full py-1.5 pr-[18px] pl-1.5 text-sm font-semibold whitespace-nowrap max-[699px]:top-3 max-[699px]:pr-1.5 min-[700px]:bottom-[22px] " +
+          "absolute z-[4] flex min-h-14 items-center gap-2.5 rounded-full py-1.5 pr-[18px] pl-1.5 text-sm font-semibold whitespace-nowrap max-[699px]:top-[76px] max-[699px]:pr-1.5 min-[700px]:bottom-[22px] " +
           T.panel +
           " " +
           sideClass +
@@ -770,7 +732,7 @@ function Lumina({
           role="dialog"
           aria-label="Lumina"
           className={
-            "absolute z-[4] w-[min(380px,calc(100vw-24px))] rounded-[24px] px-5 py-[18px] max-[699px]:inset-x-3 max-[699px]:top-[76px] max-[699px]:w-auto min-[700px]:bottom-[90px] " +
+            "absolute z-[4] w-[min(380px,calc(100vw-24px))] rounded-[24px] px-5 py-[18px] max-[699px]:inset-x-3 max-[699px]:top-[140px] max-[699px]:w-auto min-[700px]:bottom-[90px] " +
             T.panel +
             " " +
             sideClass +
