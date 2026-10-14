@@ -67,7 +67,8 @@
   --color-mist: #a9a59c;
   --color-teal-2: #8bbcc5;
   --color-amber-2: #c9a35a;
-  --color-clay: #d08a73;
+  /* Terracotta text on light paper fails 4.5:1; keep the darker light-theme clay here. */
+  --color-clay: #9e4a36;
   --color-violet-2: #b8ae98;
 }
 
