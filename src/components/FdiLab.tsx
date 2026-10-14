@@ -28,8 +28,9 @@ import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
 import { SectorBars, SectorFlow, type FdiMode } from "@/components/SectorFlow";
 import { fmt, fmtInt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
+import { CaseFile } from "@/components/CaseFile";
 
-export type LabPanel = "coef" | "sim" | "ppml" | "data" | "sector";
+export type LabPanel = "coef" | "sim" | "ppml" | "data" | "sector" | "case";
 
 function num(n: number, digits = 2): string {
   return fmt(n, digits);
@@ -129,6 +130,12 @@ function DraftCard({ draft, file }: { draft: Draft; file: string }) {
 export function useLabState() {
   const { lang } = usePrefs();
   const [panel, setPanel] = useState<LabPanel>("sim");
+  const [caseId, setCaseId] = useState<string | undefined>();
+  const [caseStep, setCaseStep] = useState(1);
+  const setCase = (id: string, step: number) => {
+    setCaseId(id);
+    setCaseStep(step);
+  };
   const [fdiMode, setFdiMode] = useState<FdiMode>("disb");
   const [model, setModel] = useState(7);
   const [a, setA] = useState("JPN");
@@ -224,7 +231,7 @@ export function useLabState() {
   }
 
   return {
-    panel, setPanel, fdiMode, setFdiMode, model, setModel, a, setA, b, setB, econ, setEcon, inst, setInst, open, setOpen, fta, setFta, check, setCheck,
+    panel, setPanel, caseId, caseStep, setCase, fdiMode, setFdiMode, model, setModel, a, setA, b, setB, econ, setEcon, inst, setInst, open, setOpen, fta, setFta, check, setCheck,
     impact, rows, lesson, name,
     table, yCol, setYCol, unitCol, setUnitCol, yearCol, setYearCol, xCols, setXCols, yLevel, setYLevel, yearFE, setYearFE, clusterOn, setClusterOn,
     estMsg: estMsg || tr("Nạp tệp CSV để bắt đầu.", "Load a CSV file to start."), est, numCols, loadTable, runEstimate, note,
@@ -255,6 +262,7 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
       {lab.panel === "ppml" ? <PpmlStage lab={lab} /> : null}
       {lab.panel === "data" ? <DataStage lab={lab} /> : null}
       {lab.panel === "sector" ? <SectorStage lab={lab} /> : null}
+      {lab.panel === "case" ? <CaseFile key={lab.caseId} initialCase={lab.caseId} initialStep={lab.caseStep} onChange={lab.setCase} /> : null}
     </div>
   );
 }
@@ -266,7 +274,7 @@ function FdiGlobe({ lab }: { lab: LabState }) {
   const terms = COUNTRIES.map((c) => ({ c, term: Math.pow(kmFromHanoi(c.id), beta) }));
   const maxTerm = Math.max(...terms.map((t) => t.term));
   const nodes: GlobeNode[] = [
-    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8fd4c0", tappable: false },
+    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8bbcc5", tappable: false },
     ...COUNTRIES.map(
       (c): GlobeNode => ({
         id: c.id,
@@ -598,7 +606,7 @@ function XuanGlobe() {
   const top = positive.reduce<(typeof positive)[number] | null>((m, s) => (!m || s.v[idx]! > m.v[idx]! ? s : m), null);
 
   const nodes: GlobeNode[] = [
-    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8fd4c0", tappable: false },
+    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8bbcc5", tappable: false },
     ...data.series.map(
       (s): GlobeNode => ({
         id: s.id,
@@ -832,6 +840,9 @@ export function FdiDock({ lab }: { lab: LabState }) {
         <Chip flat active={lab.panel === "data"} onClick={() => lab.setPanel("data")}>
           {tr("Dữ liệu của bạn", "Your data")}
         </Chip>
+        <Chip flat active={lab.panel === "case"} onClick={() => lab.setPanel("case")}>
+          {tr("Hồ sơ điều tra", "Case file")}
+        </Chip>
       </div>
       {lab.panel === "coef" ? <CoefDock lab={lab} /> : null}
       {lab.panel === "sim" ? <SimDock lab={lab} /> : null}
@@ -848,6 +859,8 @@ export function FdiDock({ lab }: { lab: LabState }) {
       <p className="text-xs text-muted">
         {lab.panel === "ppml"
           ? CITE_2008
+          : lab.panel === "case"
+            ? `${CITE_2008} ${CITE_2019}`
           : lab.panel === "data"
             ? tr(
                 "Santos Silva và Tenreyro (2006). File chỉ được đọc trên máy này.",

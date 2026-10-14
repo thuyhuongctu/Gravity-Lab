@@ -257,7 +257,7 @@ export function SoundPanel() {
                         style={{ width: PLANET_SIZE[i], height: PLANET_SIZE[i] }}
                       />
                       <span className="text-xs font-semibold leading-tight">{tr(p.vi, p.en)}</span>
-                      <span className="text-[11px] tabular-nums text-muted">{fmt(t.hz, 1)} Hz</span>
+                      <span className="text-xs tabular-nums text-muted">{fmt(t.hz, 1)} Hz</span>
                     </button>
                   </li>
                 );

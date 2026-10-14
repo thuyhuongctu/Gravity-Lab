@@ -19,7 +19,7 @@ const STORY: Part[] = [
   {
     part: "Intro",
     mood: ["Thân mật, lơ lửng (intimate, floating)", "Soft, curious"],
-    f: ["Woolsthorpe · 1666", "Woolsthorpe · 1666"],
+    f: ["Woolsthorpe · 1665", "Woolsthorpe · 1665"],
     img: "newton-tree",
     pos: "60% 50%",
     alt: ["Newton dưới cây táo trong vườn đêm", "Newton under the apple tree in a night orchard"],

@@ -1,5 +1,5 @@
 /* Gravity Lab service worker: the app shell is kept for offline use; everything else is cached as it is used. */
-const VERSION = "gl-v1";
+const VERSION = "gl-__BUILD__";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {

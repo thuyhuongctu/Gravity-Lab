@@ -42,7 +42,7 @@ const SCENES: Scene[] = [
     ],
   },
   {
-    k: ["Woolsthorpe · 1666", "Woolsthorpe · 1666"],
+    k: ["Woolsthorpe · 1665", "Woolsthorpe · 1665"],
     h: ["Lực kéo quả táo cũng giữ Mặt Trăng", "The pull on the apple also holds the Moon"],
     f: ["F = G·m₁m₂ / r²", "F = G·m₁m₂ / r²"],
     tex: ["F = G\\,\\dfrac{m_1 m_2}{r^2}", "F = G\\,\\dfrac{m_1 m_2}{r^2}"],

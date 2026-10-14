@@ -1,4 +1,4 @@
-import { circularSpeed, softenedAccel, type Simulation } from "@/sim/engine";
+import { circularSpeed, softenedAccel, type Simulation } from "./engine.ts";
 
 export type SceneId = "solar" | "binary" | "sling" | "flower" | "cloud" | "empty";
 
