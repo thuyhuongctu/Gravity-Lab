@@ -3,6 +3,10 @@ import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import type { LabPanel } from "@/components/FdiLab";
 import { fmt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
+import { LogTransformLab } from "@/components/bridge/LogTransformLab";
+import { MrtLab } from "@/components/bridge/MrtLab";
+import { PpmlLab } from "@/components/bridge/PpmlLab";
+import { FdiStep7Lab } from "@/components/bridge/FdiStep7Lab";
 
 type Room = "orbit" | "trade" | "lab";
 
@@ -218,6 +222,14 @@ const STEPS: Step[] = [
 ];
 
 const DEFAULT_GAMMA = [2, 2, 0.9, 0.9, 0.9, 0.9, 0.38];
+
+/** Interactive labs that replace the simple picture from step 4 on. */
+const LABS: Partial<Record<Step["view"], () => React.JSX.Element>> = {
+  log: LogTransformLab,
+  resistance: MrtLab,
+  zeros: PpmlLab,
+  fdi: FdiStep7Lab,
+};
 
 function Formula({ step, prev }: { step: Step; prev: Step | null }) {
   const before = new Map(prev?.tokens.map((t) => [t.k, `${t.t}|${t.sub ?? ""}`]) ?? []);
@@ -490,10 +502,11 @@ export function FormulaBridge({
   }, [playing, i]);
 
   const exp = step.free ? gamma : 2;
+  const Lab = LABS[step.view];
 
   // Presentation keys, scoped to the bridge: ← / → change step, F toggles full screen.
   const onKey = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.target instanceof HTMLInputElement) return;
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return;
     if (e.key === "ArrowRight") {
       e.preventDefault();
       setPlaying(false);
@@ -559,45 +572,53 @@ export function FormulaBridge({
       </div>
       <p className="mt-1 text-center text-xs text-muted">{step.cite}</p>
 
-      <div className="mx-auto mt-2 max-w-md">
-        <Picture step={step} d={d} gamma={exp} />
-      </div>
+      {Lab ? (
+        <div className="mt-3">
+          <Lab />
+        </div>
+      ) : (
+        <>
+          <div className="mx-auto mt-2 max-w-md">
+            <Picture step={step} d={d} gamma={exp} />
+          </div>
 
-      <div className="mt-2 grid gap-x-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          {step.view === "planets"
-            ? tr("Khoảng cách r", "Distance r")
-            : tr("Khoảng cách D", "Distance D")}{" "}
-          · {fmt(d, 1)}
-          <input
-            type="range"
-            min={1}
-            max={4}
-            step={0.1}
-            value={d}
-            aria-valuetext={fmt(d, 1)}
-            onChange={(e) => setD(Number(e.target.value))}
-          />
-        </label>
-        <label className={"block text-sm " + (step.free ? "" : "opacity-50")}>
-          {tr("Số mũ khoảng cách", "Distance exponent")} {step.free ? "γ" : ""} · {fmt(exp, 2)}
-          <input
-            type="range"
-            min={0.2}
-            max={2.5}
-            step={0.01}
-            value={exp}
-            aria-valuetext={`γ = ${fmt(exp, 2)}`}
-            disabled={!step.free}
-            onChange={(e) => setGamma(Number(e.target.value))}
-          />
-        </label>
-      </div>
-      <p className="text-xs text-muted">
-        {tr("Khoảng cách gấp đôi → nhân với", "Doubling the distance → multiply by")} 1/2
-        <sup>{fmt(exp, 2)}</sup> = {fmt(1 / Math.pow(2, exp), 2)}
-        {step.free ? null : tr(" (Newton: luôn là 1/4)", " (Newton: always 1/4)")}
-      </p>
+          <div className="mt-2 grid gap-x-4 sm:grid-cols-2">
+            <label className="block text-sm">
+              {step.view === "planets"
+                ? tr("Khoảng cách r", "Distance r")
+                : tr("Khoảng cách D", "Distance D")}{" "}
+              · {fmt(d, 1)}
+              <input
+                type="range"
+                min={1}
+                max={4}
+                step={0.1}
+                value={d}
+                aria-valuetext={fmt(d, 1)}
+                onChange={(e) => setD(Number(e.target.value))}
+              />
+            </label>
+            <label className={"block text-sm " + (step.free ? "" : "opacity-50")}>
+              {tr("Số mũ khoảng cách", "Distance exponent")} {step.free ? "γ" : ""} · {fmt(exp, 2)}
+              <input
+                type="range"
+                min={0.2}
+                max={2.5}
+                step={0.01}
+                value={exp}
+                aria-valuetext={`γ = ${fmt(exp, 2)}`}
+                disabled={!step.free}
+                onChange={(e) => setGamma(Number(e.target.value))}
+              />
+            </label>
+          </div>
+          <p className="text-xs text-muted">
+            {tr("Khoảng cách gấp đôi → nhân với", "Doubling the distance → multiply by")} 1/2
+            <sup>{fmt(exp, 2)}</sup> = {fmt(1 / Math.pow(2, exp), 2)}
+            {step.free ? null : tr(" (Newton: luôn là 1/4)", " (Newton: always 1/4)")}
+          </p>
+        </>
+      )}
 
       <h4 className="mt-3 font-serif text-lg leading-snug">
         {i + 1}. {tr(step.vi.title, step.en.title)}
