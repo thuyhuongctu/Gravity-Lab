@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import type { LabPanel } from "@/components/FdiLab";
 import { fmt, tr } from "@/lib/prefs";
@@ -461,6 +461,7 @@ export function FormulaBridge({
 }) {
   usePrefs();
   const [i, setI] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
   const [prev, setPrev] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
   const [d, setD] = useState(2);
@@ -490,10 +491,34 @@ export function FormulaBridge({
 
   const exp = step.free ? gamma : 2;
 
+  // Presentation keys, scoped to the bridge: ← / → change step, F toggles full screen.
+  const onKey = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.target instanceof HTMLInputElement) return;
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      setPlaying(false);
+      go(i + 1);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      setPlaying(false);
+      go(i - 1);
+    } else if (e.key === "f" || e.key === "F") {
+      e.preventDefault();
+      const el = sectionRef.current;
+      if (!el) return;
+      if (document.fullscreenElement) void document.exitFullscreen?.();
+      else void el.requestFullscreen?.();
+    }
+  };
+
   return (
     <section
-      className="clay-card rounded-card bg-paper p-4"
+      ref={sectionRef}
+      tabIndex={0}
+      onKeyDown={onKey}
+      className="clay-card rounded-card bg-paper p-4 outline-none focus-visible:ring-2 focus-visible:ring-teal"
       aria-roledescription={tr("trình chiếu", "carousel")}
+      aria-keyshortcuts="ArrowLeft ArrowRight F"
     >
       <p className="text-xs font-medium text-teal">
         {tr("Mô phỏng chuyển hóa công thức", "How the formula travels")}
@@ -550,6 +575,7 @@ export function FormulaBridge({
             max={4}
             step={0.1}
             value={d}
+            aria-valuetext={fmt(d, 1)}
             onChange={(e) => setD(Number(e.target.value))}
           />
         </label>
@@ -561,6 +587,7 @@ export function FormulaBridge({
             max={2.5}
             step={0.01}
             value={exp}
+            aria-valuetext={`γ = ${fmt(exp, 2)}`}
             disabled={!step.free}
             onChange={(e) => setGamma(Number(e.target.value))}
           />

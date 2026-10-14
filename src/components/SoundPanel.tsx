@@ -157,6 +157,7 @@ export function SoundPanel() {
               disabled={!song.duration}
               onChange={(e) => seekSong(Number(e.target.value))}
               aria-label={tr("Vị trí trong bài hát", "Position in the song")}
+              aria-valuetext={`${fmtInt(song.time)} s`}
               className="mt-2 w-full"
             />
             <details className="mt-1">
@@ -208,6 +209,7 @@ export function SoundPanel() {
               max={1}
               step={0.01}
               value={sound.volume}
+              aria-valuetext={`${fmtInt(sound.volume * 100)}%`}
               onChange={(e) => setVolume(Number(e.target.value))}
             />
           </label>

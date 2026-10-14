@@ -910,6 +910,7 @@ export function Observatory() {
                   step={0.05}
                   value={gamma}
                   aria-label={tr("Số mũ khoảng cách gamma", "Distance exponent gamma")}
+                  aria-valuetext={`γ = ${comma(gamma, 2)}`}
                   onChange={(e) => setGamma(Number(e.target.value))}
                 />
                 <span className="text-xs text-muted">
@@ -958,6 +959,7 @@ export function Observatory() {
                     step={0.1}
                     value={boost}
                     aria-label={tr("Ưu đãi cho cặp đang chọn", "Preference for the selected pair")}
+                    aria-valuetext={`${comma(boost, 1)}×`}
                     onChange={(e) => {
                       const v = Number(e.target.value);
                       setBoosts((prev) => ({ ...prev, [pairKey(focus.id, pairId)]: v }));
