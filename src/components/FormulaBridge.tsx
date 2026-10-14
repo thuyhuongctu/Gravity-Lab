@@ -7,6 +7,9 @@ import { LogTransformLab } from "@/components/bridge/LogTransformLab";
 import { MrtLab } from "@/components/bridge/MrtLab";
 import { PpmlLab } from "@/components/bridge/PpmlLab";
 import { FdiStep7Lab } from "@/components/bridge/FdiStep7Lab";
+import { OrbitLab } from "@/components/bridge/OrbitLab";
+import { RenameLab } from "@/components/bridge/RenameLab";
+import { MetaLab } from "@/components/bridge/MetaLab";
 import { Exercises } from "@/components/Exercises";
 
 type Room = "orbit" | "trade" | "lab";
@@ -20,7 +23,7 @@ type Step = {
   en: { title: string; text: string };
   tokens: Tok[];
   /** What the picture shows. */
-  view: "planets" | "countries" | "log" | "resistance" | "zeros" | "fdi";
+  view: "planets" | "countries" | "meta" | "log" | "resistance" | "zeros" | "fdi";
   /** Exponent on distance in the picture: fixed at 2 for Newton, free afterwards. */
   free: boolean;
   open?: { room: Room; panel: LabPanel | null; vi: string; en: string };
@@ -107,7 +110,7 @@ const STEPS: Step[] = [
       { k: "r", t: "D", sub: "ij" },
       { k: "exp", t: "γ", sup: true },
     ],
-    view: "countries",
+    view: "meta",
     free: true,
     open: {
       room: "trade",
@@ -226,6 +229,9 @@ const DEFAULT_GAMMA = [2, 2, 0.9, 0.9, 0.9, 0.9, 0.38];
 
 /** Interactive labs that replace the simple picture from step 4 on. */
 const LABS: Partial<Record<Step["view"], () => React.JSX.Element>> = {
+  planets: OrbitLab,
+  countries: RenameLab,
+  meta: MetaLab,
   log: LogTransformLab,
   resistance: MrtLab,
   zeros: PpmlLab,
