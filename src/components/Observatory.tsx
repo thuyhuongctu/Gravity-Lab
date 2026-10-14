@@ -579,6 +579,7 @@ export function Observatory() {
                 if (panel) lab.setPanel(panel);
                 go(room);
               }}
+              onBridge={() => showStorySection("formula-bridge")}
               onAbout={() => showStorySection("about-h")}
               onPrivacy={() => showStorySection("privacy-h")}
             />

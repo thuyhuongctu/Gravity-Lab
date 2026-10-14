@@ -7,6 +7,7 @@ import { LogTransformLab } from "@/components/bridge/LogTransformLab";
 import { MrtLab } from "@/components/bridge/MrtLab";
 import { PpmlLab } from "@/components/bridge/PpmlLab";
 import { FdiStep7Lab } from "@/components/bridge/FdiStep7Lab";
+import { Exercises } from "@/components/Exercises";
 
 type Room = "orbit" | "trade" | "lab";
 
@@ -526,6 +527,7 @@ export function FormulaBridge({
 
   return (
     <section
+      id="formula-bridge"
       ref={sectionRef}
       tabIndex={0}
       onKeyDown={onKey}
@@ -663,6 +665,25 @@ export function FormulaBridge({
           </button>
         ) : null}
       </div>
+      {i === STEPS.length - 1 ? (
+        <details className="mt-4 rounded-2xl border border-line p-4">
+          <summary className="cursor-pointer font-serif text-lg leading-snug">
+            {tr(
+              "Bài tập · 6 câu, chấm ngay trên thiết bị",
+              "Exercises · 6 questions, marked on this device",
+            )}
+          </summary>
+          <div className="mt-3">
+            <Exercises
+              compact
+              onOpen={(t) => {
+                if (t.room === "story") go(t.step ?? 3);
+                else onOpen(t.room, t.panel ?? null);
+              }}
+            />
+          </div>
+        </details>
+      ) : null}
     </section>
   );
 }
