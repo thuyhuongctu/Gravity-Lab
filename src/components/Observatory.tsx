@@ -1,5 +1,17 @@
+import { explainEstimate } from "@/sim/explain";
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { ArrowRight, LocateFixed, Menu, Moon, Move, Pause, Play, Sun, Trash2, Wind } from "lucide-react";
+import {
+  ArrowRight,
+  LocateFixed,
+  Menu,
+  Moon,
+  Move,
+  Pause,
+  Play,
+  Sun,
+  Trash2,
+  Wind,
+} from "lucide-react";
 import { OrbitCanvas, type OrbitSnap } from "@/components/OrbitCanvas";
 import { TradeCanvas } from "@/components/TradeCanvas";
 import { GlobeCanvas } from "@/components/GlobeCanvas";
@@ -71,22 +83,43 @@ function Chip({
 /** A pressed-in track holding a row of chips. */
 function Track({ children, label }: { children: ReactNode; label?: string }) {
   return (
-    <div role={label ? "group" : undefined} aria-label={label} className="noir-track flex gap-1 overflow-x-auto rounded-full p-1">
+    <div
+      role={label ? "group" : undefined}
+      aria-label={label}
+      className="noir-track flex gap-1 overflow-x-auto rounded-full p-1"
+    >
       {children}
     </div>
   );
 }
 
 /** "The same equation …" call to action with the amber arrow. */
-function NextCard({ kicker, title, onClick, children }: { kicker: string; title: string; onClick: () => void; children?: ReactNode }) {
+function NextCard({
+  kicker,
+  title,
+  onClick,
+  children,
+}: {
+  kicker: string;
+  title: string;
+  onClick: () => void;
+  children?: ReactNode;
+}) {
   return (
-    <button type="button" onClick={onClick} className="noir-card noir-amber flex items-center gap-3 rounded-[22px] p-3.5 text-left">
+    <button
+      type="button"
+      onClick={onClick}
+      className="noir-card noir-amber flex items-center gap-3 rounded-[22px] p-3.5 text-left"
+    >
       <span className="min-w-0 flex-1">
         <span className="block text-xs text-muted">{kicker}</span>
         <span className="mt-0.5 block font-serif text-base leading-snug">{title}</span>
         {children}
       </span>
-      <span aria-hidden="true" className="cosmic-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full">
+      <span
+        aria-hidden="true"
+        className="cosmic-btn inline-flex size-11 shrink-0 items-center justify-center rounded-full"
+      >
         <ArrowRight className="size-4" />
       </span>
     </button>
@@ -278,7 +311,11 @@ export function Observatory() {
   };
   const tabs = (vertical: boolean) => (
     <div
-      className={vertical ? "flex flex-col gap-1" : "noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 @min-[1180px]:order-2 @min-[1180px]:w-auto"}
+      className={
+        vertical
+          ? "flex flex-col gap-1"
+          : "noir-track order-3 flex w-full overflow-x-auto rounded-full p-1.5 @min-[1180px]:order-2 @min-[1180px]:w-auto"
+      }
       role="tablist"
       aria-orientation={vertical ? "vertical" : undefined}
       aria-label={tr("Chế độ", "Mode")}
@@ -291,7 +328,9 @@ export function Observatory() {
           aria-selected={mode === id}
           onClick={() => go(id)}
           className={
-            "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " + (vertical ? "text-left " : "") + (mode === id ? "cosmic-btn" : "text-mist")
+            "min-h-11 shrink-0 rounded-full px-4 text-sm font-medium " +
+            (vertical ? "text-left " : "") +
+            (mode === id ? "cosmic-btn" : "text-mist")
           }
         >
           {tr(vi, en)}
@@ -307,16 +346,24 @@ export function Observatory() {
         toggleSong();
       }}
       aria-pressed={song.playing}
-      aria-label={song.playing ? tr("Tạm dừng bài hát", "Pause the song") : tr("Phát bài hát", "Play the song")}
+      aria-label={
+        song.playing
+          ? tr("Tạm dừng bài hát", "Pause the song")
+          : tr("Phát bài hát", "Play the song")
+      }
       title={SONGS[lang].title}
       className={
         "min-h-10 max-w-11 items-center gap-1.5 overflow-hidden rounded-full px-3 text-xs font-semibold whitespace-nowrap " +
-        (story ? "inline-flex xl:min-h-11 xl:max-w-60 " : "hidden min-h-11 @min-[1400px]:inline-flex @min-[1800px]:max-w-60 ") +
+        (story
+          ? "inline-flex xl:min-h-11 xl:max-w-60 "
+          : "hidden min-h-11 @min-[1400px]:inline-flex @min-[1800px]:max-w-60 ") +
         (song.playing ? "cosmic-btn" : "noir-raise text-paper")
       }
     >
       <span aria-hidden="true">{song.playing ? "❚❚" : "♫"}</span>
-      <span className={"hidden truncate " + (story ? "xl:inline" : "@min-[1800px]:inline")}>{SONGS[lang].title}</span>
+      <span className={"hidden truncate " + (story ? "xl:inline" : "@min-[1800px]:inline")}>
+        {SONGS[lang].title}
+      </span>
     </button>
   );
   const tonesBtn = (cls: string) => (
@@ -325,13 +372,22 @@ export function Observatory() {
       onClick={() => setAmbient(!sound.ambient)}
       aria-pressed={sound.ambient}
       title={tr("Âm vũ trụ: tần số các hành tinh", "Cosmic tones: planetary frequencies")}
-      className={"min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap " + cls + " " + (sound.ambient ? "cosmic-btn" : "noir-raise text-paper")}
+      className={
+        "min-h-10 items-center rounded-full px-3 text-xs font-semibold whitespace-nowrap " +
+        cls +
+        " " +
+        (sound.ambient ? "cosmic-btn" : "noir-raise text-paper")
+      }
     >
       ◉ {tr("Âm vũ trụ", "Tones")}
     </button>
   );
   const langSeg = (
-    <div className="noir-track flex rounded-full p-1" role="group" aria-label={tr("Ngôn ngữ", "Language")}>
+    <div
+      className="noir-track flex rounded-full p-1"
+      role="group"
+      aria-label={tr("Ngôn ngữ", "Language")}
+    >
       {(["vi", "en"] as const).map((l) => (
         <button
           key={l}
@@ -339,7 +395,10 @@ export function Observatory() {
           lang={l}
           aria-pressed={lang === l}
           onClick={() => setLang(l)}
-          className={"min-h-9 min-w-9 rounded-full px-2 text-xs font-semibold uppercase sm:min-w-10 " + (lang === l ? "cosmic-btn" : "text-mist")}
+          className={
+            "min-h-9 min-w-9 rounded-full px-2 text-xs font-semibold uppercase sm:min-w-10 " +
+            (lang === l ? "cosmic-btn" : "text-mist")
+          }
         >
           {l === "vi" ? "VI" : "EN"}
         </button>
@@ -350,7 +409,11 @@ export function Observatory() {
     <button
       type="button"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      aria-label={theme === "dark" ? tr("Chuyển sang giao diện sáng", "Switch to light theme") : tr("Chuyển sang giao diện tối", "Switch to dark theme")}
+      aria-label={
+        theme === "dark"
+          ? tr("Chuyển sang giao diện sáng", "Switch to light theme")
+          : tr("Chuyển sang giao diện tối", "Switch to dark theme")
+      }
       className="noir-raise inline-flex min-h-10 min-w-10 items-center justify-center rounded-full text-paper sm:min-h-11 sm:min-w-11"
     >
       {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -361,7 +424,9 @@ export function Observatory() {
       href={APP_DOI_URL}
       target="_blank"
       rel="noreferrer"
-      className={"min-h-11 items-center rounded-full border border-paper/20 px-3 text-xs text-mist " + cls}
+      className={
+        "min-h-11 items-center rounded-full border border-paper/20 px-3 text-xs text-mist " + cls
+      }
       title={tr("Trích dẫn ứng dụng này qua DOI Zenodo", "Cite this app through its Zenodo DOI")}
     >
       DOI {APP_DOI}
@@ -369,6 +434,20 @@ export function Observatory() {
   );
   const tutor = (
     <TutorPanel
+      explain={() =>
+        lab.est && lab.table
+          ? explainEstimate(lab.est, {
+              columns: lab.table.columns,
+              rows: lab.table.rows,
+              y: lab.yCol,
+              xs: lab.xCols,
+              unit: lab.unitCol,
+              year: lab.yearCol,
+              yLevel: lab.yLevel,
+              yearFE: lab.yearFE,
+            })
+          : null
+      }
       onOpen={(room, panel) => {
         if (panel) lab.setPanel(panel);
         setWho(null);
@@ -392,10 +471,17 @@ export function Observatory() {
           className="size-10 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(79,209,197,0.25)]"
         />
         <div className="min-w-0">
-          <h1 className="font-serif text-xl leading-none font-extrabold tracking-[-0.02em] text-paper max-[639px]:sr-only">Gravity Lab</h1>
+          <h1 className="font-serif text-xl leading-none font-extrabold tracking-[-0.02em] text-paper max-[639px]:sr-only">
+            Gravity Lab
+          </h1>
           <p className="mt-1 hidden items-center gap-1.5 text-xs font-semibold tracking-[0.1em] whitespace-nowrap uppercase text-amber min-[700px]:flex">
             <Flag id="vn" />
-            <span>{tr("Làm tại Đồng bằng sông Cửu Long · Việt Nam", "Made in the Mekong Delta · Việt Nam")}</span>
+            <span>
+              {tr(
+                "Làm tại Đồng bằng sông Cửu Long · Việt Nam",
+                "Made in the Mekong Delta · Việt Nam",
+              )}
+            </span>
           </p>
         </div>
       </div>
@@ -409,7 +495,10 @@ export function Observatory() {
           aria-pressed={calm}
           aria-label={tr("Giảm chuyển động", "Reduce motion")}
           title={tr("Giảm chuyển động (reduce motion)", "Reduce motion")}
-          className={"hidden min-h-10 min-w-10 items-center justify-center rounded-full min-[700px]:inline-flex " + (calm ? "pill-on" : "noir-raise text-paper")}
+          className={
+            "hidden min-h-10 min-w-10 items-center justify-center rounded-full min-[700px]:inline-flex " +
+            (calm ? "pill-on" : "noir-raise text-paper")
+          }
         >
           <Wind className="size-4" aria-hidden="true" />
         </button>
@@ -422,7 +511,10 @@ export function Observatory() {
             aria-expanded={menu}
             aria-haspopup="true"
             aria-label={tr("Các phòng và cài đặt", "Rooms and settings")}
-            className={"inline-flex min-h-10 min-w-10 items-center justify-center rounded-full sm:min-h-11 sm:min-w-11 " + (menu ? "bg-teal-2 text-void" : "noir-raise text-paper")}
+            className={
+              "inline-flex min-h-10 min-w-10 items-center justify-center rounded-full sm:min-h-11 sm:min-w-11 " +
+              (menu ? "bg-teal-2 text-void" : "noir-raise text-paper")
+            }
           >
             <Menu className="size-4" />
           </button>
@@ -451,7 +543,9 @@ export function Observatory() {
           className="size-9 shrink-0 rounded-xl shadow-[0_14px_24px_-12px_rgba(0,0,0,0.9),0_0_0_1px_rgba(79,209,197,0.25)] sm:size-11"
         />
         <div className="min-w-0">
-          <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">{tr("Trọng lực", "Gravity Lab")}</h1>
+          <h1 className="truncate font-serif text-lg leading-tight text-paper max-[409px]:sr-only sm:text-2xl sm:leading-none">
+            {tr("Trọng lực", "Gravity Lab")}
+          </h1>
           <p className="mt-1 hidden truncate text-xs text-mist sm:block">
             {mode === "cast"
               ? tr("Cả lớp khám phá vũ trụ", "The class explores the universe")
@@ -604,7 +698,10 @@ export function Observatory() {
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_45%_0%,rgba(201,163,90,0.08),transparent_70%)]"
               />
-              <div aria-hidden="true" className="noir-vignette pointer-events-none absolute inset-0" />
+              <div
+                aria-hidden="true"
+                className="noir-vignette pointer-events-none absolute inset-0"
+              />
               <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0" />
             </>
           ) : null}
@@ -661,14 +758,14 @@ export function Observatory() {
                       "Drag to pan the map; pinch or scroll to zoom. Tap an economy for its card and a share link.",
                     )
                   : tradeView === "globe"
-                  ? tr(
-                      "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để xem thẻ số liệu và chia sẻ.",
-                      "Drag to turn the globe; pinch or scroll to zoom. Tap an economy for its card and a share link.",
-                    )
-                  : tr(
-                      "Kéo một nền kinh tế để đổi khoảng cách. Chạm để xem thẻ số liệu.",
-                      "Drag an economy to change distances. Tap one for its card.",
-                    )}
+                    ? tr(
+                        "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để xem thẻ số liệu và chia sẻ.",
+                        "Drag to turn the globe; pinch or scroll to zoom. Tap an economy for its card and a share link.",
+                      )
+                    : tr(
+                        "Kéo một nền kinh tế để đổi khoảng cách. Chạm để xem thẻ số liệu.",
+                        "Drag an economy to change distances. Tap one for its card.",
+                      )}
               </p>
             </div>
           ) : null}
@@ -902,7 +999,9 @@ export function Observatory() {
               <label className="noir-track block rounded-[22px] px-4 py-3.5">
                 <span className="mb-1 flex items-baseline justify-between text-sm">
                   <span>{tr("Số mũ khoảng cách γ", "Distance exponent γ")}</span>
-                  <span className="font-serif text-base tabular-nums text-teal">{comma(gamma, 2)}</span>
+                  <span className="font-serif text-base tabular-nums text-teal">
+                    {comma(gamma, 2)}
+                  </span>
                 </span>
                 <input
                   type="range"

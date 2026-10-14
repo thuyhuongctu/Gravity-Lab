@@ -22,7 +22,18 @@ import {
   type PanelEstimate,
 } from "@/sim/gravity-lab";
 import { Download, FileText, Pause, Play } from "lucide-react";
-import { DATASET_COLUMNS, datasetCSV, datasetCodebook, datasetDo, datasetPanel, draftFromEstimate, draftFromModel, draftToDocx, draftToLatex, type Draft } from "@/sim/pro";
+import {
+  DATASET_COLUMNS,
+  datasetCSV,
+  datasetCodebook,
+  datasetDo,
+  datasetPanel,
+  draftFromEstimate,
+  draftFromModel,
+  draftToDocx,
+  draftToLatex,
+  type Draft,
+} from "@/sim/pro";
 import { ReferenceList } from "@/components/ReferenceList";
 import { Globe, type GlobeArc, type GlobeNode } from "@/components/Globe";
 import { SectorBars, SectorFlow, type FdiMode } from "@/components/SectorFlow";
@@ -30,6 +41,8 @@ import { fmt, fmtInt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 import { CaseFile } from "@/components/CaseFile";
 import { ProDiagnostics } from "@/components/ProDiagnostics";
+import { LuminaExplain } from "@/components/LuminaExplain";
+import { explainEstimate } from "@/sim/explain";
 
 export type LabPanel = "coef" | "sim" | "ppml" | "data" | "sector" | "case";
 
@@ -92,7 +105,8 @@ function DraftCard({ draft, file }: { draft: Draft; file: string }) {
   return (
     <div className="noir-card rounded-[26px] px-4 py-4 sm:px-5">
       <p className="kicker text-amber-2">
-        {tr("Bản nháp kết quả (publication-ready)", "Results draft")} · <span className="normal-case">Pro</span>
+        {tr("Bản nháp kết quả (publication-ready)", "Results draft")} ·{" "}
+        <span className="normal-case">Pro</span>
       </p>
       <p className="mt-1 text-xs text-mist">{draft.method[L]}</p>
       <ul className="mt-3 flex list-disc flex-col gap-1.5 pl-4 text-sm text-paper">
@@ -104,7 +118,13 @@ function DraftCard({ draft, file }: { draft: Draft; file: string }) {
         <button
           type="button"
           className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-sm font-semibold"
-          onClick={() => saveFile(`${file}.docx`, draftToDocx(draft), "application/vnd.openxmlformats-officedocument.wordprocessingml.document")}
+          onClick={() =>
+            saveFile(
+              `${file}.docx`,
+              draftToDocx(draft),
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
+          }
         >
           <FileText className="size-4" />
           {tr("Tải Word (.docx)", "Download Word (.docx)")}
@@ -157,23 +177,34 @@ export function useLabState() {
   // Empty means "no message yet"; the default prompt is rendered in the current language.
   const [estMsg, setEstMsg] = useState("");
   const [est, setEst] = useState<PanelEstimate | null>(null);
-  const impact = useMemo(() => impactOf({ a, b, econPct: econ, inst, open, fta }), [a, b, econ, inst, open, fta]);
+  const impact = useMemo(
+    () => impactOf({ a, b, econPct: econ, inst, open, fta }),
+    [a, b, econ, inst, open, fta],
+  );
   // lang is a dependency because the rows carry translated labels.
   const rows = useMemo(() => coefRows(model), [model, lang]); // eslint-disable-line react-hooks/exhaustive-deps
   const lesson = useMemo(() => distanceLesson(), [lang]); // eslint-disable-line react-hooks/exhaustive-deps
   const name = countryName;
   const numCols = useMemo(() => {
     if (!table) return [];
-    return table.columns.filter((c) => table.rows.some((r) => typeof r[c] === "number" && Number.isFinite(r[c] as number)));
+    return table.columns.filter((c) =>
+      table.rows.some((r) => typeof r[c] === "number" && Number.isFinite(r[c] as number)),
+    );
   }, [table]);
 
   function loadTable(parsed: CsvTable, presetX: string[] = []) {
     setTable(parsed);
     setEst(null);
     const cols = parsed.columns;
-    const numeric = cols.filter((c) => parsed.rows.some((r) => typeof r[c] === "number" && Number.isFinite(r[c] as number)));
+    const numeric = cols.filter((c) =>
+      parsed.rows.some((r) => typeof r[c] === "number" && Number.isFinite(r[c] as number)),
+    );
     const find = (re: RegExp) => cols.find((x) => re.test(x)) ?? "";
-    const y = numeric.find((x) => /^fdi$/i.test(x)) ?? numeric.find((x) => /fdi/i.test(x)) ?? numeric[0] ?? "";
+    const y =
+      numeric.find((x) => /^fdi$/i.test(x)) ??
+      numeric.find((x) => /fdi/i.test(x)) ??
+      numeric[0] ??
+      "";
     setYCol(y);
     setUnitCol(find(/country|nuoc|quocgia|^id$/i) || cols[0] || "");
     setYearCol(find(/year|^nam$/i) || "");
@@ -216,11 +247,16 @@ export function useLabState() {
       // On phones the table sits behind the panel: bring it into view.
       window.setTimeout(() => {
         const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        document.getElementById("fdi-results")?.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+        document
+          .getElementById("fdi-results")
+          ?.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
       }, 60);
     } catch (err) {
       setEst(null);
-      setEstMsg(tr("Không ước lượng được: ", "Could not estimate: ") + (err instanceof Error ? err.message : tr("lỗi không rõ", "unknown error")));
+      setEstMsg(
+        tr("Không ước lượng được: ", "Could not estimate: ") +
+          (err instanceof Error ? err.message : tr("lỗi không rõ", "unknown error")),
+      );
     }
   }
 
@@ -232,10 +268,54 @@ export function useLabState() {
   }
 
   return {
-    panel, setPanel, caseId, caseStep, setCase, fdiMode, setFdiMode, model, setModel, a, setA, b, setB, econ, setEcon, inst, setInst, open, setOpen, fta, setFta, check, setCheck,
-    impact, rows, lesson, name,
-    table, yCol, setYCol, unitCol, setUnitCol, yearCol, setYearCol, xCols, setXCols, yLevel, setYLevel, yearFE, setYearFE, clusterOn, setClusterOn,
-    estMsg: estMsg || tr("Nạp tệp CSV để bắt đầu.", "Load a CSV file to start."), est, numCols, loadTable, runEstimate, note,
+    panel,
+    setPanel,
+    caseId,
+    caseStep,
+    setCase,
+    fdiMode,
+    setFdiMode,
+    model,
+    setModel,
+    a,
+    setA,
+    b,
+    setB,
+    econ,
+    setEcon,
+    inst,
+    setInst,
+    open,
+    setOpen,
+    fta,
+    setFta,
+    check,
+    setCheck,
+    impact,
+    rows,
+    lesson,
+    name,
+    table,
+    yCol,
+    setYCol,
+    unitCol,
+    setUnitCol,
+    yearCol,
+    setYearCol,
+    xCols,
+    setXCols,
+    yLevel,
+    setYLevel,
+    yearFE,
+    setYearFE,
+    clusterOn,
+    setClusterOn,
+    estMsg: estMsg || tr("Nạp tệp CSV để bắt đầu.", "Load a CSV file to start."),
+    est,
+    numCols,
+    loadTable,
+    runEstimate,
+    note,
   };
 }
 
@@ -246,9 +326,17 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
     <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       {lead}
       <div>
-        <p className="text-xs font-medium text-teal-2">{tr("Gravity Lab · Dòng vốn FDI vào Việt Nam (FDI inflows)", "Gravity Lab · FDI inflows into Vietnam")}</p>
+        <p className="text-xs font-medium text-teal-2">
+          {tr(
+            "Gravity Lab · Dòng vốn FDI vào Việt Nam (FDI inflows)",
+            "Gravity Lab · FDI inflows into Vietnam",
+          )}
+        </p>
         <h2 className="mt-2 max-w-xl font-serif text-2xl leading-snug text-paper">
-          {tr("Khoảng cách còn quan trọng với dòng vốn không?", "Does distance still matter for capital flows?")}
+          {tr(
+            "Khoảng cách còn quan trọng với dòng vốn không?",
+            "Does distance still matter for capital flows?",
+          )}
         </h2>
         <p className="mt-2 max-w-xl text-sm text-mist">
           {tr(
@@ -263,7 +351,14 @@ export function FdiStage({ lab, lead }: { lab: LabState; lead?: ReactNode }) {
       {lab.panel === "ppml" ? <PpmlStage lab={lab} /> : null}
       {lab.panel === "data" ? <DataStage lab={lab} /> : null}
       {lab.panel === "sector" ? <SectorStage lab={lab} /> : null}
-      {lab.panel === "case" ? <CaseFile key={lab.caseId} initialCase={lab.caseId} initialStep={lab.caseStep} onChange={lab.setCase} /> : null}
+      {lab.panel === "case" ? (
+        <CaseFile
+          key={lab.caseId}
+          initialCase={lab.caseId}
+          initialStep={lab.caseStep}
+          onChange={lab.setCase}
+        />
+      ) : null}
     </div>
   );
 }
@@ -275,18 +370,24 @@ function FdiGlobe({ lab }: { lab: LabState }) {
   const terms = COUNTRIES.map((c) => ({ c, term: Math.pow(kmFromHanoi(c.id), beta) }));
   const maxTerm = Math.max(...terms.map((t) => t.term));
   const nodes: GlobeNode[] = [
-    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8bbcc5", tappable: false },
-    ...COUNTRIES.map(
-      (c): GlobeNode => ({
-        id: c.id,
-        lon: c.cap[1],
-        lat: c.cap[0],
-        label: c.id,
-        r: 5,
-        color: c.id === lab.b ? "#e7c27a" : "#f3ece1",
-        ring: c.id === lab.a ? "teal" : c.id === lab.b ? "amber" : undefined,
-      }),
-    ),
+    {
+      id: "VNM",
+      lon: hanoi.lon,
+      lat: hanoi.lat,
+      label: tr("Hà Nội", "Hanoi"),
+      r: 7,
+      color: "#8bbcc5",
+      tappable: false,
+    },
+    ...COUNTRIES.map((c): GlobeNode => ({
+      id: c.id,
+      lon: c.cap[1],
+      lat: c.cap[0],
+      label: c.id,
+      r: 5,
+      color: c.id === lab.b ? "#e7c27a" : "#f3ece1",
+      ring: c.id === lab.a ? "teal" : c.id === lab.b ? "amber" : undefined,
+    })),
   ];
   const arcs: GlobeArc[] = terms.map(({ c, term }) => ({
     id: c.id,
@@ -340,19 +441,36 @@ function SimStage({ lab }: { lab: LabState }) {
         <div className="max-w-xl noir-card rounded-[22px] px-4 py-3.5">
           <p className="text-xs text-mist">{tr("Xa hơn 10%, mô hình 8", "10% farther, Model 8")}</p>
           <p className="glow-clay mt-1 font-serif text-3xl text-clay">{pct(geoTen)}</p>
-          <p className="mt-1 text-sm text-mist">{tr("Độ co của khoảng cách. Chưa phải kết quả của một cặp nước.", "The distance elasticity. Not yet a result for a pair of countries.")}</p>
+          <p className="mt-1 text-sm text-mist">
+            {tr(
+              "Độ co của khoảng cách. Chưa phải kết quả của một cặp nước.",
+              "The distance elasticity. Not yet a result for a pair of countries.",
+            )}
+          </p>
         </div>
       ) : (
         <div className="grid max-w-xl grid-cols-2 gap-3">
           <div className="noir-card rounded-[22px] px-4 py-3.5">
             <p className="text-xs text-mist">{tr("Ngắn hạn, năm đầu", "Short run, first year")}</p>
-            <p className={"mt-1 font-serif text-3xl " + (impact.shortRun >= 0 ? "glow-teal text-teal-2" : "glow-clay text-clay")}>
+            <p
+              className={
+                "mt-1 font-serif text-3xl " +
+                (impact.shortRun >= 0 ? "glow-teal text-teal-2" : "glow-clay text-clay")
+              }
+            >
               {pct(impact.shortRun)}
             </p>
           </div>
           <div className="noir-card rounded-[22px] px-4 py-3.5">
-            <p className="text-xs text-mist">{tr("Dài hạn, chia cho 1 − 0,45", "Long run, divided by 1 − 0.45")}</p>
-            <p className={"mt-1 font-serif text-3xl " + (impact.longRun >= 0 ? "glow-teal text-teal-2" : "glow-clay text-clay")}>
+            <p className="text-xs text-mist">
+              {tr("Dài hạn, chia cho 1 − 0,45", "Long run, divided by 1 − 0.45")}
+            </p>
+            <p
+              className={
+                "mt-1 font-serif text-3xl " +
+                (impact.longRun >= 0 ? "glow-teal text-teal-2" : "glow-clay text-clay")
+              }
+            >
               {pct(impact.longRun)}
             </p>
           </div>
@@ -361,12 +479,17 @@ function SimStage({ lab }: { lab: LabState }) {
       {impact.parts.length ? (
         <ul className="flex max-w-xl flex-col gap-2">
           {impact.parts.map((p) => (
-            <li key={p.id} className="grid grid-cols-[9rem_1fr_4.5rem] items-center gap-2 text-sm text-paper">
+            <li
+              key={p.id}
+              className="grid grid-cols-[9rem_1fr_4.5rem] items-center gap-2 text-sm text-paper"
+            >
               <span className={p.sig ? "" : "text-mist"}>{varLabel(p.id)}</span>
               <span className="noir-track relative h-2.5 rounded-full">
                 <span className="absolute inset-y-0 left-1/2 w-px bg-mist/50" />
                 <span
-                  className={"absolute inset-y-0 rounded-full " + (p.pct >= 0 ? "bg-teal-2" : "bg-clay")}
+                  className={
+                    "absolute inset-y-0 rounded-full " + (p.pct >= 0 ? "bg-teal-2" : "bg-clay")
+                  }
                   style={{
                     opacity: p.sig ? 1 : 0.4,
                     left: `${50 + (Math.min(0, p.pct) / scale) * 50}%`,
@@ -379,7 +502,12 @@ function SimStage({ lab }: { lab: LabState }) {
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-mist">{tr("Muốn xem FTA hoặc một khoảng cách khác, dùng bảng bên.", "To see an FTA or another distance, use the side panel.")}</p>
+        <p className="text-sm text-mist">
+          {tr(
+            "Muốn xem FTA hoặc một khoảng cách khác, dùng bảng bên.",
+            "To see an FTA or another distance, use the side panel.",
+          )}
+        </p>
       )}
       <p className="max-w-xl text-xs text-mist">
         {tr(
@@ -408,9 +536,15 @@ function CoefStage({ lab }: { lab: LabState }) {
         <div className="noir-card flex flex-wrap items-center gap-x-5 gap-y-3 rounded-[26px] px-5 py-4">
           <div>
             <p className="kicker text-amber-2">
-              {tr("Hệ số khoảng cách", "Distance coefficient")} <span className="normal-case">β</span>
+              {tr("Hệ số khoảng cách", "Distance coefficient")}{" "}
+              <span className="normal-case">β</span>
             </p>
-            <p className={"mt-1 font-serif text-5xl tabular-nums " + (geo.b < 0 ? "glow-clay text-clay" : "glow-teal text-teal-2")}>
+            <p
+              className={
+                "mt-1 font-serif text-5xl tabular-nums " +
+                (geo.b < 0 ? "glow-clay text-clay" : "glow-teal text-teal-2")
+              }
+            >
               {num(geo.b)}
             </p>
           </div>
@@ -422,7 +556,11 @@ function CoefStage({ lab }: { lab: LabState }) {
               )}{" "}
               ({geo.p < 0.05 ? tr("p < 0,05", "p < 0.05") : `p = ${num(geo.p, 3)}`}).
             </p>
-            <button type="button" onClick={() => lab.setPanel("ppml")} className="cosmic-btn mt-3 min-h-11 rounded-full px-4 text-sm font-semibold">
+            <button
+              type="button"
+              onClick={() => lab.setPanel("ppml")}
+              className="cosmic-btn mt-3 min-h-11 rounded-full px-4 text-sm font-semibold"
+            >
               {tr("Ước lượng lại bằng PPML →", "Re-estimate with PPML →")}
             </button>
           </div>
@@ -433,8 +571,10 @@ function CoefStage({ lab }: { lab: LabState }) {
           {tr("Mô hình", "Model")} {lab.model + 1} · {tr("Bảng 6", "Table 6")}
         </p>
         <p className="mt-1 text-xs text-mist">
-          {tr("REM, sai số chuẩn vững", "REM, robust standard errors")} · n = {meta.n} · R² = {num(meta.r2, 4)}
-          {cons ? ` · ${tr("hằng số", "constant")} ${num(cons.b)} (${num(cons.se)})` : ""} · Phan &amp; Do (2019)
+          {tr("REM, sai số chuẩn vững", "REM, robust standard errors")} · n = {meta.n} · R² ={" "}
+          {num(meta.r2, 4)}
+          {cons ? ` · ${tr("hằng số", "constant")} ${num(cons.b)} (${num(cons.se)})` : ""} · Phan
+          &amp; Do (2019)
         </p>
         <ul className="mt-3 flex flex-col gap-2.5">
           {shown.map((r) => {
@@ -442,20 +582,31 @@ function CoefStage({ lab }: { lab: LabState }) {
             const tone = !sig ? "bg-mist/45" : r.b >= 0 ? "bg-teal-2" : "bg-amber-2";
             const lo = Math.min(x(0), x(r.b));
             return (
-              <li key={r.id} className="grid grid-cols-[minmax(0,9rem)_1fr_auto] items-center gap-3 max-sm:grid-cols-[1fr_auto]">
+              <li
+                key={r.id}
+                className="grid grid-cols-[minmax(0,9rem)_1fr_auto] items-center gap-3 max-sm:grid-cols-[1fr_auto]"
+              >
                 <span className="text-sm text-paper max-sm:col-span-2">{r.label}</span>
                 <div className="noir-track relative h-4 rounded-full max-sm:order-1">
                   <span className="absolute inset-y-0 w-px bg-mist/70" style={{ left: "50%" }} />
                   <span
                     className="absolute top-1/2 h-px -translate-y-1/2 bg-mist/70"
-                    style={{ left: `${x(r.b - 1.96 * r.se)}%`, width: `${x(r.b + 1.96 * r.se) - x(r.b - 1.96 * r.se)}%` }}
+                    style={{
+                      left: `${x(r.b - 1.96 * r.se)}%`,
+                      width: `${x(r.b + 1.96 * r.se) - x(r.b - 1.96 * r.se)}%`,
+                    }}
                   />
                   <span
                     className={"absolute inset-y-[3px] rounded-full " + tone}
                     style={{ left: `${lo}%`, width: `${Math.max(Math.abs(x(r.b) - x(0)), 0.8)}%` }}
                   />
                 </div>
-                <span className={"w-20 text-right text-sm tabular-nums max-sm:order-2 " + (sig ? "text-paper" : "text-mist")}>
+                <span
+                  className={
+                    "w-20 text-right text-sm tabular-nums max-sm:order-2 " +
+                    (sig ? "text-paper" : "text-mist")
+                  }
+                >
                   {r.b > 0 ? "+" : ""}
                   {num(r.b)}
                   <span className="text-amber-2">{stars(r)}</span>
@@ -518,7 +669,10 @@ function reading(model: number): string[] {
     const [b, se] = c.cult;
     out.push(
       pValue(b, se) < 0.05
-        ? tr(`Khoảng cách văn hóa có hệ số ${num(b)}.`, `Cultural distance has a coefficient of ${num(b)}.`)
+        ? tr(
+            `Khoảng cách văn hóa có hệ số ${num(b)}.`,
+            `Cultural distance has a coefficient of ${num(b)}.`,
+          )
         : tr(
             `Khoảng cách văn hóa là ${num(b)}, chưa có ý nghĩa ở mức 5%.`,
             `Cultural distance is ${num(b)}, not significant at 5%.`,
@@ -556,7 +710,10 @@ function PpmlStage({ lab }: { lab: LabState }) {
               <span className="absolute inset-y-0 w-px bg-mist/70" style={{ left: `${x(0)}%` }} />
               <span
                 className="absolute inset-y-0 rounded-full bg-teal-2/80"
-                style={{ left: `${x(r.b - 1.96 * r.se)}%`, width: `${Math.max(0.8, x(r.b + 1.96 * r.se) - x(r.b - 1.96 * r.se))}%` }}
+                style={{
+                  left: `${x(r.b - 1.96 * r.se)}%`,
+                  width: `${Math.max(0.8, x(r.b + 1.96 * r.se) - x(r.b - 1.96 * r.se))}%`,
+                }}
               />
             </div>
           </li>
@@ -571,7 +728,9 @@ function PpmlStage({ lab }: { lab: LabState }) {
       </p>
       <XuanGlobe />
       <details className="max-w-xl">
-        <summary className="min-h-11 text-sm text-paper">{tr("Xem dữ liệu gốc", "Show the source data")}</summary>
+        <summary className="min-h-11 text-sm text-paper">
+          {tr("Xem dữ liệu gốc", "Show the source data")}
+        </summary>
         <XuanTable />
       </details>
     </div>
@@ -604,21 +763,30 @@ function XuanGlobe() {
   const year = data.years[idx]!;
   const positive = data.series.filter((s) => s.v[idx]! > 0);
   const zeros = data.series.filter((s) => s.v[idx]! <= 0);
-  const top = positive.reduce<(typeof positive)[number] | null>((m, s) => (!m || s.v[idx]! > m.v[idx]! ? s : m), null);
+  const top = positive.reduce<(typeof positive)[number] | null>(
+    (m, s) => (!m || s.v[idx]! > m.v[idx]! ? s : m),
+    null,
+  );
 
   const nodes: GlobeNode[] = [
-    { id: "VNM", lon: hanoi.lon, lat: hanoi.lat, label: tr("Hà Nội", "Hanoi"), r: 7, color: "#8bbcc5", tappable: false },
-    ...data.series.map(
-      (s): GlobeNode => ({
-        id: s.id,
-        lon: s.cap[1],
-        lat: s.cap[0],
-        label: s.id,
-        r: 5,
-        color: s.v[idx]! > 0 ? "#f3ece1" : "#c46a4a",
-        tappable: false,
-      }),
-    ),
+    {
+      id: "VNM",
+      lon: hanoi.lon,
+      lat: hanoi.lat,
+      label: tr("Hà Nội", "Hanoi"),
+      r: 7,
+      color: "#8bbcc5",
+      tappable: false,
+    },
+    ...data.series.map((s): GlobeNode => ({
+      id: s.id,
+      lon: s.cap[1],
+      lat: s.cap[0],
+      label: s.id,
+      r: 5,
+      color: s.v[idx]! > 0 ? "#f3ece1" : "#c46a4a",
+      tappable: false,
+    })),
   ];
   // Width scales with the series peak so years compare; sqrt keeps small flows visible.
   const arcs: GlobeArc[] = positive.map((s) => ({
@@ -687,7 +855,12 @@ function XuanGlobe() {
           `${year}: ${positive.length} countries with positive FDI, ${zeros.length} at zero`,
         )}
         {zeros.length ? ` (${zeros.map((s) => s.name).join(", ")})` : ""}.
-        {top ? tr(` Lớn nhất: ${top.name}, ${num(top.v[idx]!, 1)} (cung vàng).`, ` Largest: ${top.name}, ${num(top.v[idx]!, 1)} (amber arc).`) : ""}
+        {top
+          ? tr(
+              ` Lớn nhất: ${top.name}, ${num(top.v[idx]!, 1)} (cung vàng).`,
+              ` Largest: ${top.name}, ${num(top.v[idx]!, 1)} (amber arc).`,
+            )
+          : ""}
       </p>
       <p className="text-xs text-mist">
         {tr(
@@ -709,7 +882,9 @@ function XuanTable() {
           <tr className="text-mist">
             <th className="py-1 pr-3 text-left font-medium">{tr("Nước", "Country")}</th>
             {grid.years.map((y) => (
-              <th key={y} className="px-1 py-1 text-right font-medium">{y}</th>
+              <th key={y} className="px-1 py-1 text-right font-medium">
+                {y}
+              </th>
             ))}
           </tr>
         </thead>
@@ -718,7 +893,10 @@ function XuanTable() {
             <tr key={s.name} className="border-t border-paper/10">
               <td className="py-1 pr-3">{s.name}</td>
               {s.v.map((v, i) => (
-                <td key={grid.years[i]} className={"px-1 py-1 text-right tabular-nums " + (v === 0 ? "text-mist" : "")}>
+                <td
+                  key={grid.years[i]}
+                  className={"px-1 py-1 text-right tabular-nums " + (v === 0 ? "text-mist" : "")}
+                >
                   {num(v, 1)}
                 </td>
               ))}
@@ -752,7 +930,9 @@ function DataStage({ lab }: { lab: LabState }) {
               <tr className="text-xs text-mist">
                 <th className="py-2 pr-3 text-left font-medium">{tr("Biến", "Variable")}</th>
                 {est.fits.map((f) => (
-                  <th key={f.label} className="py-2 pr-3 text-right font-medium">{f.label}</th>
+                  <th key={f.label} className="py-2 pr-3 text-right font-medium">
+                    {f.label}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -766,8 +946,13 @@ function DataStage({ lab }: { lab: LabState }) {
                       <td key={f.label} className="py-2 pr-3 text-right">
                         {c ? (
                           <>
-                            <span className="tabular-nums">{num(c.b, 3)}{c.stars}</span>
-                            <span className="block text-xs text-mist tabular-nums">({num(c.se, 3)})</span>
+                            <span className="tabular-nums">
+                              {num(c.b, 3)}
+                              {c.stars}
+                            </span>
+                            <span className="block text-xs text-mist tabular-nums">
+                              ({num(c.se, 3)})
+                            </span>
                           </>
                         ) : (
                           "—"
@@ -780,13 +965,17 @@ function DataStage({ lab }: { lab: LabState }) {
               <tr className="border-t border-paper/15">
                 <td className="py-2 pr-3">{tr("Số quan sát", "Observations")}</td>
                 {est.fits.map((f) => (
-                  <td key={f.label} className="py-2 pr-3 text-right tabular-nums">{f.fit.n}</td>
+                  <td key={f.label} className="py-2 pr-3 text-right tabular-nums">
+                    {f.fit.n}
+                  </td>
                 ))}
               </tr>
               <tr className="border-t border-paper/15">
                 <td className="py-2 pr-3">R² / pseudo-R²</td>
                 {est.fits.map((f) => (
-                  <td key={f.label} className="py-2 pr-3 text-right tabular-nums">{num(f.fit.r2, 3)}</td>
+                  <td key={f.label} className="py-2 pr-3 text-right tabular-nums">
+                    {num(f.fit.r2, 3)}
+                  </td>
                 ))}
               </tr>
             </tbody>
@@ -795,18 +984,52 @@ function DataStage({ lab }: { lab: LabState }) {
       )}
       {est ? (
         <p className="text-xs text-mist">
-          {tr("Sao tính từ p hai phía. Sai số chuẩn trong ngoặc.", "Stars from two-sided p-values. Standard errors in parentheses.")}{" "}
+          {tr(
+            "Sao tính từ p hai phía. Sai số chuẩn trong ngoặc.",
+            "Stars from two-sided p-values. Standard errors in parentheses.",
+          )}{" "}
           {lab.estMsg}
         </p>
       ) : null}
       {est && lab.table ? (
         <ProDiagnostics
-          input={{ columns: lab.table.columns, rows: lab.table.rows, y: lab.yCol, xs: lab.xCols, unit: lab.unitCol, year: lab.yearCol, yLevel: lab.yLevel, yearFE: lab.yearFE }}
+          input={{
+            columns: lab.table.columns,
+            rows: lab.table.rows,
+            y: lab.yCol,
+            xs: lab.xCols,
+            unit: lab.unitCol,
+            year: lab.yearCol,
+            yLevel: lab.yLevel,
+            yearFE: lab.yearFE,
+          }}
           spec={`${lab.yLevel ? "ppmlhdfe" : "reg"} ${lab.yLevel ? lab.yCol : `ln_${lab.yCol}`} ${lab.xCols.join(" ")}${lab.yearFE ? `, absorb(${lab.yearCol})` : ""}${lab.clusterOn ? ` cluster(${lab.unitCol})` : ""}`}
         />
       ) : null}
+      {est && lab.table ? (
+        <LuminaExplain
+          ex={explainEstimate(est, {
+            columns: lab.table.columns,
+            rows: lab.table.rows,
+            y: lab.yCol,
+            xs: lab.xCols,
+            unit: lab.unitCol,
+            year: lab.yearCol,
+            yLevel: lab.yLevel,
+            yearFE: lab.yearFE,
+          })}
+        />
+      ) : null}
       {est ? (
-        <DraftCard draft={draftFromEstimate(est, { y: lab.yCol, yearFE: lab.yearFE, cluster: lab.clusterOn, unit: lab.unitCol })} file="gravity-lab-results" />
+        <DraftCard
+          draft={draftFromEstimate(est, {
+            y: lab.yCol,
+            yearFE: lab.yearFE,
+            cluster: lab.clusterOn,
+            unit: lab.unitCol,
+          })}
+          file="gravity-lab-results"
+        />
       ) : null}
     </div>
   );
@@ -831,7 +1054,11 @@ function SectorStage({ lab }: { lab: LabState }) {
 export function FdiDock({ lab }: { lab: LabState }) {
   return (
     <div className="flex flex-col gap-4 p-4 pb-8">
-      <div role="group" aria-label={tr("Phần", "Section")} className="noir-track flex flex-wrap gap-1 rounded-[22px] p-1">
+      <div
+        role="group"
+        aria-label={tr("Phần", "Section")}
+        className="noir-track flex flex-wrap gap-1 rounded-[22px] p-1"
+      >
         <Chip flat active={lab.panel === "coef"} onClick={() => lab.setPanel("coef")}>
           {tr("Hệ số 2019", "2019 coefficients")}
         </Chip>
@@ -868,12 +1095,12 @@ export function FdiDock({ lab }: { lab: LabState }) {
           ? CITE_2008
           : lab.panel === "case"
             ? `${CITE_2008} ${CITE_2019}`
-          : lab.panel === "data"
-            ? tr(
-                "Santos Silva và Tenreyro (2006). File chỉ được đọc trên máy này.",
-                "Santos Silva and Tenreyro (2006). Files are read only on this device.",
-              )
-            : `${CITE_2019} ${tr("Bảng 6 · 16 đối tác, 2006–2015.", "Table 6 · 16 partners, 2006–2015.")}`}
+            : lab.panel === "data"
+              ? tr(
+                  "Santos Silva và Tenreyro (2006). File chỉ được đọc trên máy này.",
+                  "Santos Silva and Tenreyro (2006). Files are read only on this device.",
+                )
+              : `${CITE_2019} ${tr("Bảng 6 · 16 đối tác, 2006–2015.", "Table 6 · 16 partners, 2006–2015.")}`}
       </p>
     </div>
   );
@@ -891,38 +1118,56 @@ function CoefDock({ lab }: { lab: LabState }) {
         ))}
       </div>
       <label className="flex min-h-11 items-center gap-2 text-sm">
-        <input type="checkbox" checked={lab.check} onChange={(e) => lab.setCheck(e.target.checked)} />
-        {tr("So sao trong bài với mức ý nghĩa tính lại", "Compare the paper's stars with recomputed significance")}
+        <input
+          type="checkbox"
+          checked={lab.check}
+          onChange={(e) => lab.setCheck(e.target.checked)}
+        />
+        {tr(
+          "So sao trong bài với mức ý nghĩa tính lại",
+          "Compare the paper's stars with recomputed significance",
+        )}
       </label>
       {lab.check && flagged.length ? (
         <ul className="flex flex-col gap-1 text-sm text-muted">
           {flagged.map((r) => (
             <li key={r.id}>
-              {r.label}: {tr("bài ghi", "paper reports")} {r.published || tr("không sao", "no stars")},{" "}
-              {tr("tính lại", "recomputed")} p = {num(r.p, 3)} ({r.recomputed || tr("không sao", "no stars")}).
+              {r.label}: {tr("bài ghi", "paper reports")}{" "}
+              {r.published || tr("không sao", "no stars")}, {tr("tính lại", "recomputed")} p ={" "}
+              {num(r.p, 3)} ({r.recomputed || tr("không sao", "no stars")}).
             </li>
           ))}
         </ul>
       ) : null}
       <details className="noir-card rounded-[22px] px-4 py-2">
-        <summary className="min-h-11 text-sm font-medium">{tr("Câu hỏi thảo luận", "Discussion questions")}</summary>
+        <summary className="min-h-11 text-sm font-medium">
+          {tr("Câu hỏi thảo luận", "Discussion questions")}
+        </summary>
         <ol className="list-decimal pb-2 pl-4 text-sm text-muted">
-          <li>{tr(
-            "R² chỉ khoảng 0,006–0,024, trong khi FDI và FDI năm trước tương quan 0,62. R² nào đang được báo cáo?",
-            "R² is only about 0.006–0.024, while FDI and last year's FDI correlate at 0.62. Which R² is being reported?",
-          )}</li>
-          <li>{tr(
-            "Đưa biến trễ của biến phụ thuộc vào mô hình hiệu ứng ngẫu nhiên gây ra vấn đề gì?",
-            "What problem does putting the lagged dependent variable into a random-effects model cause?",
-          )}</li>
-          <li>{tr(
-            "GDP Việt Nam giống nhau cho mọi đối tác trong một năm. Thêm hiệu ứng cố định năm thì biến này ra sao?",
-            "Vietnam's GDP is the same for every partner in a given year. What happens to this variable once year fixed effects are added?",
-          )}</li>
-          <li>{tr(
-            "Khoảng cách văn hóa không đổi theo thời gian. Hiệu ứng cố định quốc gia còn ước lượng được nó không?",
-            "Cultural distance does not change over time. Can country fixed effects still estimate it?",
-          )}</li>
+          <li>
+            {tr(
+              "R² chỉ khoảng 0,006–0,024, trong khi FDI và FDI năm trước tương quan 0,62. R² nào đang được báo cáo?",
+              "R² is only about 0.006–0.024, while FDI and last year's FDI correlate at 0.62. Which R² is being reported?",
+            )}
+          </li>
+          <li>
+            {tr(
+              "Đưa biến trễ của biến phụ thuộc vào mô hình hiệu ứng ngẫu nhiên gây ra vấn đề gì?",
+              "What problem does putting the lagged dependent variable into a random-effects model cause?",
+            )}
+          </li>
+          <li>
+            {tr(
+              "GDP Việt Nam giống nhau cho mọi đối tác trong một năm. Thêm hiệu ứng cố định năm thì biến này ra sao?",
+              "Vietnam's GDP is the same for every partner in a given year. What happens to this variable once year fixed effects are added?",
+            )}
+          </li>
+          <li>
+            {tr(
+              "Khoảng cách văn hóa không đổi theo thời gian. Hiệu ứng cố định quốc gia còn ước lượng được nó không?",
+              "Cultural distance does not change over time. Can country fixed effects still estimate it?",
+            )}
+          </li>
         </ol>
       </details>
     </div>
@@ -948,7 +1193,9 @@ function SimDock({ lab }: { lab: LabState }) {
         </select>
       </label>
       <label className="block text-sm">
-        <span className="mb-1 block font-medium">{tr("So khoảng cách với", "Compare distance with")}</span>
+        <span className="mb-1 block font-medium">
+          {tr("So khoảng cách với", "Compare distance with")}
+        </span>
         <select
           className="noir-track min-h-11 w-full rounded-full px-4 text-ink"
           value={lab.b}
@@ -969,23 +1216,56 @@ function SimDock({ lab }: { lab: LabState }) {
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
           <span>{tr("Khoảng cách kinh tế", "Economic distance")}</span>
-          <span className="tabular-nums font-medium">{lab.econ >= 0 ? "+" : ""}{lab.econ}%</span>
+          <span className="tabular-nums font-medium">
+            {lab.econ >= 0 ? "+" : ""}
+            {lab.econ}%
+          </span>
         </span>
-        <input type="range" min={-30} max={30} step={5} value={lab.econ} aria-label={tr("Khoảng cách kinh tế thay đổi", "Change in economic distance")} aria-valuetext={`${lab.econ >= 0 ? "+" : ""}${lab.econ}%`} onChange={(e) => lab.setEcon(Number(e.target.value))} />
+        <input
+          type="range"
+          min={-30}
+          max={30}
+          step={5}
+          value={lab.econ}
+          aria-label={tr("Khoảng cách kinh tế thay đổi", "Change in economic distance")}
+          aria-valuetext={`${lab.econ >= 0 ? "+" : ""}${lab.econ}%`}
+          onChange={(e) => lab.setEcon(Number(e.target.value))}
+        />
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
           <span>{tr("Khoảng cách thể chế", "Institutional distance")}</span>
-          <span className="tabular-nums font-medium">{lab.inst >= 0 ? "+" : ""}{num(lab.inst, 1)}</span>
+          <span className="tabular-nums font-medium">
+            {lab.inst >= 0 ? "+" : ""}
+            {num(lab.inst, 1)}
+          </span>
         </span>
-        <input type="range" min={-2} max={2} step={0.5} value={lab.inst} aria-label={tr("Khoảng cách thể chế thay đổi", "Change in institutional distance")} aria-valuetext={`${lab.inst >= 0 ? "+" : ""}${num(lab.inst, 1)}`} onChange={(e) => lab.setInst(Number(e.target.value))} />
+        <input
+          type="range"
+          min={-2}
+          max={2}
+          step={0.5}
+          value={lab.inst}
+          aria-label={tr("Khoảng cách thể chế thay đổi", "Change in institutional distance")}
+          aria-valuetext={`${lab.inst >= 0 ? "+" : ""}${num(lab.inst, 1)}`}
+          onChange={(e) => lab.setInst(Number(e.target.value))}
+        />
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
           <span>{tr("Độ mở thương mại", "Trade openness")}</span>
           <span className="tabular-nums font-medium">+{num(lab.open, 2)}</span>
         </span>
-        <input type="range" min={0} max={0.3} step={0.05} value={lab.open} aria-label={tr("Độ mở thương mại tăng", "Increase in trade openness")} aria-valuetext={`+${num(lab.open, 2)}`} onChange={(e) => lab.setOpen(Number(e.target.value))} />
+        <input
+          type="range"
+          min={0}
+          max={0.3}
+          step={0.05}
+          value={lab.open}
+          aria-label={tr("Độ mở thương mại tăng", "Increase in trade openness")}
+          aria-valuetext={`+${num(lab.open, 2)}`}
+          onChange={(e) => lab.setOpen(Number(e.target.value))}
+        />
       </label>
     </div>
   );
@@ -1017,7 +1297,10 @@ function DataDock({ lab }: { lab: LabState }) {
                 try {
                   lab.loadTable(parseCSV(txt));
                 } catch (err) {
-                  lab.note(tr("Không ước lượng được: ", "Could not estimate: ") + (err instanceof Error ? err.message : "CSV"));
+                  lab.note(
+                    tr("Không ước lượng được: ", "Could not estimate: ") +
+                      (err instanceof Error ? err.message : "CSV"),
+                  );
                 }
               });
             }}
@@ -1037,13 +1320,18 @@ function DataDock({ lab }: { lab: LabState }) {
         >
           {tr("Tải tệp mẫu", "Download template")}
         </button>
-        <button type="button" className="noir-raise min-h-11 rounded-full px-4 text-sm font-medium" onClick={() => lab.loadTable(panelTable(), ["ln_dist"])}>
+        <button
+          type="button"
+          className="noir-raise min-h-11 rounded-full px-4 text-sm font-medium"
+          onClick={() => lab.loadTable(panelTable(), ["ln_dist"])}
+        >
           {tr("Nạp bộ dữ liệu FDI", "Load the FDI dataset")}
         </button>
       </div>
       <div className="noir-card rounded-[22px] px-4 py-3">
         <p className="kicker text-amber">
-          {tr("Bộ dữ liệu FDI Việt Nam (cleaned dataset)", "Cleaned Viet Nam FDI dataset")} · <span className="normal-case">Pro</span>
+          {tr("Bộ dữ liệu FDI Việt Nam (cleaned dataset)", "Cleaned Viet Nam FDI dataset")} ·{" "}
+          <span className="normal-case">Pro</span>
         </p>
         <p className="mt-1 text-xs text-muted">
           {tr(
@@ -1052,13 +1340,25 @@ function DataDock({ lab }: { lab: LabState }) {
           )}
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
-          <button type="button" className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold" onClick={() => saveFile("fdi_vn_panel.csv", datasetCSV(), "text/csv")}>
+          <button
+            type="button"
+            className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
+            onClick={() => saveFile("fdi_vn_panel.csv", datasetCSV(), "text/csv")}
+          >
             <Download className="size-3.5" /> CSV
           </button>
-          <button type="button" className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold" onClick={() => saveFile("fdi_vn_panel.do", datasetDo(), "text/plain")}>
+          <button
+            type="button"
+            className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
+            onClick={() => saveFile("fdi_vn_panel.do", datasetDo(), "text/plain")}
+          >
             <Download className="size-3.5" /> Stata .do
           </button>
-          <button type="button" className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold" onClick={() => saveFile("fdi_vn_panel_codebook.md", datasetCodebook(), "text/markdown")}>
+          <button
+            type="button"
+            className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
+            onClick={() => saveFile("fdi_vn_panel_codebook.md", datasetCodebook(), "text/markdown")}
+          >
             <Download className="size-3.5" /> {tr("Từ điển biến", "Codebook")}
           </button>
         </div>
@@ -1066,7 +1366,9 @@ function DataDock({ lab }: { lab: LabState }) {
       {lab.table && lab.numCols.length ? (
         <>
           <label className="block text-sm">
-            <span className="mb-1 block font-medium">{tr("Biến phụ thuộc", "Dependent variable")}</span>
+            <span className="mb-1 block font-medium">
+              {tr("Biến phụ thuộc", "Dependent variable")}
+            </span>
             <select
               className={selectClass}
               value={lab.yCol}
@@ -1083,12 +1385,24 @@ function DataDock({ lab }: { lab: LabState }) {
             </select>
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
-            <input type="checkbox" checked={lab.yLevel} onChange={(e) => lab.setYLevel(e.target.checked)} />
-            {tr("Biến phụ thuộc ở dạng mức (không phải log)", "Dependent variable in levels (not logs)")}
+            <input
+              type="checkbox"
+              checked={lab.yLevel}
+              onChange={(e) => lab.setYLevel(e.target.checked)}
+            />
+            {tr(
+              "Biến phụ thuộc ở dạng mức (không phải log)",
+              "Dependent variable in levels (not logs)",
+            )}
           </label>
           <label className="block text-sm">
             <span className="mb-1 block font-medium">{tr("Cột quốc gia", "Country column")}</span>
-            <select className={selectClass} value={lab.unitCol} aria-label={tr("Cột quốc gia", "Country column")} onChange={(e) => lab.setUnitCol(e.target.value)}>
+            <select
+              className={selectClass}
+              value={lab.unitCol}
+              aria-label={tr("Cột quốc gia", "Country column")}
+              onChange={(e) => lab.setUnitCol(e.target.value)}
+            >
               {lab.table.columns.map((c) => (
                 <option key={c}>{c}</option>
               ))}
@@ -1096,7 +1410,12 @@ function DataDock({ lab }: { lab: LabState }) {
           </label>
           <label className="block text-sm">
             <span className="mb-1 block font-medium">{tr("Cột năm", "Year column")}</span>
-            <select className={selectClass} value={lab.yearCol} aria-label={tr("Cột năm", "Year column")} onChange={(e) => lab.setYearCol(e.target.value)}>
+            <select
+              className={selectClass}
+              value={lab.yearCol}
+              aria-label={tr("Cột năm", "Year column")}
+              onChange={(e) => lab.setYearCol(e.target.value)}
+            >
               <option value="">{tr("Không có", "None")}</option>
               {lab.table.columns.map((c) => (
                 <option key={c}>{c}</option>
@@ -1104,15 +1423,25 @@ function DataDock({ lab }: { lab: LabState }) {
             </select>
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
-            <input type="checkbox" checked={lab.yearFE} onChange={(e) => lab.setYearFE(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={lab.yearFE}
+              onChange={(e) => lab.setYearFE(e.target.checked)}
+            />
             {tr("Hiệu ứng cố định năm", "Year fixed effects")}
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
-            <input type="checkbox" checked={lab.clusterOn} onChange={(e) => lab.setClusterOn(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={lab.clusterOn}
+              onChange={(e) => lab.setClusterOn(e.target.checked)}
+            />
             {tr("Sai số chuẩn theo cụm quốc gia", "Standard errors clustered by country")}
           </label>
           <fieldset>
-            <legend className="mb-1 text-sm font-medium">{tr("Biến giải thích", "Explanatory variables")}</legend>
+            <legend className="mb-1 text-sm font-medium">
+              {tr("Biến giải thích", "Explanatory variables")}
+            </legend>
             <div className="flex flex-col">
               {lab.numCols
                 .filter((c) => c !== lab.yCol)
@@ -1121,14 +1450,22 @@ function DataDock({ lab }: { lab: LabState }) {
                     <input
                       type="checkbox"
                       checked={lab.xCols.includes(c)}
-                      onChange={(e) => lab.setXCols(e.target.checked ? [...lab.xCols, c] : lab.xCols.filter((x) => x !== c))}
+                      onChange={(e) =>
+                        lab.setXCols(
+                          e.target.checked ? [...lab.xCols, c] : lab.xCols.filter((x) => x !== c),
+                        )
+                      }
                     />
                     {c}
                   </label>
                 ))}
             </div>
           </fieldset>
-          <button type="button" className="min-h-11 rounded-full bg-ink px-3 text-sm font-medium text-paper" onClick={() => lab.runEstimate()}>
+          <button
+            type="button"
+            className="min-h-11 rounded-full bg-ink px-3 text-sm font-medium text-paper"
+            onClick={() => lab.runEstimate()}
+          >
             {tr("Ước lượng", "Estimate")}
           </button>
         </>
