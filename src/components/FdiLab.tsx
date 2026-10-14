@@ -29,6 +29,7 @@ import { SectorBars, SectorFlow, type FdiMode } from "@/components/SectorFlow";
 import { fmt, fmtInt, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 import { CaseFile } from "@/components/CaseFile";
+import { ProDiagnostics } from "@/components/ProDiagnostics";
 
 export type LabPanel = "coef" | "sim" | "ppml" | "data" | "sector" | "case";
 
@@ -797,6 +798,12 @@ function DataStage({ lab }: { lab: LabState }) {
           {tr("Sao tính từ p hai phía. Sai số chuẩn trong ngoặc.", "Stars from two-sided p-values. Standard errors in parentheses.")}{" "}
           {lab.estMsg}
         </p>
+      ) : null}
+      {est && lab.table ? (
+        <ProDiagnostics
+          input={{ columns: lab.table.columns, rows: lab.table.rows, y: lab.yCol, xs: lab.xCols, unit: lab.unitCol, year: lab.yearCol, yLevel: lab.yLevel, yearFE: lab.yearFE }}
+          spec={`${lab.yLevel ? "ppmlhdfe" : "reg"} ${lab.yLevel ? lab.yCol : `ln_${lab.yCol}`} ${lab.xCols.join(" ")}${lab.yearFE ? `, absorb(${lab.yearCol})` : ""}${lab.clusterOn ? ` cluster(${lab.unitCol})` : ""}`}
+        />
       ) : null}
       {est ? (
         <DraftCard draft={draftFromEstimate(est, { y: lab.yCol, yearFE: lab.yearFE, cluster: lab.clusterOn, unit: lab.unitCol })} file="gravity-lab-results" />
