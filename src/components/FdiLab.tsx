@@ -964,21 +964,21 @@ function SimDock({ lab }: { lab: LabState }) {
           <span>{tr("Khoảng cách kinh tế", "Economic distance")}</span>
           <span className="tabular-nums font-medium">{lab.econ >= 0 ? "+" : ""}{lab.econ}%</span>
         </span>
-        <input type="range" min={-30} max={30} step={5} value={lab.econ} aria-label={tr("Khoảng cách kinh tế thay đổi", "Change in economic distance")} onChange={(e) => lab.setEcon(Number(e.target.value))} />
+        <input type="range" min={-30} max={30} step={5} value={lab.econ} aria-label={tr("Khoảng cách kinh tế thay đổi", "Change in economic distance")} aria-valuetext={`${lab.econ >= 0 ? "+" : ""}${lab.econ}%`} onChange={(e) => lab.setEcon(Number(e.target.value))} />
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
           <span>{tr("Khoảng cách thể chế", "Institutional distance")}</span>
           <span className="tabular-nums font-medium">{lab.inst >= 0 ? "+" : ""}{num(lab.inst, 1)}</span>
         </span>
-        <input type="range" min={-2} max={2} step={0.5} value={lab.inst} aria-label={tr("Khoảng cách thể chế thay đổi", "Change in institutional distance")} onChange={(e) => lab.setInst(Number(e.target.value))} />
+        <input type="range" min={-2} max={2} step={0.5} value={lab.inst} aria-label={tr("Khoảng cách thể chế thay đổi", "Change in institutional distance")} aria-valuetext={`${lab.inst >= 0 ? "+" : ""}${num(lab.inst, 1)}`} onChange={(e) => lab.setInst(Number(e.target.value))} />
       </label>
       <label className="block">
         <span className="mb-1 flex justify-between text-sm">
           <span>{tr("Độ mở thương mại", "Trade openness")}</span>
           <span className="tabular-nums font-medium">+{num(lab.open, 2)}</span>
         </span>
-        <input type="range" min={0} max={0.3} step={0.05} value={lab.open} aria-label={tr("Độ mở thương mại tăng", "Increase in trade openness")} onChange={(e) => lab.setOpen(Number(e.target.value))} />
+        <input type="range" min={0} max={0.3} step={0.05} value={lab.open} aria-label={tr("Độ mở thương mại tăng", "Increase in trade openness")} aria-valuetext={`+${num(lab.open, 2)}`} onChange={(e) => lab.setOpen(Number(e.target.value))} />
       </label>
     </div>
   );

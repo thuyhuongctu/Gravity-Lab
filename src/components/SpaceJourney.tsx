@@ -500,6 +500,7 @@ export function SpaceJourney({
                         max={s.slider.max}
                         step={s.slider.step}
                         value={s.slider.id === "n" ? n : b}
+                        aria-valuetext={num(s.slider.id === "n" ? n : b)}
                         onChange={(e) => setVal(s.slider!.id, Number(e.target.value))}
                         className={"h-7 w-full " + T.accent}
                       />
