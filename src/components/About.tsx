@@ -3,17 +3,28 @@ import { tr } from "@/lib/prefs";
 /** About the app and its two authors, and what the app does with the reader's data (nothing leaves the device). */
 export function About() {
   const base = import.meta.env.BASE_URL;
-  const authors: Array<{ face: string; name: [string, string]; role: [string, string]; orcid: string }> = [
+  const authors: Array<{
+    face: string;
+    name: [string, string];
+    role: [string, string];
+    orcid: string;
+  }> = [
     {
       face: "cast/v2/tu-face.webp",
       name: ["PGS.TS. Phan Anh Tú", "Assoc. Prof. Phan Anh Tu"],
-      role: ["Thiết kế nghiên cứu và đặc tả mô hình trọng lực (Phan & Do, 2019)", "Research design and the gravity-model specifications (Phan & Do, 2019)"],
+      role: [
+        "Thiết kế nghiên cứu và đặc tả mô hình trọng lực (Phan & Do, 2019)",
+        "Research design and the gravity-model specifications (Phan & Do, 2019)",
+      ],
       orcid: "0000-0003-0667-3137",
     },
     {
       face: "cast/v2/huong-face.webp",
       name: ["NCS. Đỗ Thùy Hương", "Do Thuy Huong, PhD candidate"],
-      role: ["Thiết kế, phát triển ứng dụng, học liệu và bảo trì", "Application design and development, teaching materials and maintenance"],
+      role: [
+        "Thiết kế, phát triển ứng dụng, học liệu và bảo trì",
+        "Application design and development, teaching materials and maintenance",
+      ],
       orcid: "0000-0002-7711-2487",
     },
   ];
@@ -43,7 +54,9 @@ export function About() {
     <section className="mx-auto max-w-5xl px-4 pt-10" aria-labelledby="about-h">
       <div className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
         <div className="noir-card rounded-[26px] p-5 sm:p-6">
-          <p className="kicker text-amber">{tr("Giới thiệu Gravity Lab (about)", "About Gravity Lab")}</p>
+          <p className="kicker text-amber">
+            {tr("Giới thiệu Gravity Lab (about)", "About Gravity Lab")}
+          </p>
           <h3 id="about-h" className="sr-only">
             {tr("Tác giả", "Authors")}
           </h3>
@@ -73,7 +86,12 @@ export function About() {
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-sm text-muted">{tr("Khoa Kinh tế, Đại học Cần Thơ · Việt Nam", "School of Economics, Can Tho University · Việt Nam")}</p>
+          <p className="mt-3 text-sm text-muted">
+            {tr(
+              "Khoa Kinh tế, Đại học Cần Thơ · Việt Nam",
+              "School of Economics, Can Tho University · Việt Nam",
+            )}
+          </p>
           <p className="mt-4 text-[15px] leading-relaxed">
             {tr(
               "Chúng tôi xây dựng Gravity Lab để sinh viên kinh tế được nhìn thấy mô hình lực hấp dẫn (gravity model) — từ định luật Newton đến dòng vốn FDI vào Việt Nam (FDI inflows) — thay vì chỉ đọc về nó.",
@@ -88,15 +106,26 @@ export function About() {
           </p>
         </div>
         <div className="noir-card rounded-[26px] p-5 sm:p-6">
-          <p id="privacy-h" className="kicker text-amber">{tr("Quyền riêng tư (privacy)", "Privacy")}</p>
+          <p id="privacy-h" className="kicker text-amber">
+            {tr("Quyền riêng tư (privacy)", "Privacy")}
+          </p>
           <ul className="mt-3 flex flex-col gap-2.5 text-sm leading-relaxed">
             {privacy.map(([vi, en]) => (
               <li key={en} className="flex gap-2.5">
-                <span aria-hidden="true" className="mt-[7px] size-2 shrink-0 rounded-full bg-[#4fd1c5]" />
+                <span
+                  aria-hidden="true"
+                  className="mt-[7px] size-2 shrink-0 rounded-full bg-[#4fd1c5]"
+                />
                 <span>{tr(vi, en)}</span>
               </li>
             ))}
           </ul>
+          <a
+            href={`${import.meta.env.BASE_URL}privacy/`}
+            className="mt-3 inline-block text-sm font-semibold text-teal underline-offset-2 hover:underline"
+          >
+            {tr("Trang chính sách quyền riêng tư đầy đủ →", "Full privacy policy page →")}
+          </a>
         </div>
       </div>
     </section>

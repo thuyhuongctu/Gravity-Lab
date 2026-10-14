@@ -20,9 +20,22 @@
     "path": "./android.keystore",
     "alias": "gravitylab"
   },
-  "appVersionName": "2.8",
+  "appVersionName": "2.9",
   "appVersionCode": 1,
-  "shortcuts": [],
+  "shortcuts": [
+    {
+      "name": "Trade room",
+      "shortName": "Trade",
+      "url": "/Gravity-Lab/#s=r%3Dtrade",
+      "chosenIconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-192.png"
+    },
+    {
+      "name": "FDI lab",
+      "shortName": "FDI",
+      "url": "/Gravity-Lab/#s=r%3Dlab",
+      "chosenIconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-192.png"
+    }
+  ],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://thuyhuongctu.github.io/Gravity-Lab/manifest.webmanifest",
   "fallbackType": "customtabs",
