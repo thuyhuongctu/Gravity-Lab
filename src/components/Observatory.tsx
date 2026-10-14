@@ -15,6 +15,8 @@ import { setAmbient } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
 import { SONGS, getSong, pickSong, subscribeSong, toggleSong } from "@/lib/song";
 import { TutorPanel } from "@/components/TutorPanel";
+import { PartnerCard } from "@/components/PartnerCard";
+import { decodeState, type ShareState } from "@/lib/shareState";
 import { RoomCover } from "@/components/RoomCover";
 import { ReferenceList } from "@/components/ReferenceList";
 import { APP_DOI, APP_DOI_URL } from "@/components/CiteApp";
@@ -152,6 +154,7 @@ export function Observatory() {
   const [ecos, setEcos] = useState<Economy[]>(() => makeEconomies("lecture"));
   const [focusId, setFocusId] = useState("vn");
   const [pairId, setPairId] = useState<string | null>(null);
+  const [card, setCard] = useState<string | null>(null);
   const [gamma, setGamma] = useState(1.1);
   const [boosts, setBoosts] = useState<Record<string, number>>({});
   const lab = useLabState();
@@ -191,6 +194,25 @@ export function Observatory() {
     simRef.current = sim;
     setReady(true);
   }, []);
+
+  // A shared link (#s=…) restores room, view, γ, pair, story scene or case step once, then clears the hash.
+  useEffect(() => {
+    const s = decodeState();
+    if (!s) return;
+    if (s.view) setTradeView(s.view);
+    if (s.gamma !== undefined) setGamma(s.gamma);
+    if (s.pair && s.room === "trade") {
+      setPairId(s.pair);
+      setCard(s.pair);
+    }
+    if (s.room === "lab" && s.caseId) {
+      lab.setCase(s.caseId, s.step ?? 1);
+      lab.setPanel("case");
+    }
+    if (s.room === "story" && s.scene) resumeAt(s.scene - 1);
+    setMode(s.room);
+    history.replaceState(null, "", location.pathname + location.search);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const sim = simRef.current;
@@ -239,6 +261,7 @@ export function Observatory() {
 
   const go = (id: Mode) => {
     setWho(null);
+    setCard(null);
     setMode(id);
     setMenu(false);
   };
@@ -370,7 +393,7 @@ export function Observatory() {
         />
         <div className="min-w-0">
           <h1 className="font-serif text-xl leading-none font-extrabold tracking-[-0.02em] text-paper max-[639px]:sr-only">Gravity Lab</h1>
-          <p className="mt-1 hidden items-center gap-1.5 text-[11px] font-semibold tracking-[0.1em] whitespace-nowrap uppercase text-amber min-[700px]:flex">
+          <p className="mt-1 hidden items-center gap-1.5 text-xs font-semibold tracking-[0.1em] whitespace-nowrap uppercase text-amber min-[700px]:flex">
             <Flag id="vn" />
             <span>{tr("Làm tại Đồng bằng sông Cửu Long · Việt Nam", "Made in the Mekong Delta · Việt Nam")}</span>
           </p>
@@ -481,8 +504,9 @@ export function Observatory() {
               gamma={gamma}
               boosts={boosts}
               onTap={(id) => {
-                setFocusId(id);
-                setPairId(null);
+                if (id === focusId) return;
+                setPairId(id);
+                setCard(id);
               }}
             />
           ) : null}
@@ -494,8 +518,9 @@ export function Observatory() {
               gamma={gamma}
               boosts={boosts}
               onTap={(id) => {
-                setFocusId(id);
-                setPairId(null);
+                if (id === focusId) return;
+                setPairId(id);
+                setCard(id);
               }}
               onMove={(id, x, y) =>
                 setEcos((prev) => prev.map((e) => (e.id === id ? { ...e, x, y } : e)))
@@ -514,6 +539,36 @@ export function Observatory() {
             />
           ) : null}
           {mode === "cast" ? <CastStage onOpen={enterFromClass} /> : null}
+          {mode === "trade" && card && focus
+            ? (() => {
+                const row = rows.find((r) => r.econ.id === card);
+                if (!row) return null;
+                const state: ShareState = { room: "trade", view: tradeView, gamma, pair: card };
+                return (
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center p-3 sm:justify-end">
+                    <PartnerCard
+                      focus={focus}
+                      partner={row.econ}
+                      gamma={gamma}
+                      share={row.share}
+                      state={state}
+                      onOpenCase={() => {
+                        lab.setCase(card === "sg" ? "sg-kr" : "jp-kr", 1);
+                        lab.setPanel("case");
+                        setCard(null);
+                        setMode("lab");
+                      }}
+                      onFocus={() => {
+                        setFocusId(card);
+                        setPairId(null);
+                        setCard(null);
+                      }}
+                      onClose={() => setCard(null)}
+                    />
+                  </div>
+                );
+              })()
+            : null}
           {mode === "me" ? (
             <MeStage
               onStory={(i) => {
@@ -546,7 +601,7 @@ export function Observatory() {
             <>
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_45%_0%,rgba(255,197,107,0.16),transparent_70%),radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(79,209,197,0.07),transparent_70%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_65%_at_45%_0%,rgba(201,163,90,0.08),transparent_70%)]"
               />
               <div aria-hidden="true" className="noir-vignette pointer-events-none absolute inset-0" />
               <div aria-hidden="true" className="noir-grain pointer-events-none absolute inset-0" />
@@ -596,22 +651,22 @@ export function Observatory() {
                 </div>
               ) : null}
             </div>
-          ) : mode === "trade" ? (
+          ) : mode === "trade" && !card ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
               <p className="max-w-[16rem] noir-hint rounded-[20px] px-3.5 py-2.5 text-xs sm:max-w-sm sm:text-sm">
                 {tradeView === "map"
                   ? tr(
-                      "Kéo để di chuyển bản đồ, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy.",
-                      "Drag to pan the map; pinch or scroll to zoom. Tap an economy to make it the origin of the flows.",
+                      "Kéo để di chuyển bản đồ, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để xem thẻ số liệu và chia sẻ.",
+                      "Drag to pan the map; pinch or scroll to zoom. Tap an economy for its card and a share link.",
                     )
                   : tradeView === "globe"
                   ? tr(
-                      "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để lấy đó làm gốc dòng chảy.",
-                      "Drag to turn the globe; pinch or scroll to zoom. Tap an economy to make it the origin of the flows.",
+                      "Kéo để xoay địa cầu, chụm hoặc cuộn để thu phóng. Chạm một nền kinh tế để xem thẻ số liệu và chia sẻ.",
+                      "Drag to turn the globe; pinch or scroll to zoom. Tap an economy for its card and a share link.",
                     )
                   : tr(
-                      "Kéo một nền kinh tế để đổi khoảng cách. Chạm để lấy đó làm gốc dòng chảy.",
-                      "Drag an economy to change distances. Tap one to make it the origin of the flows.",
+                      "Kéo một nền kinh tế để đổi khoảng cách. Chạm để xem thẻ số liệu.",
+                      "Drag an economy to change distances. Tap one for its card.",
                     )}
               </p>
             </div>
