@@ -291,10 +291,10 @@ function Picture({ step, d, gamma }: { step: Step; d: number; gamma: number }) {
       >
         <line x1={30} y1={h - 26} x2={w - 14} y2={h - 26} className="stroke-line" />
         <line x1={30} y1={14} x2={30} y2={h - 26} className="stroke-line" />
-        <text x={w - 14} y={h - 8} textAnchor="end" className="fill-muted text-[11px]">
+        <text x={w - 14} y={h - 8} textAnchor="end" className="fill-muted text-xs">
           ln D
         </text>
-        <text x={34} y={20} className="fill-muted text-[11px]">
+        <text x={34} y={20} className="fill-muted text-xs">
           {zerosOnly ? "T" : "ln T"}
         </text>
         {pts.map((p, i) =>
@@ -322,7 +322,7 @@ function Picture({ step, d, gamma }: { step: Step; d: number; gamma: number }) {
           {tr("độ dốc", "slope")} −γ = −{fmt(gamma, 2)}
         </text>
         {zerosOnly ? (
-          <text x={X(0.02)} y={h - 32} className="fill-clay text-[11px]">
+          <text x={X(0.02)} y={h - 32} className="fill-clay text-xs">
             {tr("T = 0: OLS bỏ, PPML giữ", "T = 0: OLS drops, PPML keeps")}
           </text>
         ) : null}
@@ -446,7 +446,7 @@ function Picture({ step, d, gamma }: { step: Step; d: number; gamma: number }) {
       <text x={bx} y={cy + bR + 18} textAnchor="middle" className="fill-ink text-[12px]">
         {labelB}
       </text>
-      <text x={cx} y={h - 6} textAnchor="middle" className="fill-muted text-[11px]">
+      <text x={cx} y={h - 6} textAnchor="middle" className="fill-muted text-xs">
         {planets ? "r" : "D"} = {fmt(d, 1)} → {planets ? "F" : fdi ? "FDI" : "T"} × {fmt(value, 2)}
       </text>
     </svg>

@@ -51,8 +51,8 @@ const CLAY = {
   oceanDeep: "#070b1c",
   land: "#c9b48d",
   landEdge: "#6d5a3a",
-  vn: "#ff5e8a",
-  islands: "#ffc56b",
+  vn: "#c47a62",
+  islands: "#c9a35a",
 };
 
 const VN_RING: Vec3[] = VN_OUTLINE.map(([lon, lat]) => toVec(lon, lat));

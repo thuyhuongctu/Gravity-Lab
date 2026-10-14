@@ -71,7 +71,7 @@ export function Clocks({ story = false }: { story?: boolean }) {
         >
           <Flag id={z.id} />
           <b className="text-[13px] font-semibold text-paper tabular-nums">{now[i]}</b>
-          <i className={"hidden text-[11px] whitespace-nowrap text-mist not-italic " + (story ? "min-[1440px]:inline" : "inline")}>
+          <i className={"hidden text-xs whitespace-nowrap text-mist not-italic " + (story ? "min-[1440px]:inline" : "inline")}>
             {tr(z.vi, z.en)}
           </i>
         </span>

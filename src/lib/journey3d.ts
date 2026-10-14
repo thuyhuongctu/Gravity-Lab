@@ -129,7 +129,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   key.position.set(10, 26, 18);
   key.target.position.set(0, -4, -30);
   cam.add(key, key.target);
-  const rim = new THREE.DirectionalLight("#4fd1c5", 2.4);
+  const rim = new THREE.DirectionalLight("#8bbcc5", 2.4);
   rim.position.set(-40, 10, -60);
   scene.add(rim);
   const fill = new THREE.PointLight("#ffe2a8", 90, 0, 1.6);
@@ -142,7 +142,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const pos = new Float32Array(n * 3);
     const col = new Float32Array(n * 3);
     // On the bone sky, additive light would vanish: draw darker dust instead.
-    const pal = (light ? ["#8a8173", "#b5a98f", "#0a6577", "#b4530a"] : ["#ffffff", "#e8d9b8", "#4fd1c5", "#ffc56b"]).map(
+    const pal = (light ? ["#8a8173", "#b5a98f", "#23606b", "#8a6420"] : ["#ffffff", "#e8d9b8", "#8bbcc5", "#c9a35a"]).map(
       (c) => new THREE.Color(c),
     );
     for (let i = 0; i < n; i++) {
@@ -322,7 +322,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     piv.add(m);
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(10, 0.05, 8, 128),
-      new THREE.MeshBasicMaterial({ color: "#4fd1c5", transparent: true, opacity: 0.4 }),
+      new THREE.MeshBasicMaterial({ color: "#8bbcc5", transparent: true, opacity: 0.4 }),
     );
     ring.rotation.x = Math.PI / 2;
     g.add(e, piv, ring);
@@ -336,8 +336,8 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   // rosette: n = 2 closes the orbit, any other n makes it precess.
   {
     const g = place(2, 1);
-    const s = ball(4, "#ffc56b", { emissive: "#ff8a2a", emissiveIntensity: 1.1 });
-    const p = ball(1.4, "#4fd1c5");
+    const s = ball(4, "#c9a35a", { emissive: "#b8873f", emissiveIntensity: 1.1 });
+    const p = ball(1.4, "#8bbcc5");
     g.add(s, sprite("rgba(255,170,80,.9)", 22), p);
     [6, 11, 16].forEach((r, k) => {
       const o = new THREE.Mesh(
@@ -351,7 +351,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const M = 1200;
     const lg = new THREE.BufferGeometry();
     lg.setAttribute("position", new THREE.BufferAttribute(new Float32Array(M * 3), 3));
-    g.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ color: "#4fd1c5", transparent: true, opacity: 0.7 })));
+    g.add(new THREE.Line(lg, new THREE.LineBasicMaterial({ color: "#8bbcc5", transparent: true, opacity: 0.7 })));
     const rAt = (th: number, n: number) => 8.4 / (1 + 0.45 * Math.cos(Math.sqrt(Math.max(0.05, 3 - n)) * th));
     const turns = 6 * Math.PI;
     let lastN = NaN;
@@ -379,15 +379,15 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const g = place(3, -1);
     const a = ball(4, "#e8d9b8");
     a.position.x = -8;
-    const b = ball(2.8, "#ff7a9c");
+    const b = ball(2.8, "#d08a73");
     b.position.x = 8;
     const curve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(-8, 3, 0),
       new THREE.Vector3(0, 12, 0),
       new THREE.Vector3(8, 2, 0),
     );
-    const pk = ball(0.5, "#ffc56b", { emissive: "#ffc56b", emissiveIntensity: 1 });
-    g.add(a, b, new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.22, 8), new THREE.MeshBasicMaterial({ color: "#4fd1c5" })), pk);
+    const pk = ball(0.5, "#c9a35a", { emissive: "#c9a35a", emissiveIntensity: 1 });
+    g.add(a, b, new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.22, 8), new THREE.MeshBasicMaterial({ color: "#8bbcc5" })), pk);
     anim.push((t) => {
       pk.position.copy(curve.getPoint((t * 0.3) % 1));
       g.rotation.y = Math.sin(t * 0.3) * 0.3;
@@ -429,7 +429,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
         trace(pts);
         c.fill();
       }
-      c.fillStyle = "#ff5e8a";
+      c.fillStyle = "#c47a62";
       trace(VN_OUTLINE);
       c.fill();
       // Borders are drawn after every fill so no neighbour paints over them.
@@ -445,7 +445,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
       trace(VN_OUTLINE);
       c.stroke();
       // Hoàng Sa and Trường Sa.
-      c.fillStyle = "#ffc56b";
+      c.fillStyle = "#c9a35a";
       for (const [lon, lat] of [
         [112.3, 16.5],
         [114.3, 9.5],
@@ -460,7 +460,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     e.rotation.x = 0.3;
     const caps: THREE.Mesh[] = [];
     const cg = new THREE.SphereGeometry(0.32, 12, 12);
-    const cm = clay("#ffc56b", { emissive: "#ffc56b", emissiveIntensity: 0.6 });
+    const cm = clay("#c9a35a", { emissive: "#c9a35a", emissiveIntensity: 0.6 });
     for (let i = 0; i < 40; i++) {
       const m = new THREE.Mesh(cg, cm);
       m.userData = { a: rand() * 7, r: 9 + rand() * 9, y: (rand() - 0.5) * 8, s: 0.3 + rand() * 0.5 };
@@ -486,8 +486,8 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   // 6. An FTA: two interlocked clay rings.
   {
     const g = place(5, -1);
-    const t1 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#ffc56b"));
-    const t2 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#4fd1c5"));
+    const t1 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#c9a35a"));
+    const t2 = new THREE.Mesh(new THREE.TorusGeometry(5, 1.1, 24, 96), clay("#8bbcc5"));
     t2.position.x = 5;
     t2.rotation.y = Math.PI / 2;
     g.add(t1, t2);
@@ -502,7 +502,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const g = place(6, 1);
     const geo = new THREE.SphereGeometry(0.45, 16, 16);
     const bone = clay("#e8d9b8");
-    const amber = clay("#ffc56b");
+    const amber = clay("#c9a35a");
     for (let i = 0; i < 60; i++) {
       const zero = i % 7 === 0;
       const m = new THREE.Mesh(geo, zero ? amber : bone);
@@ -525,7 +525,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
     const ring = new THREE.Group();
     g.add(ring);
     const loader = new THREE.TextureLoader();
-    const rimMat = clay("#4fd1c5");
+    const rimMat = clay("#8bbcc5");
     opts.faces.forEach((src, k) => {
       const a = (k / opts.faces.length) * Math.PI * 2;
       const tex = loader.load(src);
@@ -547,7 +547,7 @@ export function mountJourney(host: HTMLElement, opts: JourneyOptions): JourneyHa
   // 9. By the Hậu River: an amber sun, the apple in orbit.
   {
     const g = place(8, 1);
-    const s = ball(3.5, "#ffc56b", { emissive: "#ff8a2a", emissiveIntensity: 0.9 });
+    const s = ball(3.5, "#c9a35a", { emissive: "#b8873f", emissiveIntensity: 0.9 });
     const a = ball(1.4, "#e2483a");
     g.add(s, sprite("rgba(255,170,80,.8)", 20), a);
     anim.push((t) => {

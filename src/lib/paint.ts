@@ -11,13 +11,13 @@ const LIGHT: Record<string, string> = {
   "#141c18": "#e6dfd1", // sea, limb
   "#f3ece1": "#1d1e22", // ink on the sky: graphite
   "#c4bbb0": "#55504a", // mist
-  "#8fd4c0": "#0b7285", // teal rim light
-  "#7ec8b8": "#0e7490",
+  "#8fd4c0": "#23606b", // teal rim light
+  "#7ec8b8": "#2e6a74",
   "#9ec4b6": "#6d5a3a", // clay sand
-  "#e7c27a": "#b4530a", // amber key light
-  "#d4a04a": "#9a4a0c",
-  "#e0a090": "#c2185b", // flare
-  "#c46a4a": "#a3134c",
+  "#e7c27a": "#8a6420", // amber key light
+  "#d4a04a": "#8a6420",
+  "#e0a090": "#9e4a36", // flare
+  "#c46a4a": "#86402f",
   "#f0dcc0": "#6d5a3a", // bone
 };
 
@@ -29,13 +29,13 @@ const DARK: Record<string, string> = {
   "#141c18": "#111215",
   "#f3ece1": "#f1ece2",
   "#c4bbb0": "#a8a297",
-  "#8fd4c0": "#4fd1c5",
-  "#7ec8b8": "#4fd1c5",
+  "#8fd4c0": "#8bbcc5",
+  "#7ec8b8": "#8bbcc5",
   "#9ec4b6": "#e8d9b8",
-  "#e7c27a": "#ffc56b",
-  "#d4a04a": "#f59e0b",
-  "#e0a090": "#ff7a9c",
-  "#c46a4a": "#ff5e8a",
+  "#e7c27a": "#c9a35a",
+  "#d4a04a": "#a8823f",
+  "#e0a090": "#d08a73",
+  "#c46a4a": "#c47a62",
   "#f0dcc0": "#e8d9b8",
 };
 
