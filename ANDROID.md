@@ -17,7 +17,14 @@ full-screen, without an address bar, and picks up every web update without a new
 
 ## 2. Tạo app · Create the Android project
 
-Từ thư mục này, nơi có `twa-manifest.json` sẵn:
+Cách nhanh: một lệnh làm hết (tạo khoá nếu chưa có, `init`, `build`), kết quả trong `android/`:
+
+```bash
+script/android/build.sh            # lần đầu
+script/android/build.sh --update   # sau khi sửa twa-manifest.json
+```
+
+Cách thủ công, từ thư mục này, nơi có `twa-manifest.json` sẵn:
 
 ```bash
 bubblewrap init --manifest https://thuyhuongctu.github.io/Gravity-Lab/manifest.webmanifest
@@ -79,9 +86,9 @@ Nếu cài thử bằng `.apk` ký bằng khoá upload (trước khi qua Play), 
 4. Mô tả ngắn (≤ 80 ký tự):
    - EN: *Learn the gravity model: from Newton’s apple to FDI inflows into Viet Nam.*
    - VI: *Học mô hình lực hấp dẫn: từ quả táo của Newton đến dòng vốn FDI vào Việt Nam (FDI inflows).*
-5. Chính sách quyền riêng tư: dùng mục *Privacy* ở cuối trang Câu chuyện
-   (`https://thuyhuongctu.github.io/Gravity-Lab/`): không tài khoản, không theo dõi, dữ liệu CSV và câu hỏi
-   cho Lumina ở lại trên thiết bị. Biểu mẫu *Data safety*: không thu thập, không chia sẻ dữ liệu.
+5. Chính sách quyền riêng tư: `https://thuyhuongctu.github.io/Gravity-Lab/privacy/` (trang tĩnh song ngữ,
+   Play yêu cầu một URL riêng). Biểu mẫu *Data safety*: không thu thập, không chia sẻ dữ liệu.
+   Toàn bộ mô tả cửa hàng (ngắn, đầy đủ, ghi chú phát hành, VI và EN) ở `store/listing.md`.
 6. Phân loại nội dung: Giáo dục, mọi lứa tuổi; đối tượng mục tiêu 18+ (sinh viên, giảng viên).
 
 ## 5. Cập nhật về sau · Later updates
