@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, GraduationCap, Send, X } from "lucide-react";
 import type { Reply } from "@/sim/tutor";
+import type { Explanation } from "@/sim/explain";
 import type { Entry, TutorPanel as Panel, TutorRoom } from "@/sim/tutor-kb";
 import { tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 
-type Turn = { id: number; q: string; reply: Reply };
+type Turn = { id: number; q: string; reply: Reply | { kind: "explain"; ex: Explanation } };
+
+const EXPLAIN_RE =
+  /giai thich|ket qua cua toi|he so cua toi|explain|my results|my estimate|my coefficients/;
 
 const STARTERS = ["ppml", "elasticity", "distance-puzzle", "upload"];
 
 /** Header button and panel: an offline assistant that answers from the app's own sources. */
-export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel) => void }) {
+export function TutorPanel({
+  onOpen,
+  explain,
+}: {
+  onOpen: (room: TutorRoom, panel?: Panel) => void;
+  /** Lumina reads the user's own estimate when one exists in the Data panel. */
+  explain?: () => Explanation | null;
+}) {
   usePrefs();
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
@@ -46,11 +57,19 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
   function submit(q: string) {
     const query = q.trim();
     if (!query || !engine) return;
-    setTurns((t) => [...t.slice(-9), { id: Date.now(), q: query, reply: engine.ask(query) }]);
+    const ex = EXPLAIN_RE.test(engine.normalize(query)) ? explain?.() : null;
+    setTurns((t) => [
+      ...t.slice(-9),
+      { id: Date.now(), q: query, reply: ex ? { kind: "explain", ex } : engine.ask(query) },
+    ]);
     setText("");
   }
 
-  const pick = (e: Entry) => setTurns((t) => [...t.slice(-9), { id: Date.now(), q: tr(e.q.vi, e.q.en), reply: { kind: "answer", entry: e, related: [] } }]);
+  const pick = (e: Entry) =>
+    setTurns((t) => [
+      ...t.slice(-9),
+      { id: Date.now(), q: tr(e.q.vi, e.q.en), reply: { kind: "answer", entry: e, related: [] } },
+    ]);
 
   const chips = (entries: Entry[]) => (
     <div className="mt-2 flex flex-wrap gap-2">
@@ -70,6 +89,27 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
   const starters = engine
     ? STARTERS.map((id) => engine.KB.find((e) => e.id === id)).filter((e): e is Entry => !!e)
     : [];
+  const canExplain = !!explain?.();
+  const explainChip = canExplain ? (
+    <button
+      type="button"
+      onClick={() => {
+        const ex = explain?.();
+        if (ex)
+          setTurns((t) => [
+            ...t.slice(-9),
+            {
+              id: Date.now(),
+              q: tr("Giải thích kết quả của tôi", "Explain my results"),
+              reply: { kind: "explain", ex },
+            },
+          ]);
+      }}
+      className="cosmic-btn mt-2 min-h-9 rounded-full px-3 py-1 text-xs font-semibold"
+    >
+      {tr("Giải thích kết quả của tôi", "Explain my results")}
+    </button>
+  ) : null;
 
   return (
     <div ref={wrap} className="relative">
@@ -100,7 +140,9 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
               className="size-11 shrink-0 rounded-full bg-[#f1e8de] object-cover shadow-[0_0_0_2px_rgba(79,209,197,0.55),0_0_24px_rgba(79,209,197,0.3)]"
             />
             <div className="min-w-0 flex-1">
-              <p className="font-serif text-lg leading-tight">{tr("Lumina · Trợ giảng", "Lumina · Teaching assistant")}</p>
+              <p className="font-serif text-lg leading-tight">
+                {tr("Lumina · Trợ giảng", "Lumina · Teaching assistant")}
+              </p>
               <p className="mt-1 text-xs leading-relaxed text-muted">
                 {tr(
                   "Trả lời từ tài liệu đã có trong app, kèm nguồn. Không dùng AI tạo sinh, không gửi câu hỏi đi đâu.",
@@ -121,17 +163,46 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
           <div ref={list} aria-live="polite" className="min-h-0 flex-1 overflow-y-auto px-4">
             {turns.length === 0 ? (
               <div className="pb-2">
-                <p className="text-sm">{tr("Bạn có thể hỏi, ví dụ:", "You could ask, for example:")}</p>
+                <p className="text-sm">
+                  {tr("Bạn có thể hỏi, ví dụ:", "You could ask, for example:")}
+                </p>
+                {explainChip}
                 {chips(starters)}
               </div>
             ) : null}
             {turns.map((t) => (
               <div key={t.id} className="mb-4">
-                <p className="cosmic-btn ml-auto w-fit max-w-[85%] rounded-[20px] rounded-br-md px-3.5 py-2.5 text-sm">{t.q}</p>
-                {t.reply.kind === "answer" ? (
+                <p className="cosmic-btn ml-auto w-fit max-w-[85%] rounded-[20px] rounded-br-md px-3.5 py-2.5 text-sm">
+                  {t.q}
+                </p>
+                {t.reply.kind === "explain" ? (
                   <div className="noir-track mt-2 max-w-[95%] rounded-[20px] rounded-bl-md px-3.5 py-3">
-                    <p className="text-xs font-medium text-teal">{tr(t.reply.entry.q.vi, t.reply.entry.q.en)}</p>
-                    <p className="mt-1 text-sm leading-relaxed">{tr(t.reply.entry.a.vi, t.reply.entry.a.en)}</p>
+                    <p className="text-xs font-medium text-teal">
+                      {tr(t.reply.ex.title.vi, t.reply.ex.title.en)}
+                    </p>
+                    {(tr("vi", "en") === "en"
+                      ? t.reply.ex.paragraphs.en
+                      : t.reply.ex.paragraphs.vi
+                    ).map((p, i) => (
+                      <p key={i} className="mt-1.5 text-sm leading-relaxed">
+                        {p}
+                      </p>
+                    ))}
+                    <p className="mt-2 text-xs text-muted">
+                      {tr(
+                        "Mẫu câu cố định điền bằng số liệu của bạn; Santos Silva & Tenreyro (2006); Yotov và cộng sự (2016).",
+                        "Fixed templates filled with your numbers; Santos Silva & Tenreyro (2006); Yotov et al. (2016).",
+                      )}
+                    </p>
+                  </div>
+                ) : t.reply.kind === "answer" ? (
+                  <div className="noir-track mt-2 max-w-[95%] rounded-[20px] rounded-bl-md px-3.5 py-3">
+                    <p className="text-xs font-medium text-teal">
+                      {tr(t.reply.entry.q.vi, t.reply.entry.q.en)}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed">
+                      {tr(t.reply.entry.a.vi, t.reply.entry.a.en)}
+                    </p>
                     {t.reply.entry.cite.length ? (
                       <p className="mt-2 text-xs text-muted">
                         {tr("Nguồn: ", "Sources: ")}
@@ -155,7 +226,9 @@ export function TutorPanel({ onOpen }: { onOpen: (room: TutorRoom, panel?: Panel
                     ) : null}
                     {t.reply.related.length ? (
                       <>
-                        <p className="mt-3 text-xs text-muted">{tr("Câu liên quan:", "Related:")}</p>
+                        <p className="mt-3 text-xs text-muted">
+                          {tr("Câu liên quan:", "Related:")}
+                        </p>
                         {chips(t.reply.related)}
                       </>
                     ) : null}
