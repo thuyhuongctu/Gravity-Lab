@@ -22,6 +22,7 @@ import { MeStage } from "@/components/MeStage";
 import { SoundPanel } from "@/components/SoundPanel";
 import { Clocks, Flag } from "@/components/Clocks";
 import { resumeAt, toggleCalm, useCalm, useEntered } from "@/lib/journey-state";
+import { LangHint } from "@/components/LangHint";
 import { Onboarding } from "@/components/Onboarding";
 import { setAmbient } from "@/lib/sound";
 import { useSound } from "@/lib/use-sound";
@@ -572,6 +573,7 @@ export function Observatory() {
   return (
     <div className="stage flex h-dvh flex-col bg-void lg:flex-row">
       <Onboarding />
+      <LangHint />
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
         {header}
 
