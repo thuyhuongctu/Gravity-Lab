@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Volume2, X } from "lucide-react";
+import { Compass, Pause, Play, Volume2, X } from "lucide-react";
 import { Formula } from "@/components/Formula";
 import type { JourneyHandle, JourneyVals } from "@/lib/journey3d";
 import { fmt, tr } from "@/lib/prefs";
@@ -25,6 +25,28 @@ type Scene = {
  */
 /** Scenes and languages with no recording this session, so the browser voice is used at once. */
 const missing = new Set<string>();
+
+/** A 44-byte silent WAV, played once inside the first tap to unlock audio on iOS. */
+const SILENT_WAV = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+/** Pause between one scene's narration ending and the guided tour moving on, in ms. */
+const TOUR_PAUSE_MS = 1400;
+
+/**
+ * Lumina's one audio element. Reusing it means a tap that starts the guided tour also lets later
+ * scenes play after scrolling, where some browsers would block a fresh element with no tap.
+ */
+let voice: HTMLAudioElement | null = null;
+function voiceEl(): HTMLAudioElement | null {
+  if (typeof Audio === "undefined") return null;
+  voice ??= new Audio();
+  return voice;
+}
+function unlockVoice() {
+  const a = voiceEl();
+  if (!a || a.getAttribute("src")) return;
+  a.src = SILENT_WAV;
+  a.play().catch(() => {});
+}
 
 /** Scene titles, for "Continue · Scene N" elsewhere in the app. */
 export function sceneTitle(i: number, lang: "vi" | "en"): string {
@@ -390,8 +412,9 @@ export function SpaceJourney({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
-  function enter() {
+  function enter(guided = false) {
     if (enteredAt !== null) return;
+    if (guided) startTour();
     enteredAt = performance.now();
     markEntered();
     setEntered(true);
@@ -425,6 +448,53 @@ export function SpaceJourney({
   // UI fades in 1.2 s after entering, as the camera settles.
   const ui = "transition-opacity duration-[2000ms] delay-[1200ms] " + (entered ? "opacity-100" : "opacity-0");
   const [luOpen, setLuOpen] = useState(false);
+
+  // Guided tour: Lumina reads each scene, then flies to the next; any scroll, swipe or key hands
+  // control back to the visitor ("explore on my own").
+  const [auto, setAuto] = useState(false);
+  const autoRef = useRef(false);
+  autoRef.current = auto;
+  const sceneRef = useRef(0);
+  sceneRef.current = scene;
+  const autoTimer = useRef(0);
+  const startTour = () => {
+    unlockVoice();
+    setLuOpen(true);
+    setAuto(true);
+  };
+  const onNarrated = () => {
+    window.clearTimeout(autoTimer.current);
+    autoTimer.current = window.setTimeout(() => {
+      if (!autoRef.current) return;
+      const i = sceneRef.current;
+      if (i >= SCENES.length - 1) {
+        setAuto(false);
+        return;
+      }
+      setScene(i + 1);
+      rememberScene(i + 1);
+      go(i + 1);
+    }, TOUR_PAUSE_MS);
+  };
+  useEffect(() => {
+    if (!auto) {
+      window.clearTimeout(autoTimer.current);
+      return;
+    }
+    const sc = scroller.current;
+    const takeOver = () => setAuto(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(e.key)) takeOver();
+    };
+    sc?.addEventListener("wheel", takeOver, { passive: true });
+    sc?.addEventListener("touchstart", takeOver, { passive: true });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      sc?.removeEventListener("wheel", takeOver);
+      sc?.removeEventListener("touchstart", takeOver);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [auto]);
 
   return (
     <div className={"absolute inset-0 " + T.sky + (luOpen ? " lu-open" : "")}>
@@ -568,7 +638,20 @@ export function SpaceJourney({
           ))}
         </nav>
       ) : null}
-      {inJourney ? <Lumina scene={scene} open={luOpen} setOpen={setLuOpen} T={T} entered={entered} onLab={onLab} /> : null}
+      {inJourney ? (
+        <Lumina
+          scene={scene}
+          open={luOpen}
+          setOpen={setLuOpen}
+          T={T}
+          entered={entered}
+          onLab={onLab}
+          auto={auto}
+          onStartTour={startTour}
+          onStopTour={() => setAuto(false)}
+          onNarrated={onNarrated}
+        />
+      ) : null}
       <p
         aria-hidden="true"
         className={
@@ -595,15 +678,29 @@ export function SpaceJourney({
             <h2 className="font-serif text-[clamp(34px,5.4vw,64px)] leading-[1.06] tracking-[-0.03em] text-balance">
               {tr("Đâu đó trong bóng tối, một quả táo bắt đầu rơi.", "Somewhere in the dark, an apple begins to fall.")}
             </h2>
-            <button
-              type="button"
-              onClick={enter}
-              className="cosmic-btn inline-flex min-h-14 items-center rounded-full px-[30px] text-base font-semibold shadow-[0_0_60px_-10px_rgba(79,209,197,0.7)]"
-            >
-              {tr("Bước vào vũ trụ", "Enter the cosmos")}
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => enter(true)}
+                className="cosmic-btn inline-flex min-h-14 items-center gap-2 rounded-full px-[26px] text-base font-semibold shadow-[0_0_60px_-10px_rgba(79,209,197,0.7)]"
+              >
+                <Play className="size-4" aria-hidden="true" />
+                {tr("Lumina dẫn đường", "Guided by Lumina")}
+              </button>
+              <button
+                type="button"
+                onClick={() => enter()}
+                className={"inline-flex min-h-14 items-center gap-2 rounded-full px-[26px] text-base font-semibold " + T.well}
+              >
+                <Compass className="size-4" aria-hidden="true" />
+                {tr("Tự khám phá", "Explore on my own")}
+              </button>
+            </div>
             <p className={"text-[13px] " + T.mist}>
-              {tr("Nên dùng tai nghe · âm vũ trụ từ tần số các hành tinh", "Headphones recommended · cosmic tones from planetary frequencies")}
+              {tr(
+                "Lumina đọc từng cảnh rồi tự bay tiếp; cuộn bất cứ lúc nào để tự khám phá · nên dùng tai nghe",
+                "Lumina reads each scene and flies on; scroll at any time to explore on your own · headphones recommended",
+              )}
             </p>
           </div>
         </div>
@@ -620,6 +717,10 @@ function Lumina({
   T,
   entered,
   onLab,
+  auto,
+  onStartTour,
+  onStopTour,
+  onNarrated,
 }: {
   scene: number;
   open: boolean;
@@ -627,6 +728,12 @@ function Lumina({
   T: (typeof TONE)["dark"];
   entered: boolean;
   onLab: () => void;
+  /** The guided tour is running: she reads each scene as it arrives. */
+  auto: boolean;
+  onStartTour: () => void;
+  onStopTour: () => void;
+  /** A narration finished on its own (not stopped), so the tour can move on. */
+  onNarrated: () => void;
 }) {
   const { lang } = usePrefs();
   const [speaking, setSpeaking] = useState(false);
@@ -644,69 +751,83 @@ function Lumina({
   const canSynth = typeof window !== "undefined" && "speechSynthesis" in window;
   // Her voice: a recording in public/narration/ when there is one (see docs/LUMINA_RECORDING.md), else the browser's.
   const canSpeak = canSynth || typeof Audio !== "undefined";
-  const clip = useRef<HTMLAudioElement | null>(null);
+  // Each narration gets a number; callbacks from an older one are ignored.
+  const run = useRef(0);
+  const playing = useRef(false);
   // Cards sit left on even scenes, so Lumina sits right there, and the other way round.
   const right = scene % 2 === 0;
 
   const stop = () => {
+    run.current += 1;
     if (canSynth) window.speechSynthesis.cancel();
-    if (clip.current) {
-      clip.current.pause();
-      clip.current.src = "";
-      clip.current = null;
+    if (playing.current) {
+      voice?.pause();
+      playing.current = false;
       duckAmbient(false);
     }
     setSpeaking(false);
   };
-  const synth = () => {
+  const finished = (id: number) => {
+    if (id !== run.current) return;
+    if (playing.current) {
+      playing.current = false;
+      duckAmbient(false);
+    }
+    setSpeaking(false);
+    onNarrated();
+  };
+  const synth = (id: number) => {
     if (!canSynth) {
-      setSpeaking(false);
+      finished(id);
       return;
     }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = lang === "vi" ? "vi-VN" : "en-US";
     u.rate = 0.95;
-    u.onend = () => setSpeaking(false);
-    u.onerror = () => setSpeaking(false);
+    u.onend = () => finished(id);
+    u.onerror = () => finished(id);
     window.speechSynthesis.speak(u);
   };
   const speak = () => {
     if (!canSpeak) return;
     stop();
+    const id = run.current;
     setSpeaking(true);
-    if (typeof Audio === "undefined" || missing.has(`${scene}-${lang}`)) {
-      synth();
+    const a = voiceEl();
+    if (!a || missing.has(`${scene}-${lang}`)) {
+      synth(id);
       return;
     }
-    const a = new Audio(`${import.meta.env.BASE_URL}narration/scene-${scene + 1}-${lang}.mp3`);
-    clip.current = a;
+    const key = `${scene}-${lang}`;
     const fallback = () => {
-      if (clip.current !== a) return;
-      missing.add(`${scene}-${lang}`);
-      clip.current = null;
+      if (id !== run.current) return;
+      missing.add(key);
+      playing.current = false;
       duckAmbient(false);
-      synth();
+      synth(id);
     };
     a.onerror = fallback;
-    a.onended = () => {
-      if (clip.current !== a) return;
-      clip.current = null;
-      duckAmbient(false);
-      setSpeaking(false);
-    };
+    a.onended = () => finished(id);
+    a.src = `${import.meta.env.BASE_URL}narration/scene-${scene + 1}-${lang}.mp3`;
+    playing.current = true;
     duckAmbient(true);
     a.play().catch(fallback);
   };
-  // A new scene or language while she is talking: she moves on to that text.
+  // A new scene or language while she is talking, or during the guided tour: she reads that text.
   useEffect(() => {
-    if (speaking) speak();
+    if (speaking || auto) speak();
   }, [scene, lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  // The tour starting reads the current scene; the tour stopping lets the current sentence finish.
+  useEffect(() => {
+    if (auto) speak();
+  }, [auto]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => stop(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggle = () => {
     if (open) {
       stop();
+      onStopTour();
       setTour(null);
       setOpen(false);
       return;
@@ -760,7 +881,9 @@ function Lumina({
         >
           <div className="flex items-center gap-2">
             <b className={"flex-1 text-xs font-semibold tracking-[0.12em] uppercase " + T.kicker}>
-              {tour === null ? `${tr("Cảnh", "Scene")} ${scene + 1} / 9` : `${tr("Lumina · Hướng dẫn nhanh (quick tour)", "Lumina · Quick tour")} ${tour + 1} / ${TOUR.length}`}
+              {tour === null
+                ? `${auto ? tr("Lumina dẫn đường · ", "Guided tour · ") : ""}${tr("Cảnh", "Scene")} ${scene + 1} / 9`
+                : `${tr("Lumina · Hướng dẫn nhanh (quick tour)", "Lumina · Quick tour")} ${tour + 1} / ${TOUR.length}`}
             </b>
             <button
               type="button"
@@ -776,13 +899,50 @@ function Lumina({
               <p className={"mt-2.5 text-[15px] leading-[1.6] text-pretty " + T.body} aria-live="polite">
                 {text}
               </p>
+              {auto ? (
+                <div className="mt-3.5 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onStopTour();
+                      stop();
+                    }}
+                    className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold"
+                  >
+                    <Pause className="size-4" aria-hidden="true" />
+                    {tr("Tạm dừng", "Pause")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onStopTour();
+                      stop();
+                      setOpen(false);
+                    }}
+                    className={"inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold " + T.well}
+                  >
+                    <Compass className="size-4" aria-hidden="true" />
+                    {tr("Tự khám phá", "Explore on my own")}
+                  </button>
+                </div>
+              ) : (
               <div className="mt-3.5 flex flex-wrap items-center gap-2">
+                {canSpeak ? (
+                  <button
+                    type="button"
+                    onClick={onStartTour}
+                    className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold"
+                  >
+                    <Play className="size-4" aria-hidden="true" />
+                    {scene >= SCENES.length - 1 ? tr("Dẫn lại từ đầu", "Guide me again") : tr("Lumina dẫn tour", "Guided tour")}
+                  </button>
+                ) : null}
                 {canSpeak ? (
                   <button
                     type="button"
                     onClick={speaking ? stop : speak}
                     aria-pressed={speaking}
-                    className="cosmic-btn inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold"
+                    className={"inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold " + T.well}
                   >
                     <Volume2 className="size-4" />
                     {speaking ? tr("Dừng", "Stop") : tr("Nghe", "Listen")}
@@ -799,6 +959,7 @@ function Lumina({
                   {tr("Hướng dẫn nhanh", "Quick tour")}
                 </button>
               </div>
+              )}
             </>
           ) : (
             <>
