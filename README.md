@@ -1,32 +1,70 @@
+<div align="center">
+
 # Gravity Lab
 
+### From Newton's apple to FDI in Viet Nam: an interactive laboratory for the gravity model
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23307832.svg)](https://doi.org/10.5281/zenodo.23307832)
+![Version](https://img.shields.io/badge/version-v2.9-4fd1c5)
+[![Deploy](https://github.com/thuyhuongctu/Gravity-Lab/actions/workflows/pages.yml/badge.svg)](https://github.com/thuyhuongctu/Gravity-Lab/actions/workflows/pages.yml)
+![Languages](https://img.shields.io/badge/languages-Ti%E1%BA%BFng%20Vi%E1%BB%87t%20%C2%B7%20English-c9a35a)
+![PWA](https://img.shields.io/badge/PWA-works%20offline-23606b)
+![Licence](https://img.shields.io/badge/licence-proprietary-lightgrey)
 
-**Gravity Lab: a browser-based gravity-model laboratory for foreign direct investment into Vietnam**
+**[Open the app](https://thuyhuongctu.github.io/Gravity-Lab/)** ·
+[Cite](#how-to-cite) ·
+[Features](#whats-inside) ·
+[The model](#the-model-in-six-equations) ·
+[Run locally](#run-locally) ·
+[Privacy](https://thuyhuongctu.github.io/Gravity-Lab/privacy/)
 
-Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137); patu@ctu.edu.vn) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487); thuyhuongctu@gmail.com)
-School of Economics, Can Tho University, Vietnam
+<img src="docs/screenshots/journey.webp" alt="Gravity Lab: the first scene of the 3D journey, with Lumina's panel open" width="100%">
 
-Live application: **https://thuyhuongctu.github.io/Gravity-Lab/**
+</div>
 
-## Overview
+Gravity Lab is a bilingual teaching app for the gravity model in international economics and international business. Students follow one equation from Newtonian mechanics to the empirical study of trade and foreign direct investment (FDI), and then estimate it on real data. Everything runs in the browser, on the student's own device.
 
-Gravity Lab is an interactive teaching instrument for the gravity model in international economics and international business. It follows the model from its origin in Newtonian mechanics to its use in the empirical study of trade and foreign direct investment (FDI). The application is organised in three stages:
+> **Authors.** Phan Anh Tu ([ORCID 0000-0003-0667-3137](https://orcid.org/0000-0003-0667-3137), patu@ctu.edu.vn) and Do Thuy Huong ([ORCID 0000-0002-7711-2487](https://orcid.org/0000-0002-7711-2487), thuyhuongctu@gmail.com), School of Economics, Can Tho University, Viet Nam.
 
-1. **Universal gravitation.** An N-body orbit simulator presents Newton's law, in which the attraction between two bodies is proportional to the product of their masses and inversely proportional to the square of their distance (Newton, 1687/1999).
-2. **The gravity model of trade.** Mass is replaced by economic size and the distance exponent becomes a parameter to be estimated (Tinbergen, 1962). Learners explore bilateral trade between Vietnam and its partner economies on a world map, a plane or a globe.
-3. **FDI inflows into Vietnam.** The laboratory reproduces published coefficients for FDI inflows into Vietnam (Phan & Do, 2019; Xuan & Xing, 2008). It simulates the effects of distance and market size, explains why Poisson pseudo-maximum likelihood (PPML) is preferred when flows contain zeros (Santos Silva & Tenreyro, 2006), and estimates OLS and PPML models on data uploaded by the learner.
+## What's inside
 
-A narrative page opens on a live 3D scene (a clay Earth with Vietnam lit, the Moon and Newton's apple on their orbits, and FDI flows arriving from the main source economies), traces the development of the model from Newton's falling apple at Woolsthorpe (1666) to the present, and closes with the quality of FDI (domestic and foreign value added in exports; Pathak, 2026) and recent registered FDI (PwC Vietnam, 2025). A seven-step animation shows how Newton's equation is transformed into the trade and FDI specifications.
-- **Two worked simulations in the formula bridge.** Step 4 morphs the power curve T ∝ D^−γ into a straight line on log axes (slope −γ). Step 6 simulates 180 country pairs with a known γ = 0.9 and lets the learner add zero flows and distance-dependent heteroskedasticity, comparing OLS on ln T with PPML estimated on levels (Santos Silva & Tenreyro, 2006).
+| Room               | What the learner does                                                                                                                                    |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Story**          | Flies through nine 3D scenes, from Newton's apple (1666) to FDI into Viet Nam. Lumina can guide the tour scene by scene, or the learner explores freely. |
+| **Orbit**          | Launches bodies in an N-body simulator of Newton's law, where the distance exponent is fixed at 2 (Newton, 1687/1999).                                   |
+| **Trade**          | Drags the distance elasticity γ on a world map, a plane or a globe and watches Viet Nam's trade flows re-route (Tinbergen, 1962).                        |
+| **FDI**            | Reads the published coefficients for FDI into Viet Nam (Phan & Do, 2019), runs impact scenarios and case files, and views FDI by sector.                 |
+| **Formula bridge** | Walks seven interactive steps from F = G·m₁m₂/r² to the FDI specification, including simulations of multilateral resistance and of OLS versus PPML.      |
+| **Pro (free)**     | Loads a CSV panel or the bundled Viet Nam FDI panel, estimates OLS and PPML on the device, runs six model checks and exports a Word or LaTeX table.      |
+| **Me**             | Keeps story progress and settings, and offers six self-marked exercises with a teacher mode.                                                             |
 
-## Pedagogical rationale
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/orbit.webp" alt="Orbit room: an N-body simulator with the law of gravitation"><br><sub><b>Orbit.</b> Newton's law with a live N-body simulation.</sub></td>
+    <td width="50%"><img src="docs/screenshots/trade.webp" alt="Trade room: a globe of Viet Nam's partners with a slider for the distance exponent"><br><sub><b>Trade.</b> Tinbergen's model on a globe, with γ to estimate.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/lab.webp" alt="FDI room: distance and FDI into Viet Nam with an impact calculator"><br><sub><b>FDI.</b> Published coefficients and an impact calculator.</sub></td>
+    <td width="50%"><img src="docs/screenshots/start.webp" alt="Start screen with two buttons: Guided by Lumina and Explore on my own"><br><sub><b>Start.</b> Two ways in: guided by Lumina, or explore on your own.</sub></td>
+  </tr>
+</table>
 
-Students of international business often meet the gravity equation as a regression specification and do not see what its terms mean or why it takes its functional form. Gravity Lab treats the equation as a single object that keeps its form across disciplines while its interpretation changes. Each stage asks the learner to change one element: the meaning of mass, the exponent on distance, the treatment of zero flows, or the dependent variable. The learner then observes the consequence directly. The intended outcome is an understanding of the specification that supports critical reading of empirical work on trade and FDI.
+### Built for the classroom
 
-## Model specifications
+- **Two languages, one switch.** The interface opens in English. Vietnamese is a full translation that keeps the English technical terms in brackets, and visitors on Vietnamese devices are offered it on their first visit. Use the VI/EN switch or `?lang=vi`.
+- **Lumina, an offline teaching assistant.** Lumina narrates each scene with recorded voice and answers questions from a curated bilingual knowledge base. Retrieval uses BM25, every answer lists its sources, and questions without a source are declined rather than guessed. No generative model is used (`src/sim/tutor.ts`, `src/sim/tutor-kb.ts`).
+- **Explains the student's own results.** After an estimation, Lumina reads the coefficients back in plain language and flags the six model checks: multilateral resistance, flow direction, deflation, zero flows, the confidence interval and domestic flows.
+- **Ready to cite.** APA 7 references appear in every room, exported tables carry them, and each version has a Zenodo DOI.
+- **Theme song and sonification.** A theme song in both languages, with lyrics, and an orbit simulator you can hear, where inner orbits sound higher as Kepler's third law implies (Kepler, 1619/1997).
+- **Light and dark themes, reduced motion and keyboard access.** Key screens are checked with axe against WCAG 2 A and AA.
 
-The application presents the following sequence of equations.
+### Private by design
+
+No account, no analytics, no cookies and no advertising. CSV files and questions to Lumina never leave the device. The app installs as a progressive web app and works offline after the first visit. See the [privacy policy](https://thuyhuongctu.github.io/Gravity-Lab/privacy/).
+
+## The model in six equations
+
+Students often meet the gravity equation as a regression specification without seeing what its terms mean or why it takes its form. Gravity Lab treats it as one object that keeps its form across disciplines while its meaning changes. Each stage changes one element: the meaning of mass, the exponent on distance, the treatment of zero flows, or the dependent variable. The learner then sees the consequence directly.
 
 Newton's law of universal gravitation, with the distance exponent fixed at two:
 
@@ -52,18 +90,84 @@ The FDI specification for Vietnam, with institutional, cultural and economic dis
 
 $$\ln \mathit{FDI}_{it} = \beta_0 + \beta_1 \ln Y_{it} + \beta_2 \ln Y_{VN,t} - \gamma \ln D_{i,VN} + \delta' X_{it} + u_i + \varepsilon_{it}$$
 
+<details>
+<summary><b>Estimation practice taught in the app</b></summary>
+
 Two WTO and UNCTAD guides frame the estimation practice taught in the application: Bacchetta et al. (2012) on the "gold, silver and bronze medal" mistakes and on fixed effects for multilateral resistance, and Yotov et al. (2016) on structural gravity with panel data, intra-national trade, exporter-time, importer-time and pair fixed effects, and PPML. The Story page reproduces their resolution of the "distance puzzle" (Table 2). Majumdar and Basu (2023) augment the equation with an exchange-rate uncertainty index and the real exchange rate for India's trade with its top five partners and the SAARC countries; the Story page uses the study to show why time-invariant distance cannot be identified under country-pair fixed effects. The meta-analysis of Disdier and Head (2008) is used as a benchmark for the distance elasticity in trade, with a mean near 0.9. In Phan and Do (2019), the coefficient on geographic distance for FDI inflows into Vietnam is approximately −0.38 from Model 4 onwards.
 
-## Features
+</details>
 
-- **Bilingual interface** in Vietnamese and English. Use the VI/EN switch or open the application with `?lang=en`.
-- **Light and dark themes.** The default follows the device setting, and the choice is remembered on the device.
-- **Theme song and sonification.** A theme song in Vietnamese and English, with lyrics, can be played from the sound panel. The orbit simulator can be heard: each body is assigned a pitch proportional to its angular speed, so inner orbits sound higher, as Kepler's third law implies. A separate panel transposes the sidereal orbital periods of the planets by whole octaves into the audible range (Kepler, 1619/1997; Williams, n.d.). The ambience and tones are synthesised in the browser, the song is streamed only on request, and all sound is off until the user enables it.
-- **Installable progressive web application** with its own icon. There is no sign-in, no database and no call to an external service.
-- **Offline teaching assistant.** A question box in the header answers from a curated, bilingual knowledge base built from the application's own content and its cited sources (Newton, Tinbergen, Anderson and van Wincoop, Santos Silva and Tenreyro, Bacchetta et al., Yotov et al., Phan and Do, and others). Retrieval uses BM25 with Vietnamese diacritics folded, every answer lists its sources and can open the relevant room, and questions without a source are declined rather than guessed. No generative model is used and nothing leaves the device (`src/sim/tutor.ts`, `src/sim/tutor-kb.ts`).
-- **Citation support.** The concept DOI is shown in the header, and an APA 7 reference list is available in every room.
+## Run locally
 
-## Data and visual sources
+Gravity Lab is a static single-page app built with React 19, TypeScript, Vite, Tailwind CSS 4, three.js and KaTeX. It needs Node.js 22 or later.
+
+```sh
+npm install
+npm run dev        # development server at http://localhost:8080
+npm run build      # static build in dist/
+npm run typecheck  # TypeScript
+npm run lint       # ESLint
+npm test           # unit tests (node:test)
+```
+
+The build uses relative paths, so it runs from any static host. Each push to `main` deploys to GitHub Pages through `.github/workflows/pages.yml`.
+
+```text
+src/components/   rooms, the 3D journey, the formula bridge and the Pro lab
+src/sim/          models and estimators: OLS, PPML, diagnostics, exercises, Lumina's retrieval
+src/lib/          preferences, sound, sharing and the 3D scene
+src/data/         simplified country outlines (Natural Earth)
+public/           narration, music, artwork, the service worker and the privacy page
+scripts/          map, clay-render and data build scripts
+script/android/   one-command Android (Trusted Web Activity) build
+docs/             recording guide for Lumina's voice and README screenshots
+```
+
+**Android.** `script/android/build.sh` packages the web app as a Trusted Web Activity for Google Play with Bubblewrap. See [`ANDROID.md`](ANDROID.md) and the store listing in [`store/listing.md`](store/listing.md).
+
+## How to cite
+
+Please cite the version you used. The concept DOI **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)** covers all versions and resolves to the latest release.
+
+> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.9) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23373182
+
+```bibtex
+@software{phan_do_2026_gravity_lab,
+  author    = {Phan, Anh Tu and Do, Thuy Huong},
+  title     = {Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam},
+  version   = {v2.9},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.23373182},
+  url       = {https://doi.org/10.5281/zenodo.23373182}
+}
+```
+
+<details>
+<summary><b>DOIs of every version</b></summary>
+
+| Version | DOI                                                                |
+|---------|--------------------------------------------------------------------|
+| v2.9    | [10.5281/zenodo.23373182](https://doi.org/10.5281/zenodo.23373182) |
+| v2.8    | [10.5281/zenodo.23330642](https://doi.org/10.5281/zenodo.23330642) |
+| v2.7    | [10.5281/zenodo.23327722](https://doi.org/10.5281/zenodo.23327722) |
+| v2.6    | [10.5281/zenodo.23316154](https://doi.org/10.5281/zenodo.23316154) |
+| v2.5    | [10.5281/zenodo.23314720](https://doi.org/10.5281/zenodo.23314720) |
+| v2.4    | [10.5281/zenodo.23314318](https://doi.org/10.5281/zenodo.23314318) |
+| v2.3    | [10.5281/zenodo.23313162](https://doi.org/10.5281/zenodo.23313162) |
+| v2.2    | [10.5281/zenodo.23308587](https://doi.org/10.5281/zenodo.23308587) |
+| v2.1    | [10.5281/zenodo.23308307](https://doi.org/10.5281/zenodo.23308307) |
+| v2.0    | [10.5281/zenodo.23308130](https://doi.org/10.5281/zenodo.23308130) |
+| v1.0    | [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833) |
+
+</details>
+
+Complete metadata are in [`CITATION.cff`](CITATION.cff). From v2.3 onwards the files deposited on Zenodo can be downloaded openly for reading, consultation and citation. Earlier versions were deposited with restricted access. Open access to the files does not change the licence.
+
+## Sources of data, artwork and sound
+
+<details>
+<summary><b>Maps, figures, characters, music, typefaces and constants</b></summary>
 
 - **Country outlines** come from Natural Earth (`ne_10m_admin_0_countries`, public domain), simplified by `scripts/build-land.py` into `src/data/land.ts`.
 - **Map of Vietnam.** The coastline uses the Natural Earth 1:50m outline (`scripts/vn-map/vnm.json`). The Hoàng Sa (Paracel) and Trường Sa (Spratly) archipelagos are placed from the coordinates of their principal features. The map appears in two forms: a faint background layer (`scripts/vn-map/build.py`) and a clay rendering.
@@ -75,46 +179,9 @@ Two WTO and UNCTAD guides frame the estimation practice taught in the applicatio
 - **Typefaces.** Plus Jakarta Sans and Be Vietnam Pro are self-hosted under the SIL Open Font License 1.1 (`src/fonts/OFL.txt`).
 - **Physical constants.** CODATA 2022 values are used (Mohr et al., 2025). Planetary periods are taken from the NASA Planetary Fact Sheet (Williams, n.d.).
 
-## Running and building
+</details>
 
-The application is a static single-page application built with React, Vite and Tailwind CSS. It requires Node.js 22 or later.
-
-```sh
-npm install
-npm run dev        # development server at http://localhost:8080
-npm run build      # static build in dist/
-npm run typecheck  # TypeScript
-npm run lint       # ESLint
-npm test           # unit tests: globe and world-map geometry, FDI model, sound mappings, assistant retrieval
-```
-
-The build uses relative paths and can be served from any static host. The repository deploys automatically to GitHub Pages on each change to `main` (`.github/workflows/pages.yml`).
-
-## Provenance
-
-This repository is a standalone edition of Gravity Lab, separated from the [BizOn](https://github.com/thuyhuongctu/BizOn) teaching ecosystem for academic archiving and an independent DOI. An earlier static HTML version remains available at https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html and in the git history (commit `1857067`).
-
-## How to cite
-
-Please cite the version you used. The concept DOI covers all versions and always resolves to the latest release: **[10.5281/zenodo.23307832](https://doi.org/10.5281/zenodo.23307832)**.
-
-> Phan, A. T., & Do, T. H. (2026). *Gravity Lab: A browser-based gravity-model laboratory for FDI into Vietnam* (Version v2.9) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23373182
-
-| Version | DOI |
-| --- | --- |
-| v2.9 | [10.5281/zenodo.23373182](https://doi.org/10.5281/zenodo.23373182) |
-| v2.8 | [10.5281/zenodo.23330642](https://doi.org/10.5281/zenodo.23330642) |
-| v2.7 | [10.5281/zenodo.23327722](https://doi.org/10.5281/zenodo.23327722) |
-| v2.6 | [10.5281/zenodo.23316154](https://doi.org/10.5281/zenodo.23316154) |
-| v2.5 | [10.5281/zenodo.23314720](https://doi.org/10.5281/zenodo.23314720) |
-| v2.4 | [10.5281/zenodo.23314318](https://doi.org/10.5281/zenodo.23314318) |
-| v2.3 | [10.5281/zenodo.23313162](https://doi.org/10.5281/zenodo.23313162) |
-| v2.2 | [10.5281/zenodo.23308587](https://doi.org/10.5281/zenodo.23308587) |
-| v2.1 | [10.5281/zenodo.23308307](https://doi.org/10.5281/zenodo.23308307) |
-| v2.0 | [10.5281/zenodo.23308130](https://doi.org/10.5281/zenodo.23308130) |
-| v1.0 | [10.5281/zenodo.23307833](https://doi.org/10.5281/zenodo.23307833) |
-
-Complete metadata are provided in [`CITATION.cff`](CITATION.cff). From v2.3 onwards the deposited files on Zenodo are openly downloadable for reading, consultation and citation; earlier versions were deposited with restricted access. Open access to the files does not change the licence: the software remains proprietary (see [`LICENSE`](LICENSE)).
+**Provenance.** This repository is a standalone edition of Gravity Lab, separated from the [BizOn](https://github.com/thuyhuongctu/BizOn) teaching ecosystem for academic archiving and an independent DOI. An earlier static HTML version remains at https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html and in the git history (commit `9ee11a1`).
 
 ## References
 
@@ -150,8 +217,10 @@ Yotov, Y. V., Piermartini, R., Monteiro, J.-A., & Larch, M. (2016). *An advanced
 
 ## Licence
 
-This is proprietary software, published openly for academic transparency and citation. See [`LICENSE`](LICENSE). Third-party components retain their own licences: Natural Earth data are in the public domain, three.js is distributed under the MIT License, and the typefaces are distributed under the SIL Open Font License 1.1.
+This is proprietary software, published openly for academic transparency and citation. See [`LICENSE`](LICENSE). Third-party components keep their own licences: Natural Earth data are in the public domain, three.js is distributed under the MIT License, and the typefaces are distributed under the SIL Open Font License 1.1.
 
 ---
 
-© 2026 Assoc. Prof. Dr. Phan Anh Tu and Do Thuy Huong (PhD candidate), School of Economics, Can Tho University.
+<div align="center">
+<sub>© 2026 Assoc. Prof. Dr. Phan Anh Tu and Do Thuy Huong (PhD candidate), School of Economics, Can Tho University.</sub>
+</div>
