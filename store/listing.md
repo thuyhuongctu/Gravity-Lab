@@ -11,10 +11,10 @@ full description 4 000 characters.
 | Tags                 | Economics, Statistics, Physics                                          |
 | Privacy policy URL   | https://thuyhuongctu.github.io/Gravity-Lab/privacy/                      |
 | Website              | https://thuyhuongctu.github.io/Gravity-Lab/                              |
-| Email                | (your contact address in Play Console)                                  |
+| Email                | thuyhuongctu@gmail.com                                                  |
 | Icon 512×512         | public/icons/icon-512.png                                               |
-| Feature graphic      | store/feature-graphic-1024x500.png                                      |
-| Phone screenshots    | store/screenshot-1.png … screenshot-4.png                               |
+| Feature graphic      | store/play-2026-10-26/feature-graphic-1024x500.png (no alpha channel)   |
+| Phone screenshots    | store/play-2026-10-26/screenshot-en-1.jpg … -6 (EN), screenshot-vi-1.jpg … -6 (VI) |
 | Content rating       | Everyone (education, no user content, no ads)                           |
 | Target audience      | 18 and over                                                             |
 | Data safety          | No data collected, no data shared, no encryption needed, deletion N/A   |
@@ -57,7 +57,7 @@ Rooms to explore:
 Everything runs on your device. No account, no analytics, no advertising; CSV files and questions
 never leave the phone. Works offline after the first launch.
 
-Authors: Phan Anh Tu and Do Thuy Huong, School of Economics, Can Tho University.
+Authors: Phan Anh Tu and Do Thuy Huong.
 Source code: github.com/thuyhuongctu/Gravity-Lab
 
 ## Full description · VI
@@ -87,7 +87,7 @@ Các phòng:
 Mọi thứ chạy trên thiết bị của bạn. Không tài khoản, không theo dõi, không quảng cáo; tệp CSV và câu
 hỏi không bao giờ rời khỏi điện thoại. Dùng được ngoại tuyến sau lần mở đầu.
 
-Tác giả: Phan Anh Tú và Đỗ Thuỳ Hương, Khoa Kinh tế, Đại học Cần Thơ.
+Tác giả: Phan Anh Tú và Đỗ Thùy Hương.
 Mã nguồn: github.com/thuyhuongctu/Gravity-Lab
 
 ## Release notes · first release
@@ -97,3 +97,11 @@ Runs offline, no account.
 
 VI: Bản đầu tiên. Câu chuyện, các phòng Quỹ đạo, Thương mại, FDI, cầu công thức, ước lượng Pro và
 bài tập. Chạy ngoại tuyến, không cần tài khoản.
+
+## Bản Play · Play edition (26/10/2026)
+
+The Android app opens the site with `?src=play` (see `twa-manifest.json` and `src/sim/play-app.ts`). In that
+edition the app names no institution, shows no planned prices and no sign-in buttons that do not work yet,
+because the Android app is free and has no accounts. The listing above therefore names the authors without an
+affiliation. The screenshots in `store/play-2026-10-26/` were taken from that edition; the older
+`store/screenshot-*.png` show an earlier interface and are kept only for reference.

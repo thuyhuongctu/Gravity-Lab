@@ -38,7 +38,7 @@ if [ ! -f "$KEYSTORE" ]; then
   KEY_PASS="${KEY_PASS:-$KS_PASS}"
   keytool -genkey -v -keystore "$KEYSTORE" -alias "$ALIAS" -keyalg RSA -keysize 2048 -validity 10000 \
     -storepass "$KS_PASS" -keypass "$KEY_PASS" \
-    -dname "CN=Gravity Lab, OU=School of Economics, O=Can Tho University, L=Can Tho, C=VN"
+    -dname "CN=Do Thuy Huong, O=Thuy Huong Digital Learning, L=Vinh Long, C=VN"
   echo
   echo "SHA-256 of the upload key (add it to /.well-known/assetlinks.json for sideloaded APKs):"
   keytool -list -v -keystore "$KEYSTORE" -alias "$ALIAS" -storepass "$KS_PASS" | grep -i "SHA256:"
