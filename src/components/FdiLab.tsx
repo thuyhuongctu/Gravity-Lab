@@ -43,6 +43,7 @@ import { CaseFile } from "@/components/CaseFile";
 import { ProDiagnostics } from "@/components/ProDiagnostics";
 import { LuminaExplain } from "@/components/LuminaExplain";
 import { explainEstimate } from "@/sim/explain";
+import { PLAY_APP } from "@/lib/play-app";
 
 export type LabPanel = "coef" | "sim" | "ppml" | "data" | "sector" | "case";
 
@@ -1357,7 +1358,7 @@ function DataDock({ lab }: { lab: LabState }) {
           <button
             type="button"
             className="noir-raise inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
-            onClick={() => saveFile("fdi_vn_panel_codebook.md", datasetCodebook(), "text/markdown")}
+            onClick={() => saveFile("fdi_vn_panel_codebook.md", datasetCodebook(!PLAY_APP), "text/markdown")}
           >
             <Download className="size-3.5" /> {tr("Từ điển biến", "Codebook")}
           </button>

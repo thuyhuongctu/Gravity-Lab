@@ -1,5 +1,6 @@
 import { tr } from "@/lib/prefs";
 import { MODELS } from "@/sim/gravity-lab";
+import { PLAY_APP, forPlay } from "@/lib/play-app";
 
 /**
  * Pro block for MeStage (mockups 3a / 3b). Replaces the feature list + price cards.
@@ -80,7 +81,7 @@ export function ProSection({ onRoom }: { onRoom: (room: "lab", panel: "data") =>
     <section className="flex flex-col gap-7" aria-labelledby="pro-h">
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_440px]">
         <div className="flex flex-col gap-4">
-          <span className="self-start rounded-full bg-teal/15 px-3 py-1.5 text-sm font-semibold text-teal">✓ {tr("Miễn phí trên web · giai đoạn 1", "Free on the web during phase 1")}</span>
+          <span className="self-start rounded-full bg-teal/15 px-3 py-1.5 text-sm font-semibold text-teal">✓ {forPlay(tr("Miễn phí", "Free"), tr("Miễn phí trên web · giai đoạn 1", "Free on the web during phase 1"))}</span>
           <p className="kicker text-amber">{tr("Gravity Lab Pro · cho luận văn và bài báo", "Gravity Lab Pro · for theses and papers")}</p>
           <h2 id="pro-h" className="font-serif text-3xl leading-tight text-balance sm:text-5xl">
             {tr("Từ dữ liệu thô đến chương kết quả luận văn trong một buổi chiều", "From raw data to your results chapter in one afternoon")}
@@ -137,16 +138,27 @@ export function ProSection({ onRoom }: { onRoom: (room: "lab", panel: "data") =>
           </table>
         </div>
         <div className="noir-card flex flex-col gap-3 rounded-3xl p-5">
-          <p className="kicker text-amber">{tr("Khi có bản Android", "When the Android app launches")}</p>
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="noir-track rounded-2xl p-3"><p className="text-xs text-muted">{tr("Theo tháng", "Monthly")}</p><p className="font-serif text-xl">49.000đ</p></div>
-            <div className="noir-track rounded-2xl p-3 ring-2 ring-teal"><p className="text-xs text-muted">{tr("Theo năm · ≈ 33.000đ/tháng", "Annual · ≈ 33.000đ/mo")}</p><p className="font-serif text-xl">399.000đ</p></div>
-          </div>
-          <p className="text-sm leading-relaxed">
-            {tr("Mọi thứ ở trên vẫn miễn phí trên web. Sinh viên dùng email .edu.vn được giảm giá trên Android.", "Everything above stays free on the web. Students with a .edu.vn email get a discount on Android.")}
-          </p>
+          {PLAY_APP ? (
+            <>
+              <p className="kicker text-amber">{tr("Bản Android", "On Android")}</p>
+              <p className="text-sm leading-relaxed">
+                {tr("Ứng dụng miễn phí, không quảng cáo, không mua trong ứng dụng. Mọi tính năng ở trên đều dùng được.", "The app is free, with no ads and no in-app purchases. Every feature above is included.")}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="kicker text-amber">{tr("Khi có bản Android", "When the Android app launches")}</p>
+              <div className="grid grid-cols-2 gap-2.5">
+                <div className="noir-track rounded-2xl p-3"><p className="text-xs text-muted">{tr("Theo tháng", "Monthly")}</p><p className="font-serif text-xl">49.000đ</p></div>
+                <div className="noir-track rounded-2xl p-3 ring-2 ring-teal"><p className="text-xs text-muted">{tr("Theo năm · ≈ 33.000đ/tháng", "Annual · ≈ 33.000đ/mo")}</p><p className="font-serif text-xl">399.000đ</p></div>
+              </div>
+              <p className="text-sm leading-relaxed">
+                {tr("Mọi thứ ở trên vẫn miễn phí trên web. Sinh viên dùng email .edu.vn được giảm giá trên Android.", "Everything above stays free on the web. Students with a .edu.vn email get a discount on Android.")}
+              </p>
+            </>
+          )}
           <ul className="mt-auto flex flex-wrap gap-1.5 text-xs">
-            {[["Chỉ trên thiết bị", "On-device only"], ["Phát triển tại Đại học Cần Thơ", "Built at Can Tho University"], ["Trích dẫn được · DOI Zenodo", "Citable · Zenodo DOI"]].map(([vi, en]) => (
+            {[["Chỉ trên thiết bị", "On-device only"], forPlay(["Làm tại Cần Thơ, Việt Nam", "Made in Can Tho, Viet Nam"], ["Phát triển tại Đại học Cần Thơ", "Built at Can Tho University"]), ["Trích dẫn được · DOI Zenodo", "Citable · Zenodo DOI"]].map(([vi, en]) => (
               <li key={en} className="noir-track rounded-full px-2.5 py-1">{tr(vi, en)}</li>
             ))}
           </ul>

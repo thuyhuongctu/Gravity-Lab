@@ -100,3 +100,15 @@ hoặc packageId: tăng `appVersionCode` trong `twa-manifest.json`, rồi `bubbl
 
 Đăng nhập, gói Pro và Google Play Billing (xem `PLAY_STORE_GUIDE.md` trong bản thiết kế) cần máy chủ xác
 thực và xác minh giao dịch; app hiện chạy hoàn toàn trên thiết bị, chưa có các phần này.
+
+## Bản Play 26/10/2026 · Play edition, 26 October 2026
+
+- `twa-manifest.json`: `minSdkVersion` 24 (thư viện `androidbrowserhelper` 2.7.4 cần ≥ 24; để 21 thì bước gộp
+  manifest báo lỗi), `startUrl` và hai lối tắt thêm `?src=play`.
+- `?src=play` (hoặc referrer `android-app://io.github.thuyhuongctu.gravitylab`) bật bản Play
+  (`src/lib/play-app.ts`): không nêu tên Trường, không hiện giá dự kiến, không hiện nút đăng nhập chưa chạy.
+  Bản web giữ nguyên.
+- Khoá upload đã tạo ngày 26/10/2026 (alias `gravitylab`, `CN=Do Thuy Huong, O=Thuy Huong Digital Learning,
+  L=Vinh Long, C=VN`, SHA-256 `B7:38:E4:B8:…:18:4D:69:5E`). Tệp khoá và mật khẩu được giao riêng, không nằm
+  trong repo. Muốn dùng `script/android/build.sh`, đặt tệp khoá vào `android/android.keystore` trước để script
+  không tạo khoá mới.

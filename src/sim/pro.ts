@@ -76,11 +76,13 @@ save "fdi_vn_panel.dta", replace
 }
 
 /** Variable dictionary, sources and how to extend the panel, in both languages. */
-export function datasetCodebook(): string {
+export function datasetCodebook(withAffiliation = true): string {
+  const header = withAffiliation
+    ? "Gravity Lab · Đại học Cần Thơ. Bộ dữ liệu dùng cho giảng dạy mô hình lực hấp dẫn (gravity model).\nGravity Lab · Can Tho University. A teaching dataset for the gravity model."
+    : "Gravity Lab. Bộ dữ liệu dùng cho giảng dạy mô hình lực hấp dẫn (gravity model).\nGravity Lab. A teaching dataset for the gravity model.";
   return `# fdi_vn_panel · Từ điển biến · Codebook
 
-Gravity Lab · Đại học Cần Thơ. Bộ dữ liệu dùng cho giảng dạy mô hình lực hấp dẫn (gravity model).
-Gravity Lab · Can Tho University. A teaching dataset for the gravity model.
+${header}
 
 ## Cấu trúc · Structure
 
