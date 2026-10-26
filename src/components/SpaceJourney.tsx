@@ -6,6 +6,7 @@ import { fmt, tr } from "@/lib/prefs";
 import { duckAmbient } from "@/lib/sound";
 import { markEntered, rememberScene, takeResume, useCalm } from "@/lib/journey-state";
 import { usePrefs } from "@/lib/use-prefs";
+import { forPlay } from "@/lib/play-app";
 
 type Scene = {
   k: [string, string];
@@ -56,7 +57,7 @@ export function sceneTitle(i: number, lang: "vi" | "en"): string {
 
 const SCENES: Scene[] = [
   {
-    k: ["Gravity Lab · Đại học Cần Thơ", "Gravity Lab · Can Tho University"],
+    k: forPlay(["Gravity Lab · Cần Thơ, Việt Nam", "Gravity Lab · Can Tho, Viet Nam"], ["Gravity Lab · Đại học Cần Thơ", "Gravity Lab · Can Tho University"]),
     h: ["Từ một quả táo rơi", "From a falling apple"],
     p: [
       "Cuộn để bay cùng lớp học — từ khu vườn của Newton đến dòng vốn đầu tư trực tiếp nước ngoài (FDI) chảy về Việt Nam.",
@@ -673,7 +674,7 @@ export function SpaceJourney({
         >
           <div className="flex max-w-[640px] flex-col items-center gap-[18px] motion-safe:animate-[splash-in_2.4s_cubic-bezier(0.2,0.8,0.2,1)_both]">
             <p className={"text-xs font-semibold tracking-[0.2em] uppercase " + T.kicker}>
-              {tr("Gravity Lab · Đại học Cần Thơ", "Gravity Lab · Can Tho University")}
+              {forPlay(tr("Gravity Lab · Cần Thơ, Việt Nam", "Gravity Lab · Can Tho, Viet Nam"), tr("Gravity Lab · Đại học Cần Thơ", "Gravity Lab · Can Tho University"))}
             </p>
             <h2 className="font-serif text-[clamp(34px,5.4vw,64px)] leading-[1.06] tracking-[-0.03em] text-balance">
               {tr("Đâu đó trong bóng tối, một quả táo bắt đầu rơi.", "Somewhere in the dark, an apple begins to fall.")}

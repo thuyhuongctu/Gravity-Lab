@@ -20,6 +20,7 @@ import { lastScene, toggleCalm, useCalm } from "@/lib/journey-state";
 import { setLang, setTheme, tr } from "@/lib/prefs";
 import { usePrefs } from "@/lib/use-prefs";
 import { ProSection } from "@/components/ProSection";
+import { PLAY_APP } from "@/lib/play-app";
 
 const ISSUES_URL = "https://github.com/thuyhuongctu/Gravity-Lab/issues";
 
@@ -186,12 +187,19 @@ export function MeStage({
             </div>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted">
-            {tr(
-              "Đăng nhập (sign in) để lưu tiến độ và đồng bộ (sync) giữa các thiết bị sẽ có cùng bản Android trên CH Play.",
-              "Signing in to save progress and sync across devices arrives with the Android app on Google Play.",
-            )}
+            {PLAY_APP
+              ? tr(
+                  "Ứng dụng không có tài khoản và chưa có đăng nhập (sign in): tiến độ và lựa chọn chỉ nằm trên điện thoại này.",
+                  "The app has no accounts and no sign-in yet: progress and choices stay on this phone.",
+                )
+              : tr(
+                  "Đăng nhập (sign in) để lưu tiến độ và đồng bộ (sync) giữa các thiết bị sẽ có cùng bản Android trên CH Play.",
+                  "Signing in to save progress and sync across devices arrives with the Android app on Google Play.",
+                )}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
+            {!PLAY_APP && (
+              <>
             <button
               type="button"
               disabled
@@ -206,6 +214,8 @@ export function MeStage({
             >
               {tr("Gửi mã đăng nhập (sign-in code)", "Send sign-in code")}
             </button>
+              </>
+            )}
             <span className="pill-on inline-flex min-h-11 items-center rounded-full px-4 text-sm font-semibold">
               <Check className="mr-1.5 size-4" />
               {tr("Dùng thử không cần tài khoản (guest mode)", "Try without an account")}

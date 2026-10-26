@@ -12,6 +12,7 @@ import { NewtonFigure } from "@/components/NewtonFigure";
 import { VnWatermark } from "@/components/VnWatermark";
 import { RoomCover, type CoverRoom } from "@/components/RoomCover";
 import { tr } from "@/lib/prefs";
+import { forPlay } from "@/lib/play-app";
 
 type Room = "orbit" | "trade" | "lab";
 
@@ -461,9 +462,10 @@ export function StoryStage({
             className="clay-card mt-3 aspect-[43/24] w-full rounded-card bg-[#0a0b0d] object-cover"
           />
           <p className="mt-3 text-sm leading-relaxed text-muted">
+            {forPlay("", tr("Trường Kinh tế, Đại học Cần Thơ. ", "School of Economics, Can Tho University. "))}
             {tr(
-              "Trường Kinh tế, Đại học Cần Thơ. Gravity Lab đưa cả chặng đường lên trình duyệt: quỹ đạo Newton, mô hình thương mại Tinbergen, hệ số FDI năm 2019, phép thử PPML, ước lượng trên dữ liệu của chính người học, và một trợ giảng tra cứu có trích nguồn.",
-              "School of Economics, Can Tho University. Gravity Lab puts the whole journey in the browser: Newton's orbits, Tinbergen's trade model, the 2019 FDI coefficients, the PPML test, estimation on the learner's own data, and a teaching assistant that answers with citations.",
+              "Gravity Lab đưa cả chặng đường lên trình duyệt: quỹ đạo Newton, mô hình thương mại Tinbergen, hệ số FDI năm 2019, phép thử PPML, ước lượng trên dữ liệu của chính người học, và một trợ giảng tra cứu có trích nguồn.",
+              "Gravity Lab puts the whole journey in the browser: Newton's orbits, Tinbergen's trade model, the 2019 FDI coefficients, the PPML test, estimation on the learner's own data, and a teaching assistant that answers with citations.",
             )}
           </p>
           <p className="mt-2 text-sm">

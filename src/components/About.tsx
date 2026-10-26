@@ -1,4 +1,5 @@
 import { tr } from "@/lib/prefs";
+import { forPlay } from "@/lib/play-app";
 
 /** About the app and its two authors, and what the app does with the reader's data (nothing leaves the device). */
 export function About() {
@@ -87,9 +88,9 @@ export function About() {
             ))}
           </ul>
           <p className="mt-3 text-sm text-muted">
-            {tr(
-              "Khoa Kinh tế, Đại học Cần Thơ · Việt Nam",
-              "School of Economics, Can Tho University · Việt Nam",
+            {forPlay(
+              tr("Cần Thơ · Việt Nam", "Can Tho · Việt Nam"),
+              tr("Khoa Kinh tế, Đại học Cần Thơ · Việt Nam", "School of Economics, Can Tho University · Việt Nam"),
             )}
           </p>
           <p className="mt-4 text-[15px] leading-relaxed">
