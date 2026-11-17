@@ -13,8 +13,8 @@
   "backgroundColor": "#0a0b0d",
   "enableNotifications": false,
   "startUrl": "/Gravity-Lab/?src=play",
-  "iconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-512.png",
-  "maskableIconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-512-maskable.png",
+  "iconUrl": "https://gravity.bizonland.com/icons/icon-512.png",
+  "maskableIconUrl": "https://gravity.bizonland.com/icons/icon-512-maskable.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
@@ -27,17 +27,17 @@
       "name": "Trade room",
       "shortName": "Trade",
       "url": "/Gravity-Lab/?src=play#s=r%3Dtrade",
-      "chosenIconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-192.png"
+      "chosenIconUrl": "https://gravity.bizonland.com/icons/icon-192.png"
     },
     {
       "name": "FDI lab",
       "shortName": "FDI",
       "url": "/Gravity-Lab/?src=play#s=r%3Dlab",
-      "chosenIconUrl": "https://thuyhuongctu.github.io/Gravity-Lab/icons/icon-192.png"
+      "chosenIconUrl": "https://gravity.bizonland.com/icons/icon-192.png"
     }
   ],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://thuyhuongctu.github.io/Gravity-Lab/manifest.webmanifest",
+  "webManifestUrl": "https://gravity.bizonland.com/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -46,7 +46,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://thuyhuongctu.github.io/Gravity-Lab/",
+  "fullScopeUrl": "https://gravity.bizonland.com/",
   "minSdkVersion": 24,
   "orientation": "default",
   "fingerprints": [],
