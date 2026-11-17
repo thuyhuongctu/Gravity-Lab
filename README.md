@@ -11,17 +11,17 @@
 ![PWA](https://img.shields.io/badge/PWA-works%20offline-23606b)
 ![Licence](https://img.shields.io/badge/licence-proprietary-lightgrey)
 
-**[Open the app](https://thuyhuongctu.github.io/Gravity-Lab/)** ·
-[Trailer](https://thuyhuongctu.github.io/Gravity-Lab/trailer/gravity-lab-trailer.mp4) ·
+**[Open the app](https://gravity.bizonland.com/)** ·
+[Trailer](https://gravity.bizonland.com/trailer/gravity-lab-trailer.mp4) ·
 [Cite](#how-to-cite) ·
 [Features](#whats-inside) ·
 [The model](#the-model-in-six-equations) ·
 [Run locally](#run-locally) ·
-[Privacy](https://thuyhuongctu.github.io/Gravity-Lab/privacy/)
+[Privacy](https://gravity.bizonland.com/privacy/)
 
-<a href="https://thuyhuongctu.github.io/Gravity-Lab/trailer/gravity-lab-trailer.mp4"><img src="docs/screenshots/trailer.webp" alt="Play the 60-second Gravity Lab trailer: Newton under the apple tree, Woolsthorpe, 1666" width="100%"></a>
+<a href="https://gravity.bizonland.com/trailer/gravity-lab-trailer.mp4"><img src="docs/screenshots/trailer.webp" alt="Play the 60-second Gravity Lab trailer: Newton under the apple tree, Woolsthorpe, 1666" width="100%"></a>
 
-<sub><b>Watch the 60-second trailer</b> (1080p, English voice-over with the theme song): <a href="https://thuyhuongctu.github.io/Gravity-Lab/trailer/gravity-lab-trailer.mp4">play in the browser</a></sub>
+<sub><b>Watch the 60-second trailer</b> (1080p, English voice-over with the theme song): <a href="https://gravity.bizonland.com/trailer/gravity-lab-trailer.mp4">play in the browser</a></sub>
 
 </div>
 
@@ -63,7 +63,7 @@ Gravity Lab is a bilingual teaching app for the gravity model in international e
 
 ### Private by design
 
-No account, no analytics, no cookies and no advertising. CSV files and questions to Lumina never leave the device. The app installs as a progressive web app and works offline after the first visit. See the [privacy policy](https://thuyhuongctu.github.io/Gravity-Lab/privacy/).
+No account, no analytics, no cookies and no advertising. CSV files and questions to Lumina never leave the device. The app installs as a progressive web app and works offline after the first visit. See the [privacy policy](https://gravity.bizonland.com/privacy/).
 
 ## The model in six equations
 
@@ -185,7 +185,7 @@ Complete metadata are in [`CITATION.cff`](CITATION.cff). From v2.3 onwards the f
 
 </details>
 
-**Provenance.** This repository is a standalone edition of Gravity Lab, separated from the [BizOn](https://github.com/thuyhuongctu/BizOn) teaching ecosystem for academic archiving and an independent DOI. An earlier static HTML version remains at https://thuyhuongctu.github.io/BizOn/lab/gravity-lab.html and in the git history (commit `9ee11a1`).
+**Provenance.** This repository is a standalone edition of Gravity Lab, separated from the [BizOn](https://github.com/thuyhuongctu/BizOn) teaching ecosystem for academic archiving and an independent DOI. An earlier static HTML version remains at https://bizonland.com/lab/gravity-lab.html and in the git history (commit `9ee11a1`).
 
 ## References
 

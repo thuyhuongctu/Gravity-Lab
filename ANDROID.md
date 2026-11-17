@@ -1,7 +1,7 @@
 # Gravity Lab trên Android (CH Play) · Gravity Lab on Android (Google Play)
 
 Gravity Lab là web app (Vite, GitHub Pages). Bản Android là một **Trusted Web Activity (TWA)**: app mở
-`https://thuyhuongctu.github.io/Gravity-Lab/` toàn màn hình, không có thanh địa chỉ, và nhận mọi cập nhật
+`https://gravity.bizonland.com/` toàn màn hình, không có thanh địa chỉ, và nhận mọi cập nhật
 từ web mà không cần phát hành lại. Cách làm giống hai app đã có của cùng tài khoản (BizOn, EnQuiz), với
 packageId cùng họ `io.github.thuyhuongctu.*`.
 
@@ -27,7 +27,7 @@ script/android/build.sh --update   # sau khi sửa twa-manifest.json
 Cách thủ công, từ thư mục này, nơi có `twa-manifest.json` sẵn:
 
 ```bash
-bubblewrap init --manifest https://thuyhuongctu.github.io/Gravity-Lab/manifest.webmanifest
+bubblewrap init --manifest https://gravity.bizonland.com/manifest.webmanifest
 ```
 
 Bubblewrap đọc `twa-manifest.json` (packageId `io.github.thuyhuongctu.gravitylab`, startUrl `/Gravity-Lab/`,
@@ -86,7 +86,7 @@ Nếu cài thử bằng `.apk` ký bằng khoá upload (trước khi qua Play), 
 4. Mô tả ngắn (≤ 80 ký tự):
    - EN: *Learn the gravity model: from Newton’s apple to FDI inflows into Viet Nam.*
    - VI: *Học mô hình lực hấp dẫn: từ quả táo của Newton đến dòng vốn FDI vào Việt Nam (FDI inflows).*
-5. Chính sách quyền riêng tư: `https://thuyhuongctu.github.io/Gravity-Lab/privacy/` (trang tĩnh song ngữ,
+5. Chính sách quyền riêng tư: `https://gravity.bizonland.com/privacy/` (trang tĩnh song ngữ,
    Play yêu cầu một URL riêng). Biểu mẫu *Data safety*: không thu thập, không chia sẻ dữ liệu.
    Toàn bộ mô tả cửa hàng (ngắn, đầy đủ, ghi chú phát hành, VI và EN) ở `store/listing.md`.
 6. Phân loại nội dung: Giáo dục, mọi lứa tuổi; đối tượng mục tiêu 18+ (sinh viên, giảng viên).

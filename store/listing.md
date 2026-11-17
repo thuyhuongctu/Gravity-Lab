@@ -9,8 +9,8 @@ full description 4 000 characters.
 | App name             | Gravity Lab                                                             |
 | Category             | Education                                                               |
 | Tags                 | Economics, Statistics, Physics                                          |
-| Privacy policy URL   | https://thuyhuongctu.github.io/Gravity-Lab/privacy/                      |
-| Website              | https://thuyhuongctu.github.io/Gravity-Lab/                              |
+| Privacy policy URL   | https://gravity.bizonland.com/privacy/                      |
+| Website              | https://gravity.bizonland.com/                              |
 | Email                | thuyhuongctu@gmail.com                                                  |
 | Icon 512×512         | public/icons/icon-512.png                                               |
 | Feature graphic      | store/play-2026-10-26/feature-graphic-1024x500.png (no alpha channel)   |
