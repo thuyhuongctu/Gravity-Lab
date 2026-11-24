@@ -1,6 +1,6 @@
 {
   "packageId": "io.github.thuyhuongctu.gravitylab",
-  "host": "thuyhuongctu.github.io",
+  "host": "gravity.bizonland.com",
   "name": "Gravity Lab",
   "launcherName": "Gravity Lab",
   "display": "standalone",
@@ -12,7 +12,7 @@
   "navigationDividerColorDark": "#0a0b0d",
   "backgroundColor": "#0a0b0d",
   "enableNotifications": false,
-  "startUrl": "/Gravity-Lab/?src=play",
+  "startUrl": "/?src=play",
   "iconUrl": "https://gravity.bizonland.com/icons/icon-512.png",
   "maskableIconUrl": "https://gravity.bizonland.com/icons/icon-512-maskable.png",
   "splashScreenFadeOutDuration": 300,
@@ -26,13 +26,13 @@
     {
       "name": "Trade room",
       "shortName": "Trade",
-      "url": "/Gravity-Lab/?src=play#s=r%3Dtrade",
+      "url": "/?src=play#s=r%3Dtrade",
       "chosenIconUrl": "https://gravity.bizonland.com/icons/icon-192.png"
     },
     {
       "name": "FDI lab",
       "shortName": "FDI",
-      "url": "/Gravity-Lab/?src=play#s=r%3Dlab",
+      "url": "/?src=play#s=r%3Dlab",
       "chosenIconUrl": "https://gravity.bizonland.com/icons/icon-192.png"
     }
   ],
