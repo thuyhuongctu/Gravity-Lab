@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.thuyhuongctu.gravitylab",
+      "sha256_cert_fingerprints": [
+        "2F:48:4E:E3:98:C0:B7:10:50:E5:41:26:8E:33:73:F1:D2:9E:4A:14:07:91:9A:F7:C5:47:72:CE:5B:C5:AF:1F",
+        "B7:38:E4:B8:C2:D9:59:8C:5B:C8:D2:3A:FD:F5:8C:8E:4D:FF:E9:C0:4C:41:CD:E7:8B:3F:B2:B9:18:4D:69:5E"
+      ]
+    }
+  }
+]

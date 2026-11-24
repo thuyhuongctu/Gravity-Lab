@@ -12,8 +12,10 @@ full-screen, without an address bar, and picks up every web update without a new
 
 - Node 18+ và `npm i -g @bubblewrap/cli` (Bubblewrap tải JDK 17 và Android SDK vào `~/.bubblewrap` ở lần chạy đầu).
 - Tài khoản Google Play Console (đã có: *Thuy Huong Digital Learning*).
-- Repo `thuyhuongctu/thuyhuongctu.github.io` để phục vụ `/.well-known/assetlinks.json` ở gốc tên miền
-  (BizOn và EnQuiz đã cần file này, nên repo này hẳn đã có).
+- Tệp `public/.well-known/assetlinks.json` trong chính repo này: Vite chép nó vào `dist/`, nên nó được phục vụ ở
+  `https://gravity.bizonland.com/.well-known/assetlinks.json` (gốc tên miền riêng của app). Trước ngày 24/11/2026
+  app mở `thuyhuongctu.github.io/Gravity-Lab/` và tệp này nằm ở repo `thuyhuongctu.github.io`; mục cũ ở đó giữ lại
+  cho bản dựng đầu còn trên máy người dùng.
 
 ## 2. Tạo app · Create the Android project
 
@@ -30,7 +32,8 @@ Cách thủ công, từ thư mục này, nơi có `twa-manifest.json` sẵn:
 bubblewrap init --manifest https://gravity.bizonland.com/manifest.webmanifest
 ```
 
-Bubblewrap đọc `twa-manifest.json` (packageId `io.github.thuyhuongctu.gravitylab`, startUrl `/Gravity-Lab/`,
+Bubblewrap đọc `twa-manifest.json` (packageId `io.github.thuyhuongctu.gravitylab`, host `gravity.bizonland.com`,
+startUrl `/?src=play`,
 màu `#0a0b0d`, icon maskable). Khi hỏi khoá ký, chỉ vào `android.keystore` với alias `gravitylab`:
 
 ```bash
@@ -51,10 +54,14 @@ Kết quả: `app-release-bundle.aab` (tải lên Play) và `app-release-signed.
 
 ## 3. Digital Asset Links
 
+> **Đổi tên miền 24/11/2026.** `twa-manifest.json` nay trỏ `gravity.bizonland.com` (startUrl `/?src=play`).
+> Bản dựng kế tiếp phải tăng `appVersionCode` lên trên số đang có trên Play Console rồi `script/android/build.sh --update`;
+> bản dựng đầu vẫn mở địa chỉ cũ, được GitHub chuyển hướng sang tên miền mới nhưng hiện thanh địa chỉ.
+
 1. Trong Play Console → *App integrity* → *App signing*, bật **Play App Signing** và chép **SHA-256** của
    *App signing key certificate*.
-2. Thêm mục này vào `/.well-known/assetlinks.json` trong repo `thuyhuongctu.github.io` (giữ các mục của
-   BizOn và EnQuiz, thêm một phần tử vào mảng):
+2. Thêm vân tay đó vào `public/.well-known/assetlinks.json` của repo này (tệp đã có mục của gói, chép từ repo
+   `thuyhuongctu.github.io` ngày 24/11/2026; chỉ thêm vào mảng nếu vân tay chưa có):
 
 ```json
 {
@@ -67,7 +74,7 @@ Kết quả: `app-release-bundle.aab` (tải lên Play) và `app-release-signed.
 }
 ```
 
-3. Kiểm tra: `https://thuyhuongctu.github.io/.well-known/assetlinks.json` phải trả về JSON (HTTP 200,
+3. Kiểm tra: `https://gravity.bizonland.com/.well-known/assetlinks.json` phải trả về JSON (HTTP 200,
    `Content-Type: application/json`). Khi khớp, app mở không có thanh địa chỉ; khi chưa khớp, app vẫn chạy
    nhưng hiện thanh địa chỉ của Chrome.
 

@@ -55,7 +55,7 @@ fi
 
 if [ ! -d "$OUT/app" ]; then
   echo "First build: bubblewrap init (answer the prompts; the defaults come from twa-manifest.json)."
-  bubblewrap init --manifest "https://thuyhuongctu.github.io/Gravity-Lab/manifest.webmanifest" --directory "$OUT"
+  bubblewrap init --manifest "https://gravity.bizonland.com/manifest.webmanifest" --directory "$OUT"
 fi
 
 bubblewrap build
@@ -64,4 +64,4 @@ echo
 echo "Done."
 echo "  Upload:   $OUT/app-release-bundle.aab   (Play Console → Testing → Closed testing)"
 echo "  Sideload: $OUT/app-release-signed.apk   (adb install)"
-echo "Then copy the Play App Signing SHA-256 into thuyhuongctu.github.io/.well-known/assetlinks.json (see ANDROID.md §3)."
+echo "Then make sure the Play App Signing SHA-256 is in public/.well-known/assetlinks.json (served at gravity.bizonland.com; see ANDROID.md §3)."
